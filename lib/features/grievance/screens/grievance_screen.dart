@@ -45,9 +45,6 @@ class _GrievanceScreenState extends State<GrievanceScreen> {
         appBar: AppBar(
           title: const Text('অভিযোগ ব্যবস্থাপনা'),
           bottom: const TabBar(
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white70,
-            indicatorColor: Colors.white,
             tabs: [
               Tab(text: 'নতুন অভিযোগ'),
               Tab(text: 'আমার অভিযোগ'),
@@ -67,73 +64,96 @@ class _GrievanceScreenState extends State<GrievanceScreen> {
   }
 
   Widget _buildNewGrievance() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
+      physics: const BouncingScrollPhysics(),
       child: Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('অভিযোগ দাখিল করুন', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            Row(
+              children: [
+                Container(width: 4, height: 20, decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(2))),
+                const SizedBox(width: 8),
+                const Text('অভিযোগ দাখিল করুন', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+              ],
+            ),
             const SizedBox(height: 16),
-            // Category
-            DropdownButtonFormField<String>(
-              initialValue: _selectedCategory.isEmpty ? null : _selectedCategory,
-              decoration: const InputDecoration(labelText: 'অভিযোগের ধরন *', prefixIcon: Icon(Icons.category)),
-              items: GrievanceCategory.categories.map((c) => DropdownMenuItem(value: c.nameBn, child: Text(c.nameBn))).toList(),
-              onChanged: (v) => setState(() => _selectedCategory = v ?? ''),
-              validator: (v) => v == null || v.isEmpty ? 'অভিযোগের ধরন নির্বাচন করুন' : null,
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkCard : Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: isDark ? [] : AppColors.softShadow,
+              ),
+              child: Column(
+                children: [
+                  DropdownButtonFormField<String>(
+                    initialValue: _selectedCategory.isEmpty ? null : _selectedCategory,
+                    decoration: const InputDecoration(labelText: 'অভিযোগের ধরন *', prefixIcon: Icon(Icons.category_rounded)),
+                    items: GrievanceCategory.categories.map((c) => DropdownMenuItem(value: c.nameBn, child: Text(c.nameBn))).toList(),
+                    onChanged: (v) => setState(() => _selectedCategory = v ?? ''),
+                    validator: (v) => v == null || v.isEmpty ? 'অভিযোগের ধরন নির্বাচন করুন' : null,
+                  ),
+                  const SizedBox(height: 14),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(labelText: 'আপনার নাম *', prefixIcon: Icon(Icons.person_outline_rounded)),
+                    validator: (v) => v == null || v.isEmpty ? 'নাম লিখুন' : null,
+                  ),
+                  const SizedBox(height: 14),
+                  TextFormField(
+                    controller: _phoneController,
+                    decoration: const InputDecoration(labelText: 'মোবাইল নম্বর *', prefixIcon: Icon(Icons.phone_rounded)),
+                    keyboardType: TextInputType.phone,
+                    validator: (v) => v == null || v.isEmpty ? 'মোবাইল নম্বর লিখুন' : null,
+                  ),
+                  const SizedBox(height: 14),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(labelText: 'ইমেইল (ঐচ্ছিক)', prefixIcon: Icon(Icons.email_rounded)),
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 14),
+                  TextFormField(
+                    controller: _subjectController,
+                    decoration: const InputDecoration(labelText: 'বিষয় *', prefixIcon: Icon(Icons.subject_rounded)),
+                    validator: (v) => v == null || v.isEmpty ? 'বিষয় লিখুন' : null,
+                  ),
+                  const SizedBox(height: 14),
+                  TextFormField(
+                    controller: _descriptionController,
+                    decoration: const InputDecoration(labelText: 'বিস্তারিত বর্ণনা *', alignLabelWithHint: true),
+                    maxLines: 5,
+                    validator: (v) => v == null || v.isEmpty ? 'বর্ণনা লিখুন' : null,
+                  ),
+                  const SizedBox(height: 14),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('ফাইল আপলোড ফিচার শীঘ্রই আসছে')));
+                      },
+                      icon: const Icon(Icons.attach_file_rounded),
+                      label: const Text('ফাইল সংযুক্ত করুন'),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: 'আপনার নাম *', prefixIcon: Icon(Icons.person)),
-              validator: (v) => v == null || v.isEmpty ? 'নাম লিখুন' : null,
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _phoneController,
-              decoration: const InputDecoration(labelText: 'মোবাইল নম্বর *', prefixIcon: Icon(Icons.phone)),
-              keyboardType: TextInputType.phone,
-              validator: (v) => v == null || v.isEmpty ? 'মোবাইল নম্বর লিখুন' : null,
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'ইমেইল (ঐচ্ছিক)', prefixIcon: Icon(Icons.email)),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _subjectController,
-              decoration: const InputDecoration(labelText: 'বিষয় *', prefixIcon: Icon(Icons.subject)),
-              validator: (v) => v == null || v.isEmpty ? 'বিষয় লিখুন' : null,
-            ),
-            const SizedBox(height: 12),
-            TextFormField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'বিস্তারিত বর্ণনা *', alignLabelWithHint: true),
-              maxLines: 5,
-              validator: (v) => v == null || v.isEmpty ? 'বর্ণনা লিখুন' : null,
-            ),
-            const SizedBox(height: 12),
-            OutlinedButton.icon(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('ফাইল আপলোড ফিচার শীঘ্রই আসছে')));
-              },
-              icon: const Icon(Icons.attach_file),
-              label: const Text('ফাইল সংযুক্ত করুন'),
-            ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: _submitGrievance,
-                icon: const Icon(Icons.send),
+                icon: const Icon(Icons.send_rounded),
                 label: const Text('অভিযোগ জমা দিন', style: TextStyle(fontSize: 16)),
-                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14)),
+                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
               ),
             ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
@@ -171,13 +191,30 @@ class _GrievanceScreenState extends State<GrievanceScreen> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.check_circle, color: AppColors.success, size: 60),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.success.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 52),
+              ),
               const SizedBox(height: 16),
-              const Text('আপনার অভিযোগ সফলভাবে জমা হয়েছে।'),
+              const Text('আপনার অভিযোগ সফলভাবে জমা হয়েছে।', textAlign: TextAlign.center),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  'ট্র্যাকিং: $trackingNumber',
+                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15, color: AppColors.primary),
+                ),
+              ),
               const SizedBox(height: 8),
-              Text('ট্র্যাকিং নম্বর: $trackingNumber', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              const SizedBox(height: 8),
-              const Text('এই নম্বরটি সংরক্ষণ করুন।', style: TextStyle(color: AppColors.textSecondary)),
+              const Text('এই নম্বরটি সংরক্ষণ করুন।', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
             ],
           ),
           actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('ঠিক আছে'))],
@@ -187,43 +224,61 @@ class _GrievanceScreenState extends State<GrievanceScreen> {
   }
 
   Widget _buildMyGrievances() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     if (_myGrievances.isEmpty) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.inbox, size: 80, color: Colors.grey),
-            SizedBox(height: 16),
-            Text('কোনো অভিযোগ নেই', style: TextStyle(fontSize: 18)),
+            Icon(Icons.inbox_rounded, size: 72, color: Colors.grey[300]),
+            const SizedBox(height: 16),
+            const Text('কোনো অভিযোগ নেই', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 4),
+            const Text('আপনার দাখিলকৃত অভিযোগ এখানে দেখা যাবে', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
           ],
         ),
       );
     }
     return ListView.builder(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(12),
+      physics: const BouncingScrollPhysics(),
       itemCount: _myGrievances.length,
       itemBuilder: (context, index) {
         final g = _myGrievances[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkCard : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: isDark ? [] : AppColors.softShadow,
+          ),
           child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: _getStatusColor(g.status).withValues(alpha: 0.1),
-              child: Icon(_getStatusIcon(g.status), color: _getStatusColor(g.status)),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            leading: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: _getStatusColor(g.status).withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(_getStatusIcon(g.status), color: _getStatusColor(g.status), size: 22),
             ),
-            title: Text(g.subject, style: const TextStyle(fontWeight: FontWeight.bold)),
+            title: Text(g.subject, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('ট্র্যাকিং: ${g.trackingNumber}'),
                 const SizedBox(height: 4),
+                Text('ট্র্যাকিং: ${g.trackingNumber}', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                const SizedBox(height: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                   decoration: BoxDecoration(
                     color: _getStatusColor(g.status).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text(_getStatusText(g.status), style: TextStyle(color: _getStatusColor(g.status), fontSize: 12)),
+                  child: Text(
+                    _getStatusText(g.status),
+                    style: TextStyle(color: _getStatusColor(g.status), fontSize: 11, fontWeight: FontWeight.w600),
+                  ),
                 ),
               ],
             ),
@@ -239,41 +294,60 @@ class _GrievanceScreenState extends State<GrievanceScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.7,
         maxChildSize: 0.9,
         minChildSize: 0.5,
         expand: false,
-        builder: (context, scrollController) => SingleChildScrollView(
-          controller: scrollController,
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
-              const SizedBox(height: 20),
-              Text(g.subject, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(color: _getStatusColor(g.status).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
-                child: Text(_getStatusText(g.status), style: TextStyle(color: _getStatusColor(g.status), fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 16),
-              _buildDetailRow('ট্র্যাকিং নম্বর', g.trackingNumber),
-              _buildDetailRow('ক্যাটাগরি', g.category),
-              _buildDetailRow('দাখিলের তারিখ', '${g.submittedDate.day}/${g.submittedDate.month}/${g.submittedDate.year}'),
-              const Divider(),
-              const Text('বিবরণ:', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 4),
-              Text(g.description),
-              if (g.resolution != null) ...[
-                const Divider(),
-                const Text('সমাধান:', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.success)),
-                const SizedBox(height: 4),
-                Text(g.resolution!),
+        builder: (context, scrollController) => Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: SingleChildScrollView(
+            controller: scrollController,
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
+                const SizedBox(height: 20),
+                Text(g.subject, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: _getStatusColor(g.status).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    _getStatusText(g.status),
+                    style: TextStyle(color: _getStatusColor(g.status), fontWeight: FontWeight.w700, fontSize: 13),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildDetailRow('ট্র্যাকিং নম্বর', g.trackingNumber),
+                _buildDetailRow('ক্যাটাগরি', g.category),
+                _buildDetailRow('দাখিলের তারিখ', '${g.submittedDate.day}/${g.submittedDate.month}/${g.submittedDate.year}'),
+                const Divider(height: 28),
+                const Text('বিবরণ:', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                const SizedBox(height: 6),
+                Text(g.description, style: const TextStyle(height: 1.5)),
+                if (g.resolution != null) ...[
+                  const Divider(height: 28),
+                  Row(
+                    children: [
+                      const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 18),
+                      const SizedBox(width: 6),
+                      const Text('সমাধান:', style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.success)),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(g.resolution!, style: const TextStyle(height: 1.5)),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
@@ -282,39 +356,69 @@ class _GrievanceScreenState extends State<GrievanceScreen> {
 
   Widget _buildDetailRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: AppColors.textSecondary)),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
+          Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
         ],
       ),
     );
   }
 
   Widget _buildTracking() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          const Text('অভিযোগ ট্র্যাক করুন', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
-          TextField(
-            controller: _trackingController,
-            decoration: InputDecoration(
-              labelText: 'ট্র্যাকিং নম্বর লিখুন',
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.arrow_forward),
-                onPressed: _trackGrievance,
+          Row(
+            children: [
+              Container(width: 4, height: 20, decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(2))),
+              const SizedBox(width: 8),
+              const Text('অভিযোগ ট্র্যাক করুন', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Container(
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkCard : Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: isDark ? [] : AppColors.softShadow,
+            ),
+            padding: const EdgeInsets.all(4),
+            child: TextField(
+              controller: _trackingController,
+              decoration: InputDecoration(
+                labelText: 'ট্র্যাকিং নম্বর লিখুন',
+                prefixIcon: const Icon(Icons.search_rounded),
+                suffixIcon: Container(
+                  margin: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_forward_rounded, color: AppColors.primary),
+                    onPressed: _trackGrievance,
+                  ),
+                ),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
               ),
             ),
           ),
-          const SizedBox(height: 24),
-          const Icon(Icons.track_changes, size: 80, color: Colors.grey),
+          const SizedBox(height: 40),
+          Icon(Icons.track_changes_rounded, size: 72, color: Colors.grey[300]),
           const SizedBox(height: 16),
-          const Text('আপনার ট্র্যাকিং নম্বর দিয়ে অভিযোগের বর্তমান অবস্থা জানুন', textAlign: TextAlign.center, style: TextStyle(color: AppColors.textSecondary)),
+          const Text(
+            'আপনার ট্র্যাকিং নম্বর দিয়ে\nঅভিযোগের বর্তমান অবস্থা জানুন',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 14, height: 1.5),
+          ),
         ],
       ),
     );
@@ -327,7 +431,7 @@ class _GrievanceScreenState extends State<GrievanceScreen> {
     if (found.isNotEmpty) {
       _showGrievanceDetails(found.first);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('অভিযোগ পাওয়া যায়নি'), backgroundColor: Colors.red));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('অভিযোগ পাওয়া যায়নি'), backgroundColor: AppColors.error));
     }
   }
 
@@ -343,11 +447,11 @@ class _GrievanceScreenState extends State<GrievanceScreen> {
 
   IconData _getStatusIcon(String status) {
     switch (status) {
-      case 'submitted': return Icons.send;
-      case 'under_review': return Icons.hourglass_empty;
-      case 'resolved': return Icons.check_circle;
-      case 'rejected': return Icons.cancel;
-      default: return Icons.help;
+      case 'submitted': return Icons.send_rounded;
+      case 'under_review': return Icons.hourglass_empty_rounded;
+      case 'resolved': return Icons.check_circle_rounded;
+      case 'rejected': return Icons.cancel_rounded;
+      default: return Icons.help_rounded;
     }
   }
 
