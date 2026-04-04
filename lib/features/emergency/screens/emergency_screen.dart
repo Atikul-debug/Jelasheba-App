@@ -10,20 +10,22 @@ class EmergencyScreen extends StatefulWidget {
   State<EmergencyScreen> createState() => _EmergencyScreenState();
 }
 
-class _EmergencyScreenState extends State<EmergencyScreen> with SingleTickerProviderStateMixin {
+class _EmergencyScreenState extends State<EmergencyScreen> with TickerProviderStateMixin {
   String _selectedBloodGroup = 'সব';
-  late TabController _tabController;
+  TabController? _tabController;
+
+  int get _currentTab => _tabController?.index ?? 0;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() => setState(() {}));
+    _tabController!.addListener(() { if (mounted) setState(() {}); });
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController?.dispose();
     super.dispose();
   }
 
@@ -71,7 +73,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> with SingleTickerProv
         appBar: AppBar(
           title: const Text('জরুরি সেবা'),
           bottom: TabBar(
-            controller: _tabController,
+            controller: _tabController!,
             tabs: const [
               Tab(text: 'হেল্পলাইন'),
               Tab(text: 'থানা'),
@@ -79,7 +81,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> with SingleTickerProv
             ],
           ),
         ),
-        floatingActionButton: _tabController.index == 2
+        floatingActionButton: _currentTab == 2
             ? FloatingActionButton.extended(
                 onPressed: () => _showDonorRegistrationForm(),
                 backgroundColor: AppColors.error,
@@ -89,7 +91,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> with SingleTickerProv
               )
             : null,
         body: TabBarView(
-          controller: _tabController,
+          controller: _tabController!,
           children: [
             _buildHelplines(),
             _buildPoliceStations(),
