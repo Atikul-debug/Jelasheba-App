@@ -10,24 +10,8 @@ class EmergencyScreen extends StatefulWidget {
   State<EmergencyScreen> createState() => _EmergencyScreenState();
 }
 
-class _EmergencyScreenState extends State<EmergencyScreen> with TickerProviderStateMixin {
+class _EmergencyScreenState extends State<EmergencyScreen> {
   String _selectedBloodGroup = 'সব';
-  TabController? _tabController;
-
-  int get _currentTab => _tabController?.index ?? 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-    _tabController!.addListener(() { if (mounted) setState(() {}); });
-  }
-
-  @override
-  void dispose() {
-    _tabController?.dispose();
-    super.dispose();
-  }
 
   final List<Map<String, dynamic>> _emergencyNumbers = [
     {'name': 'জাতীয় জরুরি সেবা', 'number': '999', 'icon': Icons.emergency, 'color': AppColors.error},
@@ -69,35 +53,34 @@ class _EmergencyScreenState extends State<EmergencyScreen> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
         appBar: AppBar(
           title: const Text('জরুরি সেবা'),
-          bottom: TabBar(
-            controller: _tabController!,
-            tabs: const [
+          bottom: const TabBar(
+            tabs: [
               Tab(text: 'হেল্পলাইন'),
               Tab(text: 'থানা'),
               Tab(text: 'রক্তদাতা'),
             ],
           ),
         ),
-        floatingActionButton: _currentTab == 2
-            ? FloatingActionButton.extended(
-                onPressed: () => _showDonorRegistrationForm(),
-                backgroundColor: AppColors.error,
-                icon: const Icon(Icons.volunteer_activism_rounded, color: Colors.white),
-                label: const Text('রক্তদাতা যোগ দিন', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
-                elevation: 6,
-              )
-            : null,
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => _showDonorRegistrationForm(),
+          backgroundColor: AppColors.error,
+          icon: const Icon(Icons.volunteer_activism_rounded, color: Colors.white),
+          label: const Text('রক্তদাতা যোগ দিন', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+          elevation: 6,
+        ),
         body: TabBarView(
-          controller: _tabController!,
           children: [
             _buildHelplines(),
             _buildPoliceStations(),
             _buildBloodDonors(),
           ],
         ),
+      ),
     );
   }
 
