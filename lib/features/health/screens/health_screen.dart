@@ -230,12 +230,26 @@ class _HealthScreenState extends State<HealthScreen> {
                         )).toList(),
                       ),
                       const SizedBox(height: 14),
+                      // ডাক্তার দেখুন button
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: () => _showHospitalDoctors(hospital),
+                          icon: const Icon(Icons.medical_services_rounded, size: 18),
+                          label: Text('ডাক্তার দেখুন (${hospital.doctorCount} জন)', style: const TextStyle(fontWeight: FontWeight.w600)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF7C3AED),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
-                            child: ElevatedButton.icon(
+                            child: OutlinedButton.icon(
                               onPressed: () => Helpers.makePhoneCall(hospital.phone),
-                              icon: const Icon(Icons.call_rounded),
+                              icon: const Icon(Icons.call_rounded, size: 18),
                               label: const Text('কল'),
                             ),
                           ),
@@ -243,7 +257,7 @@ class _HealthScreenState extends State<HealthScreen> {
                           Expanded(
                             child: OutlinedButton.icon(
                               onPressed: () => Helpers.openMap(hospital.latitude, hospital.longitude),
-                              icon: const Icon(Icons.map_rounded),
+                              icon: const Icon(Icons.map_rounded, size: 18),
                               label: const Text('ম্যাপ'),
                             ),
                           ),
@@ -260,6 +274,209 @@ class _HealthScreenState extends State<HealthScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  void _showHospitalDoctors(Hospital hospital) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final hospitalDoctors = _doctors.where((d) => d.hospital == hospital.nameBn).toList();
+    final color = hospital.type == 'government' ? AppColors.primary : const Color(0xFF8B5CF6);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.85,
+        maxChildSize: 0.95,
+        minChildSize: 0.5,
+        expand: false,
+        builder: (context, scrollController) => Container(
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkSurface : Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            children: [
+              // Handle + Header
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
+                    const SizedBox(height: 14),
+                    // Hospital info header
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.04)]),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: color.withValues(alpha: 0.2)),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(12)),
+                            child: Icon(Icons.local_hospital_rounded, color: color, size: 24),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(hospital.nameBn, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(color: color.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
+                                      child: Text(hospital.type == 'government' ? 'সরকারি' : 'বেসরকারি', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: color)),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text('${hospital.bedCount} শয্যা', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                    const SizedBox(width: 6),
+                                    Text('${hospital.doctorCount} ডাক্তার', style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.w600)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // Doctor count header
+                    Row(
+                      children: [
+                        Container(width: 4, height: 18, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))),
+                        const SizedBox(width: 8),
+                        Text(hospitalDoctors.isEmpty ? 'ডাক্তারের বিস্তারিত তথ্য শীঘ্রই আসছে' : 'বিশেষজ্ঞ ডাক্তার (${hospitalDoctors.length} জন)', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              // Doctor list
+              Expanded(
+                child: hospitalDoctors.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.medical_services_rounded, size: 56, color: Colors.grey[300]),
+                            const SizedBox(height: 12),
+                            const Text('বিস্তারিত তথ্য শীঘ্রই যোগ হবে', style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
+                            const SizedBox(height: 4),
+                            Text('মোট ${hospital.doctorCount} জন ডাক্তার কর্মরত', style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        controller: scrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: hospitalDoctors.length,
+                        itemBuilder: (context, index) {
+                          final doctor = hospitalDoctors[index];
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            decoration: BoxDecoration(
+                              color: isDark ? AppColors.darkCard : Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: isDark ? [] : AppColors.softShadow,
+                              border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.grey.withValues(alpha: 0.1)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(14),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Doctor header
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 48, height: 48,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(colors: [color.withValues(alpha: 0.15), color.withValues(alpha: 0.05)]),
+                                          borderRadius: BorderRadius.circular(14),
+                                        ),
+                                        child: Icon(Icons.person_rounded, color: color, size: 26),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(doctor.nameBn, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                                            const SizedBox(height: 2),
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                              decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
+                                              child: Text(doctor.specialtyBn, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: color)),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                  // Doctor details
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: isDark ? AppColors.darkSurface : const Color(0xFFF9FAFB),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        _buildDoctorInfoRow('🎓 যোগ্যতা', doctor.qualification),
+                                        _buildDoctorInfoRow('🏥 চেম্বার', doctor.chamber),
+                                        _buildDoctorInfoRow('🕐 সময়', doctor.visitingHours),
+                                        _buildDoctorInfoRow('💰 ফি', '৳${doctor.fee.toInt()} টাকা'),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  // Call button
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton.icon(
+                                      onPressed: () => Helpers.makePhoneCall(doctor.phone),
+                                      icon: const Icon(Icons.call_rounded, size: 18),
+                                      label: Text('কল করুন: ${doctor.phone}'),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.success,
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDoctorInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(width: 90, child: Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary))),
+          Expanded(child: Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600))),
+        ],
+      ),
     );
   }
 
