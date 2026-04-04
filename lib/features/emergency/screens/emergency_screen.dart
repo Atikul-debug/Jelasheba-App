@@ -763,17 +763,19 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                           context: context,
                           builder: (ctx) => AlertDialog(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.1), shape: BoxShape.circle), child: const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 52)),
-                                const SizedBox(height: 16),
-                                const Text('ধন্যবাদ! 🎉', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800)),
-                                const SizedBox(height: 8),
-                                Text('আপনি সফলভাবে রক্তদাতা হিসেবে যোগ দিয়েছেন।\n\nনাম: ${nameController.text.trim()}\nরক্তের গ্রুপ: $selectedGroup\nবয়স: ${ageController.text.trim()} বছর\nলিঙ্গ: $selectedGender\nউপজেলা: $selectedUpazila', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.5)),
-                                const SizedBox(height: 8),
-                                const Text('আপনার তথ্য তালিকায় যোগ হয়েছে।', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
-                              ],
+                            content: SingleChildScrollView(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(padding: const EdgeInsets.all(14), decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.1), shape: BoxShape.circle), child: const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 44)),
+                                  const SizedBox(height: 12),
+                                  const Text('ধন্যবাদ!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+                                  const SizedBox(height: 8),
+                                  Text('নাম: ${nameController.text.trim()}\nগ্রুপ: $selectedGroup | বয়স: ${ageController.text.trim()}\nউপজেলা: $selectedUpazila', textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, height: 1.5)),
+                                  const SizedBox(height: 6),
+                                  const Text('তালিকায় যোগ হয়েছে।', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                                ],
+                              ),
                             ),
                             actions: [SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () => Navigator.pop(ctx), child: const Text('ঠিক আছে')))],
                           ),
