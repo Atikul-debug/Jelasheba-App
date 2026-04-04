@@ -66,40 +66,53 @@ class _HealthScreenState extends State<HealthScreen> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 6,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('চিকিৎসা'),
-          bottom: const TabBar(
-            isScrollable: true,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white70,
-            indicatorColor: Colors.white,
-            tabs: [
-              Tab(text: 'হাসপাতাল'),
-              Tab(text: 'ডাক্তার'),
-              Tab(text: 'ফার্মেসি'),
-              Tab(text: 'হসপিটাল'),
-              Tab(text: 'অ্যাম্বুলেন্স'),
-              Tab(text: 'রক্তদাতা'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            _buildHospitalList(),
-            _buildDoctorList(),
-            _buildPharmacyList(),
-            _buildDiagnosticList(),
-            _buildAmbulanceList(),
-            _buildBloodDonors(),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => _showDonorRegistrationForm(),
-          backgroundColor: AppColors.error,
-          icon: const Icon(Icons.volunteer_activism_rounded),
-          label: const Text('রক্তদাতা হন', style: TextStyle(fontWeight: FontWeight.w600)),
-        ),
+      child: Builder(
+        builder: (ctx) {
+          final tabController = DefaultTabController.of(ctx);
+          return AnimatedBuilder(
+            animation: tabController,
+            builder: (context, _) {
+              return Scaffold(
+                appBar: AppBar(
+                  title: const Text('চিকিৎসা'),
+                  bottom: const TabBar(
+                    isScrollable: true,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.white70,
+                    indicatorColor: Colors.white,
+                    tabs: [
+                      Tab(text: 'হাসপাতাল'),
+                      Tab(text: 'ডাক্তার'),
+                      Tab(text: 'ফার্মেসি'),
+                      Tab(text: 'হসপিটাল'),
+                      Tab(text: 'অ্যাম্বুলেন্স'),
+                      Tab(text: 'রক্তদাতা'),
+                    ],
+                  ),
+                ),
+                body: TabBarView(
+                  children: [
+                    _buildHospitalList(),
+                    _buildDoctorList(),
+                    _buildPharmacyList(),
+                    _buildDiagnosticList(),
+                    _buildAmbulanceList(),
+                    _buildBloodDonors(),
+                  ],
+                ),
+                floatingActionButton: tabController.index == 5
+                    ? FloatingActionButton.extended(
+                        onPressed: () => _showDonorRegistrationForm(),
+                        backgroundColor: AppColors.error,
+                        icon: const Icon(Icons.volunteer_activism_rounded, color: Colors.white),
+                        label: const Text('রক্তদাতা হন', style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white)),
+                        elevation: 6,
+                      )
+                    : null,
+              );
+            },
+          );
+        },
       ),
     );
   }
