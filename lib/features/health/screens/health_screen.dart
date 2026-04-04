@@ -14,52 +14,68 @@ class HealthScreen extends StatefulWidget {
 class _HealthScreenState extends State<HealthScreen> {
   String _searchQuery = '';
   String _selectedBloodGroup = 'সব';
+  String _hospitalFilter = 'সব';
+
+  // doctorCount per hospital id
+  int _getDoctorCount(String hospitalName) {
+    return _doctors.where((d) => d.hospital == hospitalName).length;
+  }
 
   final List<Hospital> _hospitals = [
-    // সরকারি হাসপাতাল
-    Hospital(id: '1', name: 'Sirajganj 250 Bed Sadar Hospital', nameBn: 'সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল', type: 'government', address: 'হাসপাতাল রোড, সিরাজগঞ্জ সদর', phone: '0751-62345', bedCount: 250, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি', 'শিশু', 'অর্থোপেডিক', 'চক্ষু', 'ENT', 'চর্ম', 'মানসিক'], latitude: 24.4534, longitude: 89.7003),
-    Hospital(id: '2', name: 'Shahzadpur UHC', nameBn: 'শাহজাদপুর উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'শাহজাদপুর, সিরাজগঞ্জ', phone: '01711-300002', bedCount: 50, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি', 'শিশু'], latitude: 24.1833, longitude: 89.5917),
-    Hospital(id: '3', name: 'Ullapara UHC', nameBn: 'উল্লাপাড়া উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'উল্লাপাড়া, সিরাজগঞ্জ', phone: '01711-300005', bedCount: 50, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি'], latitude: 24.3167, longitude: 89.5500),
-    Hospital(id: '4', name: 'Kazipur UHC', nameBn: 'কাজীপুর উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'কাজীপুর, সিরাজগঞ্জ', phone: '01711-300006', bedCount: 31, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি', 'শিশু'], latitude: 24.6333, longitude: 89.6167),
-    Hospital(id: '5', name: 'Belkuchi UHC', nameBn: 'বেলকুচি উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'বেলকুচি, সিরাজগঞ্জ', phone: '01711-300007', bedCount: 31, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি'], latitude: 24.3700, longitude: 89.6800),
-    Hospital(id: '6', name: 'Tarash UHC', nameBn: 'তাড়াশ উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'তাড়াশ, সিরাজগঞ্জ', phone: '01711-300008', bedCount: 31, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি'], latitude: 24.2600, longitude: 89.4600),
-    Hospital(id: '7', name: 'Kamarkhanda UHC', nameBn: 'কামারখন্দ উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'কামারখন্দ, সিরাজগঞ্জ', phone: '01711-300009', bedCount: 31, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি'], latitude: 24.3500, longitude: 89.5833),
-    Hospital(id: '8', name: 'Raiganj UHC', nameBn: 'রায়গঞ্জ উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'রায়গঞ্জ, সিরাজগঞ্জ', phone: '01711-300010', bedCount: 31, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি'], latitude: 24.2700, longitude: 89.5200),
-    Hospital(id: '9', name: 'Chauhali UHC', nameBn: 'চৌহালী উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'চৌহালী, সিরাজগঞ্জ', phone: '01711-300011', bedCount: 20, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি'], latitude: 24.3833, longitude: 89.7500),
-    Hospital(id: '10', name: 'MCWC', nameBn: 'মা ও শিশু কল্যাণ কেন্দ্র, সিরাজগঞ্জ', type: 'government', address: 'সিরাজগঞ্জ সদর', phone: '01711-300012', bedCount: 20, hasEmergency: false, departments: ['গাইনি', 'শিশু', 'পরিবার পরিকল্পনা'], latitude: 24.4530, longitude: 89.7010),
-    // বেসরকারি হাসপাতাল
-    Hospital(id: '11', name: 'Khwaja Yunus Ali Medical College Hospital', nameBn: 'খাজা ইউনুছ আলী মেডিকেল কলেজ ও হাসপাতাল', type: 'private', address: 'এনায়েতপুর, কামারখন্দ, সিরাজগঞ্জ', phone: '01711-300013', bedCount: 750, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি', 'শিশু', 'অর্থোপেডিক', 'কার্ডিওলজি', 'নিউরোলজি', 'ইউরোলজি', 'চক্ষু', 'ENT', 'ডেন্টাল', 'ICU', 'CCU', 'ডায়ালাইসিস'], latitude: 24.3520, longitude: 89.6840),
-    Hospital(id: '12', name: 'Ibn Sina Hospital', nameBn: 'ইবনে সিনা হাসপাতাল', type: 'private', address: 'বড় বাজার, সিরাজগঞ্জ সদর', phone: '01711-300003', bedCount: 80, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'কার্ডিওলজি', 'গাইনি'], latitude: 24.4520, longitude: 89.6990),
-    Hospital(id: '13', name: 'Sirajganj Clinic', nameBn: 'সিরাজগঞ্জ ক্লিনিক', type: 'private', address: 'স্টেশন রোড, সিরাজগঞ্জ সদর', phone: '01711-300004', bedCount: 40, hasEmergency: false, departments: ['মেডিসিন', 'গাইনি', 'শিশু'], latitude: 24.4510, longitude: 89.7020),
-    Hospital(id: '14', name: 'Popular Hospital', nameBn: 'পপুলার হাসপাতাল, সিরাজগঞ্জ', type: 'private', address: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-300014', bedCount: 50, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি', 'শিশু'], latitude: 24.4525, longitude: 89.6985),
-    Hospital(id: '15', name: 'Jamuna Clinic', nameBn: 'যমুনা ক্লিনিক', type: 'private', address: 'কলেজ রোড, সিরাজগঞ্জ', phone: '01711-300015', bedCount: 30, hasEmergency: false, departments: ['মেডিসিন', 'গাইনি'], latitude: 24.4540, longitude: 89.7015),
-    Hospital(id: '16', name: 'Shahzadpur Private Hospital', nameBn: 'শাহজাদপুর প্রাইভেট হাসপাতাল', type: 'private', address: 'শাহজাদপুর বাজার, সিরাজগঞ্জ', phone: '01711-300016', bedCount: 25, hasEmergency: false, departments: ['মেডিসিন', 'গাইনি'], latitude: 24.1840, longitude: 89.5925),
-    Hospital(id: '17', name: 'Ullapara Private Clinic', nameBn: 'উল্লাপাড়া প্রাইভেট ক্লিনিক', type: 'private', address: 'উল্লাপাড়া বাজার, সিরাজগঞ্জ', phone: '01711-300017', bedCount: 20, hasEmergency: false, departments: ['মেডিসিন', 'গাইনি'], latitude: 24.3170, longitude: 89.5505),
+    // ===== সরকারি হাসপাতাল =====
+    Hospital(id: '1', name: 'Sirajganj 250 Bed Sadar Hospital', nameBn: 'সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল', type: 'government', address: 'হাসপাতাল রোড, সিরাজগঞ্জ সদর', phone: '0751-62345', bedCount: 250, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি ও প্রসূতি', 'শিশু', 'অর্থোপেডিক', 'চক্ষু', 'নাক-কান-গলা', 'চর্ম ও যৌন', 'মানসিক', 'দন্ত', 'ফিজিওথেরাপি', 'প্যাথলজি', 'রেডিওলজি'], latitude: 24.4534, longitude: 89.7003),
+    Hospital(id: '2', name: 'Shahzadpur UHC', nameBn: 'শাহজাদপুর উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'শাহজাদপুর, সিরাজগঞ্জ', phone: '01711-300002', bedCount: 50, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি ও প্রসূতি', 'শিশু', 'দন্ত'], latitude: 24.1833, longitude: 89.5917),
+    Hospital(id: '3', name: 'Ullapara UHC', nameBn: 'উল্লাপাড়া উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'উল্লাপাড়া, সিরাজগঞ্জ', phone: '01711-300005', bedCount: 50, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি ও প্রসূতি', 'শিশু'], latitude: 24.3167, longitude: 89.5500),
+    Hospital(id: '4', name: 'Kazipur UHC', nameBn: 'কাজীপুর উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'কাজীপুর, সিরাজগঞ্জ', phone: '01711-300006', bedCount: 31, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি', 'শিশু'], latitude: 24.6333, longitude: 89.6167),
+    Hospital(id: '5', name: 'Belkuchi UHC', nameBn: 'বেলকুচি উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'বেলকুচি, সিরাজগঞ্জ', phone: '01711-300007', bedCount: 31, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি'], latitude: 24.3700, longitude: 89.6800),
+    Hospital(id: '6', name: 'Tarash UHC', nameBn: 'তাড়াশ উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'তাড়াশ, সিরাজগঞ্জ', phone: '01711-300008', bedCount: 31, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি'], latitude: 24.2600, longitude: 89.4600),
+    Hospital(id: '7', name: 'Kamarkhanda UHC', nameBn: 'কামারখন্দ উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'কামারখন্দ, সিরাজগঞ্জ', phone: '01711-300009', bedCount: 31, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি'], latitude: 24.3500, longitude: 89.5833),
+    Hospital(id: '8', name: 'Raiganj UHC', nameBn: 'রায়গঞ্জ উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'রায়গঞ্জ, সিরাজগঞ্জ', phone: '01711-300010', bedCount: 31, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি'], latitude: 24.2700, longitude: 89.5200),
+    Hospital(id: '9', name: 'Chauhali UHC', nameBn: 'চৌহালী উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'চৌহালী, সিরাজগঞ্জ', phone: '01711-300011', bedCount: 20, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি'], latitude: 24.3833, longitude: 89.7500),
+    Hospital(id: '10', name: 'MCWC Sirajganj', nameBn: 'মা ও শিশু কল্যাণ কেন্দ্র, সিরাজগঞ্জ', type: 'government', address: 'সিরাজগঞ্জ সদর', phone: '01711-300012', bedCount: 20, hasEmergency: false, departments: ['গাইনি ও প্রসূতি', 'শিশু', 'পরিবার পরিকল্পনা'], latitude: 24.4530, longitude: 89.7010),
+    Hospital(id: '11', name: 'TB Hospital', nameBn: 'সিরাজগঞ্জ যক্ষ্মা (টিবি) হাসপাতাল', type: 'government', address: 'সিরাজগঞ্জ সদর', phone: '01711-300018', bedCount: 50, hasEmergency: false, departments: ['যক্ষ্মা চিকিৎসা', 'বক্ষব্যাধি', 'মেডিসিন'], latitude: 24.4540, longitude: 89.6995),
+    Hospital(id: '12', name: 'Enayetpur 20 Bed Hospital', nameBn: 'এনায়েতপুর ২০ শয্যা হাসপাতাল', type: 'government', address: 'এনায়েতপুর, কামারখন্দ', phone: '01711-300019', bedCount: 20, hasEmergency: true, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি'], latitude: 24.3520, longitude: 89.6835),
+    // ===== বেসরকারি হাসপাতাল =====
+    Hospital(id: '13', name: 'Khwaja Yunus Ali Medical College Hospital', nameBn: 'খাজা ইউনুছ আলী মেডিকেল কলেজ ও হাসপাতাল', type: 'private', address: 'এনায়েতপুর, কামারখন্দ, সিরাজগঞ্জ', phone: '01711-300013', bedCount: 750, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি ও প্রসূতি', 'শিশু', 'অর্থোপেডিক', 'কার্ডিওলজি', 'নিউরোলজি', 'নিউরোসার্জারি', 'ইউরোলজি', 'নেফ্রোলজি', 'চক্ষু', 'নাক-কান-গলা', 'ডেন্টাল', 'চর্ম', 'ICU', 'CCU', 'NICU', 'ডায়ালাইসিস', 'ফিজিওথেরাপি', 'রেডিওলজি', 'প্যাথলজি'], latitude: 24.3520, longitude: 89.6840),
+    Hospital(id: '14', name: 'Ibn Sina Hospital', nameBn: 'ইবনে সিনা হাসপাতাল', type: 'private', address: 'বড় বাজার, সিরাজগঞ্জ সদর', phone: '01711-300003', bedCount: 80, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'কার্ডিওলজি', 'গাইনি ও প্রসূতি', 'শিশু', 'ICU'], latitude: 24.4520, longitude: 89.6990),
+    Hospital(id: '15', name: 'Popular Hospital', nameBn: 'পপুলার হাসপাতাল', type: 'private', address: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-300014', bedCount: 50, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি ও প্রসূতি', 'শিশু', 'প্যাথলজি'], latitude: 24.4525, longitude: 89.6985),
+    Hospital(id: '16', name: 'Sirajganj Clinic', nameBn: 'সিরাজগঞ্জ ক্লিনিক', type: 'private', address: 'স্টেশন রোড, সিরাজগঞ্জ সদর', phone: '01711-300004', bedCount: 40, hasEmergency: false, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি', 'শিশু'], latitude: 24.4510, longitude: 89.7020),
+    Hospital(id: '17', name: 'Jamuna Clinic', nameBn: 'যমুনা ক্লিনিক', type: 'private', address: 'কলেজ রোড, সিরাজগঞ্জ', phone: '01711-300015', bedCount: 30, hasEmergency: false, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি'], latitude: 24.4540, longitude: 89.7015),
+    Hospital(id: '18', name: 'Shahzadpur Private Hospital', nameBn: 'শাহজাদপুর প্রাইভেট হাসপাতাল', type: 'private', address: 'শাহজাদপুর বাজার, সিরাজগঞ্জ', phone: '01711-300016', bedCount: 25, hasEmergency: false, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি'], latitude: 24.1840, longitude: 89.5925),
+    Hospital(id: '19', name: 'Ullapara Private Clinic', nameBn: 'উল্লাপাড়া প্রাইভেট ক্লিনিক', type: 'private', address: 'উল্লাপাড়া বাজার, সিরাজগঞ্জ', phone: '01711-300017', bedCount: 20, hasEmergency: false, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি'], latitude: 24.3170, longitude: 89.5505),
+    Hospital(id: '20', name: 'Ruma Clinic', nameBn: 'রুমা ক্লিনিক', type: 'private', address: 'নতুন বাজার, সিরাজগঞ্জ', phone: '01711-300020', bedCount: 20, hasEmergency: false, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি'], latitude: 24.4532, longitude: 89.7000),
+    Hospital(id: '21', name: 'Kazipur Private Clinic', nameBn: 'কাজীপুর প্রাইভেট ক্লিনিক', type: 'private', address: 'কাজীপুর বাজার, সিরাজগঞ্জ', phone: '01711-300021', bedCount: 15, hasEmergency: false, departments: ['মেডিসিন', 'গাইনি ও প্রসূতি'], latitude: 24.6335, longitude: 89.6170),
   ];
 
   final List<Doctor> _doctors = [
-    // সদর হাসপাতাল
-    Doctor(id: '1', name: 'Dr. Md. Abdul Mojid', nameBn: 'ডাঃ মোঃ আব্দুল মজিদ', specialty: 'Medicine', specialtyBn: 'সিভিল সার্জন, মেডিসিন', qualification: 'MBBS, FCPS (Medicine)', hospital: 'সিরাজগঞ্জ সদর হাসপাতাল', chamber: 'সদর হাসপাতাল, সিরাজগঞ্জ', phone: '01711-400001', visitingHours: 'সকাল ৮টা - দুপুর ২টা', fee: 500),
-    Doctor(id: '2', name: 'Dr. Nasrin Akter', nameBn: 'ডাঃ নাসরিন আক্তার', specialty: 'Gynecology', specialtyBn: 'গাইনি ও প্রসূতি', qualification: 'MBBS, MS (Gynae)', hospital: 'সিরাজগঞ্জ সদর হাসপাতাল', chamber: 'সদর হাসপাতাল, সিরাজগঞ্জ', phone: '01711-400002', visitingHours: 'বিকাল ৪টা - রাত ৮টা', fee: 600),
-    Doctor(id: '3', name: 'Dr. Md. Kamal Uddin', nameBn: 'ডাঃ মোঃ কামাল উদ্দিন', specialty: 'Surgery', specialtyBn: 'সার্জারি', qualification: 'MBBS, FCPS (Surgery)', hospital: 'সিরাজগঞ্জ সদর হাসপাতাল', chamber: 'সদর হাসপাতাল', phone: '01711-400003', visitingHours: 'সকাল ৯টা - দুপুর ১টা', fee: 500),
-    Doctor(id: '4', name: 'Dr. Md. Shafiqul Islam', nameBn: 'ডাঃ মোঃ শফিকুল ইসলাম', specialty: 'Orthopedics', specialtyBn: 'অর্থোপেডিক', qualification: 'MBBS, MS (Ortho)', hospital: 'সিরাজগঞ্জ সদর হাসপাতাল', chamber: 'সদর হাসপাতাল', phone: '01711-400004', visitingHours: 'সকাল ১০টা - দুপুর ২টা', fee: 500),
-    Doctor(id: '5', name: 'Dr. Md. Rahim Uddin', nameBn: 'ডাঃ মোঃ রহিম উদ্দিন', specialty: 'Pediatrics', specialtyBn: 'শিশু রোগ', qualification: 'MBBS, DCH', hospital: 'সিরাজগঞ্জ সদর হাসপাতাল', chamber: 'সদর হাসপাতাল', phone: '01711-400005', visitingHours: 'বিকাল ৩টা - রাত ৭টা', fee: 500),
-    Doctor(id: '6', name: 'Dr. Md. Hasanuzzaman', nameBn: 'ডাঃ মোঃ হাসানুজ্জামান', specialty: 'Eye', specialtyBn: 'চক্ষু বিশেষজ্ঞ', qualification: 'MBBS, DO, FCPS', hospital: 'সিরাজগঞ্জ সদর হাসপাতাল', chamber: 'সদর হাসপাতাল', phone: '01711-400006', visitingHours: 'সকাল ৮টা - দুপুর ১২টা', fee: 500),
-    Doctor(id: '7', name: 'Dr. Fatema Khatun', nameBn: 'ডাঃ ফাতেমা খাতুন', specialty: 'Skin', specialtyBn: 'চর্ম ও যৌন রোগ', qualification: 'MBBS, DDV', hospital: 'সিরাজগঞ্জ সদর হাসপাতাল', chamber: 'সদর হাসপাতাল', phone: '01711-400007', visitingHours: 'বিকাল ৪টা - রাত ৮টা', fee: 500),
-    // খাজা ইউনুছ আলী হাসপাতাল
-    Doctor(id: '8', name: 'Prof. Dr. Md. Nurul Islam', nameBn: 'প্রফেসর ডাঃ মোঃ নুরুল ইসলাম', specialty: 'Cardiology', specialtyBn: 'হৃদরোগ বিশেষজ্ঞ', qualification: 'MBBS, MD (Cardiology)', hospital: 'খাজা ইউনুছ আলী হাসপাতাল', chamber: 'এনায়েতপুর, কামারখন্দ', phone: '01711-400008', visitingHours: 'সকাল ৯টা - দুপুর ১টা', fee: 1000),
-    Doctor(id: '9', name: 'Dr. Md. Anisur Rahman', nameBn: 'ডাঃ মোঃ আনিসুর রহমান', specialty: 'Neurology', specialtyBn: 'নিউরোলজি (মস্তিষ্ক)', qualification: 'MBBS, MD (Neuro)', hospital: 'খাজা ইউনুছ আলী হাসপাতাল', chamber: 'এনায়েতপুর, কামারখন্দ', phone: '01711-400009', visitingHours: 'বিকাল ২টা - রাত ৬টা', fee: 800),
-    Doctor(id: '10', name: 'Dr. Md. Jahangir Alam', nameBn: 'ডাঃ মোঃ জাহাঙ্গীর আলম', specialty: 'Urology', specialtyBn: 'ইউরোলজি', qualification: 'MBBS, MS (Urology)', hospital: 'খাজা ইউনুছ আলী হাসপাতাল', chamber: 'এনায়েতপুর, কামারখন্দ', phone: '01711-400010', visitingHours: 'সকাল ১০টা - দুপুর ২টা', fee: 800),
+    // সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল
+    Doctor(id: '1', name: 'Dr. Md. Abdul Mojid', nameBn: 'ডাঃ মোঃ আব্দুল মজিদ', specialty: 'Medicine', specialtyBn: 'সিভিল সার্জন, মেডিসিন', qualification: 'MBBS, FCPS (Medicine)', hospital: 'সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল', chamber: 'সদর হাসপাতাল, সিরাজগঞ্জ', phone: '01711-400001', visitingHours: 'সকাল ৮টা - দুপুর ২টা', fee: 500),
+    Doctor(id: '2', name: 'Dr. Nasrin Akter', nameBn: 'ডাঃ নাসরিন আক্তার', specialty: 'Gynecology', specialtyBn: 'গাইনি ও প্রসূতি', qualification: 'MBBS, MS (Gynae)', hospital: 'সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল', chamber: 'সদর হাসপাতাল, সিরাজগঞ্জ', phone: '01711-400002', visitingHours: 'বিকাল ৪টা - রাত ৮টা', fee: 600),
+    Doctor(id: '3', name: 'Dr. Md. Kamal Uddin', nameBn: 'ডাঃ মোঃ কামাল উদ্দিন', specialty: 'Surgery', specialtyBn: 'সার্জারি', qualification: 'MBBS, FCPS (Surgery)', hospital: 'সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল', chamber: 'সদর হাসপাতাল', phone: '01711-400003', visitingHours: 'সকাল ৯টা - দুপুর ১টা', fee: 500),
+    Doctor(id: '4', name: 'Dr. Md. Shafiqul Islam', nameBn: 'ডাঃ মোঃ শফিকুল ইসলাম', specialty: 'Orthopedics', specialtyBn: 'অর্থোপেডিক', qualification: 'MBBS, MS (Ortho)', hospital: 'সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল', chamber: 'সদর হাসপাতাল', phone: '01711-400004', visitingHours: 'সকাল ১০টা - দুপুর ২টা', fee: 500),
+    Doctor(id: '5', name: 'Dr. Md. Rahim Uddin', nameBn: 'ডাঃ মোঃ রহিম উদ্দিন', specialty: 'Pediatrics', specialtyBn: 'শিশু রোগ', qualification: 'MBBS, DCH', hospital: 'সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল', chamber: 'সদর হাসপাতাল', phone: '01711-400005', visitingHours: 'বিকাল ৩টা - রাত ৭টা', fee: 500),
+    Doctor(id: '6', name: 'Dr. Md. Hasanuzzaman', nameBn: 'ডাঃ মোঃ হাসানুজ্জামান', specialty: 'Eye', specialtyBn: 'চক্ষু বিশেষজ্ঞ', qualification: 'MBBS, DO, FCPS', hospital: 'সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল', chamber: 'সদর হাসপাতাল', phone: '01711-400006', visitingHours: 'সকাল ৮টা - দুপুর ১২টা', fee: 500),
+    Doctor(id: '7', name: 'Dr. Fatema Khatun', nameBn: 'ডাঃ ফাতেমা খাতুন', specialty: 'Skin', specialtyBn: 'চর্ম ও যৌন রোগ', qualification: 'MBBS, DDV', hospital: 'সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল', chamber: 'সদর হাসপাতাল', phone: '01711-400007', visitingHours: 'বিকাল ৪টা - রাত ৮টা', fee: 500),
+    Doctor(id: '8', name: 'Dr. Md. Tarikul Islam', nameBn: 'ডাঃ মোঃ তারিকুল ইসলাম', specialty: 'ENT', specialtyBn: 'নাক-কান-গলা', qualification: 'MBBS, DLO', hospital: 'সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল', chamber: 'সদর হাসপাতাল', phone: '01711-400017', visitingHours: 'সকাল ৯টা - দুপুর ১টা', fee: 500),
+    Doctor(id: '9', name: 'Dr. Md. Sohel Rana', nameBn: 'ডাঃ মোঃ সোহেল রানা', specialty: 'Dental', specialtyBn: 'দন্ত চিকিৎসা', qualification: 'BDS, DDS', hospital: 'সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল', chamber: 'সদর হাসপাতাল', phone: '01711-400018', visitingHours: 'সকাল ৮টা - দুপুর ১টা', fee: 300),
+    // খাজা ইউনুছ আলী মেডিকেল কলেজ ও হাসপাতাল
+    Doctor(id: '10', name: 'Prof. Dr. Md. Nurul Islam', nameBn: 'প্রফেসর ডাঃ মোঃ নুরুল ইসলাম', specialty: 'Cardiology', specialtyBn: 'হৃদরোগ বিশেষজ্ঞ', qualification: 'MBBS, MD (Cardiology)', hospital: 'খাজা ইউনুছ আলী মেডিকেল কলেজ ও হাসপাতাল', chamber: 'এনায়েতপুর, কামারখন্দ', phone: '01711-400008', visitingHours: 'সকাল ৯টা - দুপুর ১টা', fee: 1000),
+    Doctor(id: '11', name: 'Dr. Md. Anisur Rahman', nameBn: 'ডাঃ মোঃ আনিসুর রহমান', specialty: 'Neurology', specialtyBn: 'নিউরোলজি', qualification: 'MBBS, MD (Neuro)', hospital: 'খাজা ইউনুছ আলী মেডিকেল কলেজ ও হাসপাতাল', chamber: 'এনায়েতপুর, কামারখন্দ', phone: '01711-400009', visitingHours: 'বিকাল ২টা - রাত ৬টা', fee: 800),
+    Doctor(id: '12', name: 'Dr. Md. Jahangir Alam', nameBn: 'ডাঃ মোঃ জাহাঙ্গীর আলম', specialty: 'Urology', specialtyBn: 'ইউরোলজি', qualification: 'MBBS, MS (Urology)', hospital: 'খাজা ইউনুছ আলী মেডিকেল কলেজ ও হাসপাতাল', chamber: 'এনায়েতপুর, কামারখন্দ', phone: '01711-400010', visitingHours: 'সকাল ১০টা - দুপুর ২টা', fee: 800),
+    Doctor(id: '13', name: 'Dr. Md. Mizanur Rahman', nameBn: 'ডাঃ মোঃ মিজানুর রহমান', specialty: 'Surgery', specialtyBn: 'সার্জারি', qualification: 'MBBS, FCPS (Surgery)', hospital: 'খাজা ইউনুছ আলী মেডিকেল কলেজ ও হাসপাতাল', chamber: 'এনায়েতপুর, কামারখন্দ', phone: '01711-400019', visitingHours: 'সকাল ৮টা - দুপুর ১২টা', fee: 700),
+    Doctor(id: '14', name: 'Dr. Salma Akter', nameBn: 'ডাঃ সালমা আক্তার', specialty: 'Gynecology', specialtyBn: 'গাইনি ও প্রসূতি', qualification: 'MBBS, MS (Gynae)', hospital: 'খাজা ইউনুছ আলী মেডিকেল কলেজ ও হাসপাতাল', chamber: 'এনায়েতপুর, কামারখন্দ', phone: '01711-400020', visitingHours: 'বিকাল ৩টা - রাত ৭টা', fee: 700),
+    Doctor(id: '15', name: 'Dr. Md. Abdur Rashid', nameBn: 'ডাঃ মোঃ আব্দুর রশিদ', specialty: 'Nephrology', specialtyBn: 'কিডনি বিশেষজ্ঞ', qualification: 'MBBS, MD (Nephro)', hospital: 'খাজা ইউনুছ আলী মেডিকেল কলেজ ও হাসপাতাল', chamber: 'এনায়েতপুর, কামারখন্দ', phone: '01711-400021', visitingHours: 'সকাল ৯টা - দুপুর ১টা', fee: 1000),
     // ইবনে সিনা হাসপাতাল
-    Doctor(id: '11', name: 'Dr. Md. Rafiqul Islam', nameBn: 'ডাঃ মোঃ রফিকুল ইসলাম', specialty: 'Surgery', specialtyBn: 'সার্জারি', qualification: 'MBBS, FCPS (Surgery)', hospital: 'ইবনে সিনা হাসপাতাল', chamber: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-400011', visitingHours: 'সকাল ১০টা - দুপুর ১টা', fee: 800),
-    Doctor(id: '12', name: 'Dr. Md. Anowar Hossain', nameBn: 'ডাঃ মোঃ আনোয়ার হোসেন', specialty: 'Cardiology', specialtyBn: 'হৃদরোগ', qualification: 'MBBS, MD (Cardio)', hospital: 'ইবনে সিনা হাসপাতাল', chamber: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-400012', visitingHours: 'সকাল ৯টা - দুপুর ১২টা', fee: 1000),
+    Doctor(id: '16', name: 'Dr. Md. Rafiqul Islam', nameBn: 'ডাঃ মোঃ রফিকুল ইসলাম', specialty: 'Surgery', specialtyBn: 'সার্জারি', qualification: 'MBBS, FCPS (Surgery)', hospital: 'ইবনে সিনা হাসপাতাল', chamber: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-400011', visitingHours: 'সকাল ১০টা - দুপুর ১টা', fee: 800),
+    Doctor(id: '17', name: 'Dr. Md. Anowar Hossain', nameBn: 'ডাঃ মোঃ আনোয়ার হোসেন', specialty: 'Cardiology', specialtyBn: 'হৃদরোগ', qualification: 'MBBS, MD (Cardio)', hospital: 'ইবনে সিনা হাসপাতাল', chamber: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-400012', visitingHours: 'সকাল ৯টা - দুপুর ১২টা', fee: 1000),
     // পপুলার হাসপাতাল
-    Doctor(id: '13', name: 'Dr. Md. Shahadat Hossain', nameBn: 'ডাঃ মোঃ শাহাদাত হোসেন', specialty: 'Pediatrics', specialtyBn: 'শিশু রোগ বিশেষজ্ঞ', qualification: 'MBBS, DCH', hospital: 'পপুলার হাসপাতাল', chamber: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-400013', visitingHours: 'বিকাল ৫টা - রাত ৯টা', fee: 600),
-    Doctor(id: '14', name: 'Dr. Rehana Begum', nameBn: 'ডাঃ রেহানা বেগম', specialty: 'Gynecology', specialtyBn: 'গাইনি ও প্রসূতি', qualification: 'MBBS, DGO', hospital: 'পপুলার হাসপাতাল', chamber: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-400014', visitingHours: 'সকাল ৯টা - দুপুর ১টা', fee: 600),
-    // শাহজাদপুর
-    Doctor(id: '15', name: 'Dr. Md. Moniruzzaman', nameBn: 'ডাঃ মোঃ মনিরুজ্জামান', specialty: 'Medicine', specialtyBn: 'মেডিসিন বিশেষজ্ঞ', qualification: 'MBBS, FCPS', hospital: 'শাহজাদপুর স্বাস্থ্য কমপ্লেক্স', chamber: 'শাহজাদপুর, সিরাজগঞ্জ', phone: '01711-400015', visitingHours: 'সকাল ৮টা - দুপুর ২টা', fee: 500),
-    // উল্লাপাড়া
-    Doctor(id: '16', name: 'Dr. Md. Zakir Hossain', nameBn: 'ডাঃ মোঃ জাকির হোসেন', specialty: 'Medicine', specialtyBn: 'মেডিসিন', qualification: 'MBBS', hospital: 'উল্লাপাড়া স্বাস্থ্য কমপ্লেক্স', chamber: 'উল্লাপাড়া, সিরাজগঞ্জ', phone: '01711-400016', visitingHours: 'সকাল ৮টা - দুপুর ২টা', fee: 400),
+    Doctor(id: '18', name: 'Dr. Md. Shahadat Hossain', nameBn: 'ডাঃ মোঃ শাহাদাত হোসেন', specialty: 'Pediatrics', specialtyBn: 'শিশু রোগ বিশেষজ্ঞ', qualification: 'MBBS, DCH', hospital: 'পপুলার হাসপাতাল', chamber: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-400013', visitingHours: 'বিকাল ৫টা - রাত ৯টা', fee: 600),
+    Doctor(id: '19', name: 'Dr. Rehana Begum', nameBn: 'ডাঃ রেহানা বেগম', specialty: 'Gynecology', specialtyBn: 'গাইনি ও প্রসূতি', qualification: 'MBBS, DGO', hospital: 'পপুলার হাসপাতাল', chamber: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-400014', visitingHours: 'সকাল ৯টা - দুপুর ১টা', fee: 600),
+    // শাহজাদপুর উপজেলা স্বাস্থ্য কমপ্লেক্স
+    Doctor(id: '20', name: 'Dr. Md. Moniruzzaman', nameBn: 'ডাঃ মোঃ মনিরুজ্জামান', specialty: 'Medicine', specialtyBn: 'মেডিসিন বিশেষজ্ঞ', qualification: 'MBBS, FCPS', hospital: 'শাহজাদপুর উপজেলা স্বাস্থ্য কমপ্লেক্স', chamber: 'শাহজাদপুর, সিরাজগঞ্জ', phone: '01711-400015', visitingHours: 'সকাল ৮টা - দুপুর ২টা', fee: 500),
+    Doctor(id: '21', name: 'Dr. Mst. Shirin Akter', nameBn: 'ডাঃ মোসাঃ শিরিন আক্তার', specialty: 'Gynecology', specialtyBn: 'গাইনি ও প্রসূতি', qualification: 'MBBS, DGO', hospital: 'শাহজাদপুর উপজেলা স্বাস্থ্য কমপ্লেক্স', chamber: 'শাহজাদপুর, সিরাজগঞ্জ', phone: '01711-400022', visitingHours: 'বিকাল ৪টা - রাত ৮টা', fee: 400),
+    // উল্লাপাড়া উপজেলা স্বাস্থ্য কমপ্লেক্স
+    Doctor(id: '22', name: 'Dr. Md. Zakir Hossain', nameBn: 'ডাঃ মোঃ জাকির হোসেন', specialty: 'Medicine', specialtyBn: 'মেডিসিন', qualification: 'MBBS', hospital: 'উল্লাপাড়া উপজেলা স্বাস্থ্য কমপ্লেক্স', chamber: 'উল্লাপাড়া, সিরাজগঞ্জ', phone: '01711-400016', visitingHours: 'সকাল ৮টা - দুপুর ২টা', fee: 400),
   ];
 
   @override
@@ -119,12 +135,36 @@ class _HealthScreenState extends State<HealthScreen> {
 
   Widget _buildHospitalList() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(12),
-      itemCount: _hospitals.length,
-      itemBuilder: (context, index) {
-        final hospital = _hospitals[index];
+    final govtCount = _hospitals.where((h) => h.type == 'government').length;
+    final pvtCount = _hospitals.where((h) => h.type == 'private').length;
+    final filtered = _hospitalFilter == 'সব' ? _hospitals
+        : _hospitalFilter == 'সরকারি' ? _hospitals.where((h) => h.type == 'government').toList()
+        : _hospitals.where((h) => h.type == 'private').toList();
+
+    return Column(
+      children: [
+        // Filter chips
+        SizedBox(
+          height: 52,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            children: [
+              _buildHospitalFilterChip('সব', '${_hospitals.length}', AppColors.primary, isDark),
+              const SizedBox(width: 8),
+              _buildHospitalFilterChip('সরকারি', '$govtCount', AppColors.primary, isDark),
+              const SizedBox(width: 8),
+              _buildHospitalFilterChip('বেসরকারি', '$pvtCount', const Color(0xFF8B5CF6), isDark),
+            ],
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            itemCount: filtered.length,
+            itemBuilder: (context, index) {
+              final hospital = filtered[index];
         final color = hospital.type == 'government' ? AppColors.primary : AppColors.secondary;
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
@@ -181,9 +221,10 @@ class _HealthScreenState extends State<HealthScreen> {
                     children: [
                       _buildHospitalDetail('ঠিকানা', hospital.address),
                       _buildHospitalDetail('ফোন', hospital.phone),
-                      _buildHospitalDetail('বেড সংখ্যা', '${hospital.bedCount}'),
+                      _buildHospitalDetail('বেড সংখ্যা', '${hospital.bedCount} টি'),
+                      _buildHospitalDetail('ডাক্তার সংখ্যা', '${_getDoctorCount(hospital.nameBn)} জন'),
                       const SizedBox(height: 8),
-                      const Text('বিভাগসমূহ:', style: TextStyle(fontWeight: FontWeight.w700)),
+                      const Text('সেবাসমূহ / বিভাগ:', style: TextStyle(fontWeight: FontWeight.w700)),
                       const SizedBox(height: 4),
                       Wrap(
                         spacing: 8,
@@ -223,6 +264,28 @@ class _HealthScreenState extends State<HealthScreen> {
           ),
         );
       },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHospitalFilterChip(String label, String count, Color color, bool isDark) {
+    final isSelected = _hospitalFilter == label;
+    return FilterChip(
+      avatar: null,
+      label: Text(
+        '$label ($count)',
+        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: isSelected ? Colors.white : (isDark ? Colors.white : AppColors.textPrimary)),
+      ),
+      selected: isSelected,
+      showCheckmark: false,
+      onSelected: (_) => setState(() => _hospitalFilter = label),
+      selectedColor: color,
+      backgroundColor: isDark ? AppColors.darkCard : Colors.white,
+      side: BorderSide(color: isSelected ? color : color.withValues(alpha: 0.3)),
+      elevation: isSelected ? 3 : 0,
+      shadowColor: color.withValues(alpha: 0.4),
     );
   }
 
