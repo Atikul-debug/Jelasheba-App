@@ -13,68 +13,122 @@ class TourismScreen extends StatefulWidget {
 class _TourismScreenState extends State<TourismScreen> {
   String _selectedCategory = 'সব';
 
-  // Gradient + Icon for each place image placeholder
+  // Cycling gradients & icons for image placeholders
   static const List<List<Color>> _placeGradients = [
-    [Color(0xFF1E3A5F), Color(0xFF3B82F6)],    // bridge blue
-    [Color(0xFF6B21A8), Color(0xFF9333EA)],    // kuthibari purple
-    [Color(0xFF065F46), Color(0xFF059669)],    // mosque green
-    [Color(0xFFB45309), Color(0xFFF59E0B)],    // river sunset amber
-    [Color(0xFF166534), Color(0xFF22C55E)],    // park green
-    [Color(0xFF7C2D12), Color(0xFFEA580C)],    // shrine orange
-    [Color(0xFF0E7490), Color(0xFF06B6D4)],    // river cyan
-    [Color(0xFF1E40AF), Color(0xFF60A5FA)],    // beel blue
-    [Color(0xFF15803D), Color(0xFF4ADE80)],    // village green
-    [Color(0xFF78350F), Color(0xFFD97706)],    // bridge brown
-    [Color(0xFF831843), Color(0xFFEC4899)],    // mazar pink
-    [Color(0xFF3730A3), Color(0xFF818CF8)],    // campus indigo
-    [Color(0xFF0F766E), Color(0xFF2DD4BF)],    // char teal
-    [Color(0xFF1D4ED8), Color(0xFF93C5FD)],    // ghat blue
-    [Color(0xFFB91C1C), Color(0xFFF87171)],    // belkuchi red
-    [Color(0xFF4338CA), Color(0xFFA78BFA)],    // shahzadpur violet
+    [Color(0xFF6B21A8), Color(0xFF9333EA)],  // purple
+    [Color(0xFF1E3A5F), Color(0xFF3B82F6)],  // blue
+    [Color(0xFF166534), Color(0xFF22C55E)],  // green
+    [Color(0xFFB45309), Color(0xFFF59E0B)],  // amber
+    [Color(0xFF065F46), Color(0xFF059669)],  // teal
+    [Color(0xFF7C2D12), Color(0xFFEA580C)],  // orange
+    [Color(0xFF0E7490), Color(0xFF06B6D4)],  // cyan
+    [Color(0xFF831843), Color(0xFFEC4899)],  // pink
+    [Color(0xFF78350F), Color(0xFFD97706)],  // brown
+    [Color(0xFF3730A3), Color(0xFF818CF8)],  // indigo
+    [Color(0xFF1E40AF), Color(0xFF60A5FA)],  // light blue
+    [Color(0xFF15803D), Color(0xFF4ADE80)],  // light green
+    [Color(0xFF0F766E), Color(0xFF2DD4BF)],  // turquoise
+    [Color(0xFFB91C1C), Color(0xFFF87171)],  // red
+    [Color(0xFF4338CA), Color(0xFFA78BFA)],  // violet
+    [Color(0xFF92400E), Color(0xFFFBBF24)],  // gold
+    [Color(0xFF1D4ED8), Color(0xFF93C5FD)],  // sky
   ];
 
   static const List<IconData> _placeIcons = [
-    Icons.architecture_rounded,       // bridge
-    Icons.museum_rounded,             // kuthibari
-    Icons.mosque_rounded,             // mosque
-    Icons.water_rounded,              // river sunset
-    Icons.park_rounded,               // park
-    Icons.auto_awesome_rounded,       // shrine
-    Icons.sailing_rounded,            // river
-    Icons.water_rounded,              // beel
-    Icons.grass_rounded,              // village
-    Icons.foundation_rounded,         // elliott bridge
-    Icons.auto_awesome_rounded,       // mazar
-    Icons.school_rounded,             // campus
-    Icons.terrain_rounded,            // char
-    Icons.directions_boat_rounded,    // ghat
-    Icons.wb_twilight_rounded,        // belkuchi sunset
-    Icons.nature_people_rounded,      // shahzadpur char
+    Icons.museum_rounded,
+    Icons.architecture_rounded,
+    Icons.park_rounded,
+    Icons.water_rounded,
+    Icons.temple_hindu_rounded,
+    Icons.home_rounded,
+    Icons.water_rounded,
+    Icons.water_rounded,
+    Icons.factory_rounded,
+    Icons.house_rounded,
+    Icons.foundation_rounded,
+    Icons.villa_rounded,
+    Icons.security_rounded,
+    Icons.house_rounded,
+    Icons.house_rounded,
+    Icons.house_rounded,
+    Icons.auto_awesome_rounded,
   ];
 
   final List<TouristPlace> _places = [
-    TouristPlace(id: '1', name: 'Bangabandhu Bridge', nameBn: 'বঙ্গবন্ধু সেতু (যমুনা সেতু)', description: 'বাংলাদেশের অন্যতম বড় সেতু। যমুনা নদীর উপর তৈরি এই সেতুটি ৪.৮ কিলোমিটার দীর্ঘ। বিকেলের সময় ভিউ অসাধারণ সুন্দর।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'সিরাজগঞ্জ-টাঙ্গাইল সংযোগ', latitude: 24.3833, longitude: 89.7833, entryFee: 'বিনামূল্যে', openingHours: 'সর্বদা খোলা', rating: 4.8),
-    TouristPlace(id: '2', name: 'Shahzadpur Rabindra Kuthibari', nameBn: 'শাহজাদপুর রবীন্দ্র কুঠিবাড়ী', description: 'কবি রবীন্দ্রনাথ ঠাকুর এখানে থাকতেন এবং অনেক বিখ্যাত রচনা লিখেছিলেন। ঐতিহাসিক ও সাহিত্যপ্রেমীদের জন্য অত্যন্ত গুরুত্বপূর্ণ স্থান।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.1833, longitude: 89.5917, entryFee: '২০ টাকা', openingHours: 'সকাল ৯টা - বিকাল ৫টা', rating: 4.7),
-    TouristPlace(id: '3', name: 'Hatikumrul Mosque', nameBn: 'হাটিকুমরুল নয়গম্বুজ মসজিদ', description: 'প্রাচীন মুঘল আমলের স্থাপত্য। অত্যন্ত সুন্দর কারুকাজ করা এই মসজিদটি স্থাপত্যশিল্পের এক অনন্য নিদর্শন।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'কামারখন্দ, সিরাজগঞ্জ', latitude: 24.3500, longitude: 89.5833, openingHours: 'সর্বদা খোলা', rating: 4.6),
-    TouristPlace(id: '4', name: 'Hard Point Jamuna', nameBn: 'হার্ড পয়েন্ট যমুনা নদী', description: 'নদীর পাড়ে বসে সময় কাটানোর অসাধারণ জায়গা। সূর্যাস্ত দেখার জন্য অত্যন্ত জনপ্রিয়। বিকেলের আবহাওয়া মনোমুগ্ধকর।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'সিরাজগঞ্জ সদর, যমুনা তীর', latitude: 24.4534, longitude: 89.7003, openingHours: 'সর্বদা খোলা', rating: 4.5),
-    TouristPlace(id: '5', name: 'Maulana Bhasani Park', nameBn: 'মাওলানা ভাসানী পার্ক', description: 'পরিবার নিয়ে ঘুরার জন্য চমৎকার জায়গা। শহরের ভিতরে অবস্থিত এই সুন্দর পার্কটি সিরাজগঞ্জবাসীর বিনোদনের অন্যতম কেন্দ্র।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'সিরাজগঞ্জ শহর', latitude: 24.4500, longitude: 89.7000, entryFee: '১০ টাকা', openingHours: 'সকাল ৬টা - রাত ৯টা', rating: 4.2),
-    TouristPlace(id: '6', name: 'Enayetpur Darbar Sharif', nameBn: 'এনায়েতপুর দরবার শরীফ', description: 'ধর্মীয় গুরুত্বপূর্ণ স্থান। সারা দেশ থেকে লক্ষ লক্ষ মানুষ এখানে আসেন। বার্ষিক ওরস অনুষ্ঠিত হয়।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'কামারখন্দ, সিরাজগঞ্জ', latitude: 24.3500, longitude: 89.6833, openingHours: 'সর্বদা খোলা', rating: 4.8),
-    TouristPlace(id: '7', name: 'Jamuna River Bank', nameBn: 'যমুনা নদী তীর এলাকা', description: 'প্রাকৃতিক সৌন্দর্যে ভরপুর যমুনা নদীর তীর। পিকনিক বা ঘুরে বেড়ানোর জন্য আদর্শ স্থান। নদীর বিস্তীর্ণ দৃশ্য মনোমুগ্ধকর।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'সিরাজগঞ্জ সদর', latitude: 24.4550, longitude: 89.7050, openingHours: 'সর্বদা খোলা', rating: 4.3),
-    TouristPlace(id: '8', name: 'Kashem Beel', nameBn: 'কাসেম বিল', description: 'সিরাজগঞ্জের সবচেয়ে সুন্দর প্রাকৃতিক বিলগুলোর একটি। বর্ষাকালে পানিতে ভরে যায় — অসাধারণ দৃশ্য। পাখি দেখা ও নৌকা ভ্রমণের জন্য চমৎকার।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'তাড়াশ, সিরাজগঞ্জ', latitude: 24.3000, longitude: 89.6500, openingHours: 'সর্বদা খোলা', rating: 4.4),
-    TouristPlace(id: '9', name: 'Udhuniya', nameBn: 'উধুনিয়া', description: 'গ্রামীণ পরিবেশ, সবুজ প্রকৃতি। শান্ত পরিবেশে ঘুরে বেড়ানোর জন্য অসাধারণ। ফটোগ্রাফির জন্য চমৎকার লোকেশন।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'উল্লাপাড়া, সিরাজগঞ্জ', latitude: 24.2800, longitude: 89.6200, openingHours: 'সর্বদা খোলা', rating: 4.1),
-    TouristPlace(id: '10', name: 'Elliott Bridge', nameBn: 'এলিয়ট ব্রিজ', description: 'ব্রিটিশ আমলের পুরনো সেতু। ঐতিহাসিক গুরুত্ব রয়েছে। স্থাপত্যশৈলী দেখার মতো।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'সিরাজগঞ্জ সদর', latitude: 24.4520, longitude: 89.6980, openingHours: 'সর্বদা খোলা', rating: 4.0),
-    TouristPlace(id: '11', name: 'Chala Shah Mazar', nameBn: 'চালা শাহ মাজার', description: 'প্রাচীন ধর্মীয় স্থান। অনেক দর্শনার্থী ও ভক্ত এখানে আসেন। শান্ত ও পবিত্র পরিবেশ।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'সিরাজগঞ্জ সদর', latitude: 24.4510, longitude: 89.7010, openingHours: 'সর্বদা খোলা', rating: 4.2),
-    TouristPlace(id: '12', name: 'Sirajganj Govt College Campus', nameBn: 'সিরাজগঞ্জ সরকারি কলেজ ক্যাম্পাস', description: 'বড় সবুজ ক্যাম্পাস। বিকেলে ঘুরে বেড়ানোর জন্য চমৎকার। গাছপালায় ঘেরা শান্ত পরিবেশ।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'কলেজ রোড, সিরাজগঞ্জ', latitude: 24.4540, longitude: 89.7020, openingHours: 'সকাল ৬টা - সন্ধ্যা ৬টা', rating: 4.0),
-    TouristPlace(id: '13', name: 'Jamuna Char Area', nameBn: 'যমুনা নদীর চর এলাকা', description: 'নদীর চর — অ্যাডভেঞ্চার টাইপ ভ্রমণ। পিকনিকের জন্য অত্যন্ত জনপ্রিয়। বিস্তীর্ণ বালুচরের সৌন্দর্য অতুলনীয়।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'সিরাজগঞ্জ সদর, যমুনা চর', latitude: 24.4600, longitude: 89.7100, openingHours: 'সর্বদা খোলা', rating: 4.1),
-    TouristPlace(id: '14', name: 'Baghbari Ghat', nameBn: 'বাঘাবাড়ী ঘাট', description: 'নদীপথের গুরুত্বপূর্ণ স্থান। সুন্দর নদীর দৃশ্য উপভোগ করা যায়। নৌকা ভ্রমণের জন্য আদর্শ।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.1700, longitude: 89.6000, openingHours: 'সর্বদা খোলা', rating: 4.3),
-    TouristPlace(id: '15', name: 'Belkuchi Jamuna Par', nameBn: 'বেলকুচি যমুনা পাড়', description: 'নদীর পাড়ে সময় কাটানোর জন্য চমৎকার। সূর্যাস্তের দৃশ্য অসাধারণ সুন্দর। প্রকৃতিপ্রেমীদের জন্য আদর্শ।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'বেলকুচি, সিরাজগঞ্জ', latitude: 24.3700, longitude: 89.6700, openingHours: 'সর্বদা খোলা', rating: 4.2),
-    TouristPlace(id: '16', name: 'Shahzadpur Char', nameBn: 'শাহজাদপুর চর এলাকা', description: 'গ্রামীণ প্রকৃতি ও শান্ত পরিবেশ। নদীর চরের সৌন্দর্য উপভোগ করতে পারবেন। ফটোগ্রাফির জন্য অসাধারণ।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.1900, longitude: 89.5950, openingHours: 'সর্বদা খোলা', rating: 4.0),
+    // ১. রবীন্দ্র কাছারি বাড়ি
+    TouristPlace(id: '1', name: 'Rabindra Kachari Bari', nameBn: 'রবীন্দ্র কাছারি বাড়ি', description: 'কবি রবীন্দ্রনাথ ঠাকুরের স্মৃতিবিজড়িত কাছারি বাড়ি। এখানে বসে তিনি অনেক বিখ্যাত রচনা লিখেছিলেন। সাহিত্যপ্রেমীদের জন্য তীর্থস্থান।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.1833, longitude: 89.5917, entryFee: '২০ টাকা', openingHours: 'সকাল ৯টা - বিকাল ৫টা', rating: 4.8),
+    // ২. যমুনা সেতু
+    TouristPlace(id: '2', name: 'Jamuna Bridge', nameBn: 'যমুনা সেতু (বঙ্গবন্ধু সেতু)', description: 'বাংলাদেশের অন্যতম বড় সেতু। যমুনা নদীর উপর তৈরি এই ৪.৮ কিমি দীর্ঘ সেতুটি প্রকৌশলের এক বিস্ময়। বিকেলের ভিউ অসাধারণ।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'সিরাজগঞ্জ-টাঙ্গাইল সংযোগ', latitude: 24.3833, longitude: 89.7833, entryFee: 'বিনামূল্যে', openingHours: 'সর্বদা খোলা', rating: 4.9),
+    // ৩. বঙ্গবন্ধু যমুনা ইকোপার্ক
+    TouristPlace(id: '3', name: 'Bangabandhu Jamuna Eco Park', nameBn: 'বঙ্গবন্ধু যমুনা ইকোপার্ক', description: 'যমুনা সেতুর কাছে অবস্থিত সুন্দর ইকোপার্ক। বিভিন্ন প্রজাতির গাছ, পাখি ও প্রাকৃতিক সৌন্দর্য। পরিবার নিয়ে ঘুরার আদর্শ স্থান।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'যমুনা সেতু এলাকা, সিরাজগঞ্জ', latitude: 24.3900, longitude: 89.7750, entryFee: '৫০ টাকা', openingHours: 'সকাল ৮টা - বিকাল ৫টা', rating: 4.5),
+    // ৪. চায়না বাঁধ
+    TouristPlace(id: '4', name: 'China Bandh', nameBn: 'চায়না বাঁধ', description: 'চীনা সহায়তায় নির্মিত বন্যা নিয়ন্ত্রণ বাঁধ। বাঁধের উপর দিয়ে হাঁটা ও নদীর দৃশ্য উপভোগের জন্য জনপ্রিয় স্থান।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'সিরাজগঞ্জ সদর', latitude: 24.4480, longitude: 89.7080, openingHours: 'সর্বদা খোলা', rating: 4.2),
+    // ৫. নবরত্ন মন্দির
+    TouristPlace(id: '5', name: 'Nabaratna Temple', nameBn: 'নবরত্ন মন্দির', description: 'প্রাচীন হিন্দু মন্দির। অসাধারণ স্থাপত্যশৈলীতে নির্মিত। ধর্মীয় ও ঐতিহাসিক গুরুত্বপূর্ণ স্থান।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.1850, longitude: 89.5930, openingHours: 'সকাল ৬টা - সন্ধ্যা ৭টা', rating: 4.3),
+    // ৬. সেন ভাঙ্গাবাড়ী গ্রাম
+    TouristPlace(id: '6', name: 'Sen Bhangabari', nameBn: 'সেন ভাঙ্গাবাড়ী গ্রাম (রজনীকান্ত ও সূচিত্রা সেনের জন্মস্থান)', description: 'কবি রজনীকান্ত সেন ও কিংবদন্তি নায়িকা সূচিত্রা সেনের জন্মস্থান। বাংলা সংস্কৃতির ইতিহাসে গুরুত্বপূর্ণ স্থান।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'ভাঙ্গাবাড়ী, সিরাজগঞ্জ', latitude: 24.3200, longitude: 89.5700, openingHours: 'সর্বদা খোলা', rating: 4.4),
+    // ৭. জয়সাগর দিঘি
+    TouristPlace(id: '7', name: 'Joysagar Dighi', nameBn: 'জয়সাগর দিঘি', description: 'ঐতিহাসিক বিশাল দিঘি। পারিপার্শ্বিক প্রাকৃতিক সৌন্দর্য মনোমুগ্ধকর। বিশ্রাম ও পিকনিকের জন্য আদর্শ।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'সিরাজগঞ্জ সদর', latitude: 24.4550, longitude: 89.6950, openingHours: 'সর্বদা খোলা', rating: 4.1),
+    // ৮. চলন বিল
+    TouristPlace(id: '8', name: 'Chalan Beel', nameBn: 'চলন বিল', description: 'বাংলাদেশের সবচেয়ে বড় বিলগুলোর একটি। বর্ষাকালে অপরূপ রূপ ধারণ করে। পাখি দেখা, নৌকা ভ্রমণ ও মাছ ধরার জন্য বিখ্যাত।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'তাড়াশ, সিরাজগঞ্জ', latitude: 24.2800, longitude: 89.4500, openingHours: 'সর্বদা খোলা', rating: 4.6),
+    // ৯. মিল্ক ভিটা
+    TouristPlace(id: '9', name: 'Milk Vita', nameBn: 'মিল্ক ভিটা (বাংলাদেশ দুগ্ধ উৎপাদক সমবায়)', description: 'বাংলাদেশের বিখ্যাত মিল্ক ভিটার কারখানা। দুগ্ধ শিল্পের ইতিহাস জানতে ও শিল্প পরিদর্শনের জন্য আকর্ষণীয়।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'বাঘাবাড়ী, সিরাজগঞ্জ', latitude: 24.1750, longitude: 89.5980, openingHours: 'সকাল ৯টা - বিকাল ৫টা', rating: 4.0),
+    // ১০. যাদব চক্রবর্তী নিবাস
+    TouristPlace(id: '10', name: 'Jadob Chakroborti Nibas', nameBn: 'যাদব চক্রবর্তী নিবাস', description: 'ঐতিহাসিক ব্যক্তিত্ব যাদব চক্রবর্তীর নিবাস। প্রাচীন স্থাপত্য ও সাংস্কৃতিক ঐতিহ্য সংরক্ষিত।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'সিরাজগঞ্জ সদর', latitude: 24.4525, longitude: 89.7015, openingHours: 'সর্বদা খোলা', rating: 4.0),
+    // ১১. ইলিয়ট ব্রীজ
+    TouristPlace(id: '11', name: 'Elliott Bridge', nameBn: 'ইলিয়ট ব্রিজ', description: 'ব্রিটিশ আমলে নির্মিত ঐতিহাসিক সেতু। প্রাচীন স্থাপত্যশৈলী দেখার মতো। ইতিহাস অনুরাগীদের জন্য আকর্ষণীয়।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'সিরাজগঞ্জ সদর', latitude: 24.4520, longitude: 89.6980, openingHours: 'সর্বদা খোলা', rating: 4.1),
+    // ১২. সার্কিট হাউজ
+    TouristPlace(id: '12', name: 'Circuit House', nameBn: 'সার্কিট হাউজ', description: 'ব্রিটিশ আমলের ঐতিহাসিক সার্কিট হাউজ। সুন্দর স্থাপত্য ও পরিবেশ। সিরাজগঞ্জের ঐতিহ্যবাহী স্থাপনা।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'সিরাজগঞ্জ সদর', latitude: 24.4530, longitude: 89.7025, openingHours: 'সকাল ৯টা - বিকাল ৫টা', rating: 3.9),
+    // ১৩. সিরাজগঞ্জ শহর রক্ষা বাঁধ
+    TouristPlace(id: '13', name: 'Sirajganj Town Protection Embankment', nameBn: 'সিরাজগঞ্জ শহর রক্ষা বাঁধ', description: 'যমুনা নদীর ভাঙন থেকে শহর রক্ষার বাঁধ। বাঁধের উপর দিয়ে হাঁটার সুন্দর অভিজ্ঞতা। নদীর অসাধারণ দৃশ্য।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'সিরাজগঞ্জ সদর', latitude: 24.4540, longitude: 89.7060, openingHours: 'সর্বদা খোলা', rating: 4.2),
+    // ১৪. ধুবিল কাটার মহল জমিদার বাড়ী
+    TouristPlace(id: '14', name: 'Dhubil Katar Mahal Zamindar Bari', nameBn: 'ধুবিল কাটার মহল জমিদার বাড়ী', description: 'প্রাচীন জমিদার বাড়ি। ঐতিহাসিক স্থাপত্য ও কারুকাজ সংরক্ষিত। জমিদারি আমলের স্মৃতি বহন করে।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'উল্লাপাড়া, সিরাজগঞ্জ', latitude: 24.3100, longitude: 89.5400, openingHours: 'সর্বদা খোলা', rating: 4.0),
+    // ১৫. আটঘরিয়া জমিদার বাড়ী
+    TouristPlace(id: '15', name: 'Atghoria Zamindar Bari', nameBn: 'আটঘরিয়া জমিদার বাড়ী', description: 'ঐতিহাসিক জমিদার বাড়ি। পুরনো দিনের জমিদারি আমলের স্থাপত্যের নিদর্শন। ইতিহাসপ্রেমীদের জন্য দর্শনীয়।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'রায়গঞ্জ, সিরাজগঞ্জ', latitude: 24.2700, longitude: 89.5100, openingHours: 'সর্বদা খোলা', rating: 3.9),
+    // ১৬. মাওলানা ভাসানীর বাড়ী
+    TouristPlace(id: '16', name: 'Maulana Bhasani House', nameBn: 'মজলুম জননেতা মাওলানা আব্দুল হামিদ খান ভাসানীর বাড়ী', description: 'মজলুম জননেতা মাওলানা ভাসানীর ঐতিহাসিক বাসস্থান। বাংলাদেশের রাজনৈতিক ইতিহাসে গুরুত্বপূর্ণ স্থান।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'সিরাজগঞ্জ', latitude: 24.4490, longitude: 89.6960, openingHours: 'সর্বদা খোলা', rating: 4.5),
+    // ১৭. সান্যাল জমিদার বাড়ীর শিব দুর্গা মন্দির
+    TouristPlace(id: '17', name: 'Sanyal Zamindar Shib Durga Temple', nameBn: 'সান্যাল জমিদার বাড়ীর শিব দুর্গা মন্দির', description: 'জমিদার আমলের প্রাচীন শিব ও দুর্গা মন্দির। সুন্দর কারুকাজ ও ধর্মীয় স্থাপত্যের অনন্য নিদর্শন।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.1860, longitude: 89.5940, openingHours: 'সকাল ৬টা - সন্ধ্যা ৭টা', rating: 4.1),
+    // ১৮. মকিমপুর জমিদার বাড়ীর মন্দির
+    TouristPlace(id: '18', name: 'Mokimpur Zamindar Temple', nameBn: 'মকিমপুর জমিদার বাড়ীর মন্দির', description: 'মকিমপুর জমিদার বাড়ির প্রাচীন মন্দির। ঐতিহাসিক স্থাপত্য ও ধর্মীয় গুরুত্ব রয়েছে।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'সিরাজগঞ্জ', latitude: 24.4200, longitude: 89.6800, openingHours: 'সর্বদা খোলা', rating: 4.0),
+    // ১৯. তাড়াশ চলন বিল
+    TouristPlace(id: '19', name: 'Tarash Chalan Beel', nameBn: 'তাড়াশ চলন বিল', description: 'তাড়াশ উপজেলায় চলন বিলের অংশ। বর্ষাকালে অপরূপ রূপ ধারণ করে। মাছ ধরা ও নৌকা ভ্রমণের জন্য জনপ্রিয়।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'তাড়াশ, সিরাজগঞ্জ', latitude: 24.2600, longitude: 89.4600, openingHours: 'সর্বদা খোলা', rating: 4.3),
+    // ২০. মুক্তির সোপান
+    TouristPlace(id: '20', name: 'Muktir Sopan', nameBn: 'মুক্তির সোপান', description: 'মুক্তিযুদ্ধের স্মৃতিসৌধ। দেশের স্বাধীনতা সংগ্রামের স্মৃতি সংরক্ষিত। দেশপ্রেমিক নাগরিকদের জন্য অবশ্যই দর্শনীয়।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'সিরাজগঞ্জ সদর', latitude: 24.4535, longitude: 89.7005, openingHours: 'সর্বদা খোলা', rating: 4.4),
+    // ২১. বাঘাবাড়ি নদী বন্দর
+    TouristPlace(id: '21', name: 'Baghbari River Port', nameBn: 'বাঘাবাড়ি নদী বন্দর', description: 'গুরুত্বপূর্ণ নদী বন্দর। নদীপথের যোগাযোগের কেন্দ্রবিন্দু। নদীর সুন্দর দৃশ্য উপভোগ করা যায়।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'বাঘাবাড়ী, শাহজাদপুর', latitude: 24.1700, longitude: 89.6000, openingHours: 'সর্বদা খোলা', rating: 4.3),
+    // ২২. শাহজাদপুর মসজিদ
+    TouristPlace(id: '22', name: 'Shahzadpur Mosque', nameBn: 'শাহজাদপুর মসজিদ', description: 'শাহজাদপুরের ঐতিহাসিক মসজিদ। প্রাচীন স্থাপত্যশৈলীতে নির্মিত। ধর্মীয় ও সাংস্কৃতিক গুরুত্ব রয়েছে।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.1840, longitude: 89.5920, openingHours: 'সর্বদা খোলা', rating: 4.2),
+    // ২৩. শাহজাদপুর পোতাজিয়া বিল
+    TouristPlace(id: '23', name: 'Shahzadpur Potajia Beel', nameBn: 'শাহজাদপুর পোতাজিয়া বিল', description: 'শাহজাদপুরের সুন্দর প্রাকৃতিক বিল। পাখি দেখা, নৌকা ভ্রমণ ও মাছ ধরার জন্য জনপ্রিয়।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.1750, longitude: 89.5850, openingHours: 'সর্বদা খোলা', rating: 4.1),
+    // ২৪. শাহ মখদুমের মাজার
+    TouristPlace(id: '24', name: 'Shah Mokhdum Mazar', nameBn: 'শাহ মখদুমের মাজার', description: 'প্রাচীন সুফি সাধকের মাজার। ধর্মপ্রাণ মানুষের কাছে অত্যন্ত শ্রদ্ধার স্থান। পবিত্র ও শান্ত পরিবেশ।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'সিরাজগঞ্জ', latitude: 24.4500, longitude: 89.6970, openingHours: 'সর্বদা খোলা', rating: 4.3),
+    // ২৫. ছয়আনি পাড়া দুই গম্বুজ মসজিদ
+    TouristPlace(id: '25', name: 'Chhoyani Para Mosque', nameBn: 'ছয়আনি পাড়া দুই গম্বুজ মসজিদ', description: 'প্রাচীন দুই গম্বুজ বিশিষ্ট মসজিদ। সুন্দর কারুকাজ ও স্থাপত্যশৈলী। ঐতিহাসিক ধর্মীয় স্থাপনা।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'সিরাজগঞ্জ সদর', latitude: 24.4515, longitude: 89.7030, openingHours: 'সর্বদা খোলা', rating: 4.0),
+    // ২৬. ভিক্টোরিয়া স্কুল
+    TouristPlace(id: '26', name: 'Victoria School', nameBn: 'ভিক্টোরিয়া স্কুল', description: 'ব্রিটিশ আমলে প্রতিষ্ঠিত ঐতিহাসিক বিদ্যালয়। প্রাচীন ভবন ও স্থাপত্যশৈলী সংরক্ষিত। শিক্ষার ইতিহাসের সাক্ষী।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'সিরাজগঞ্জ সদর', latitude: 24.4528, longitude: 89.7008, openingHours: 'সকাল ৯টা - বিকাল ৪টা', rating: 4.0),
+    // ২৭. হার্ড পয়েন্ট
+    TouristPlace(id: '27', name: 'Hard Point', nameBn: 'হার্ড পয়েন্ট', description: 'যমুনা নদীর তীরে অবস্থিত জনপ্রিয় স্থান। সূর্যাস্ত দেখার জন্য অত্যন্ত জনপ্রিয়। বিকেলের আবহাওয়া মনোমুগ্ধকর।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'সিরাজগঞ্জ সদর, যমুনা তীর', latitude: 24.4534, longitude: 89.7003, openingHours: 'সর্বদা খোলা', rating: 4.5),
+    // ২৮. নওগাঁ শাহ শরীফ জিন্দানী মাজার
+    TouristPlace(id: '28', name: 'Naogaon Shah Sharif Jindani Mazar', nameBn: 'নওগাঁ শাহ শরীফ জিন্দানী (রাঃ) মাজার', description: 'প্রাচীন সুফি সাধকের মাজার শরীফ। ধর্মপ্রাণ মানুষের তীর্থস্থান। শান্ত ও পবিত্র পরিবেশ।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'কামারখন্দ, সিরাজগঞ্জ', latitude: 24.3450, longitude: 89.5850, openingHours: 'সর্বদা খোলা', rating: 4.4),
+    // ২৯. এনায়েত খাজা বেড়িবাঁধ
+    TouristPlace(id: '29', name: 'Enayetpur Khaja Embankment', nameBn: 'এনায়েত খাজা বেড়িবাঁধ', description: 'এনায়েতপুর এলাকার বেড়িবাঁধ। বাঁধের উপর দিয়ে হাঁটা ও প্রাকৃতিক দৃশ্য উপভোগের জন্য সুন্দর স্থান।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'কামারখন্দ, সিরাজগঞ্জ', latitude: 24.3480, longitude: 89.6850, openingHours: 'সর্বদা খোলা', rating: 4.0),
+    // ৩০. রাউতারা বাঁধ ও স্লুইচ গেট
+    TouristPlace(id: '30', name: 'Rautara Dam & Sluice Gate', nameBn: 'রাউতারা বাঁধ ও স্লুইচ গেট', description: 'পানি নিয়ন্ত্রণ বাঁধ ও স্লুইচ গেট। প্রকৌশলবিদ্যার নিদর্শন। পানির প্রবাহ দেখার জন্য আকর্ষণীয়।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'সিরাজগঞ্জ', latitude: 24.4300, longitude: 89.6750, openingHours: 'সর্বদা খোলা', rating: 3.8),
+    // ৩১. খাজা ইউনুছ আলী মেডিকেল কলেজ
+    TouristPlace(id: '31', name: 'Khwaja Yunus Ali Medical College', nameBn: 'খাজা ইউনুছ আলী মেডিকেল কলেজ ও হাসপাতাল', description: 'সিরাজগঞ্জের বিখ্যাত মেডিকেল কলেজ ও হাসপাতাল। আধুনিক স্থাপত্য ও সবুজ ক্যাম্পাস। দর্শনীয় স্থান।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'এনায়েতপুর, সিরাজগঞ্জ', latitude: 24.3520, longitude: 89.6840, openingHours: 'সর্বদা খোলা', rating: 4.5),
+    // ৩২. দরবার শরীফ মাজার
+    TouristPlace(id: '32', name: 'Darbar Sharif Mazar', nameBn: 'এনায়েতপুর দরবার শরীফ মাজার', description: 'বিখ্যাত ধর্মীয় স্থান। সারা দেশ থেকে লক্ষ লক্ষ মানুষ আসেন। বার্ষিক ওরস মাহফিল অনুষ্ঠিত হয়।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'এনায়েতপুর, কামারখন্দ', latitude: 24.3500, longitude: 89.6833, openingHours: 'সর্বদা খোলা', rating: 4.8),
+    // ৩৩. বেহুলার কূপ
+    TouristPlace(id: '33', name: 'Behular Kup', nameBn: 'বেহুলার কূপ', description: 'লোককথার বেহুলার সাথে সম্পর্কিত প্রাচীন কূপ। পৌরাণিক ও ঐতিহাসিক গুরুত্ব রয়েছে। দর্শনার্থীদের আকর্ষণ করে।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'সিরাজগঞ্জ', latitude: 24.4400, longitude: 89.6900, openingHours: 'সর্বদা খোলা', rating: 4.1),
+    // ৩৪. জোতপাড়া যমুনা নদীর ঘাট
+    TouristPlace(id: '34', name: 'Jotpara Jamuna Ghat', nameBn: 'জোতপাড়া যমুনা নদীর ঘাট', description: 'যমুনা নদীর সুন্দর ঘাট। নদীর দৃশ্য উপভোগ, নৌকা ভ্রমণ ও সূর্যাস্ত দেখার জন্য অত্যন্ত জনপ্রিয়।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'জোতপাড়া, সিরাজগঞ্জ', latitude: 24.4580, longitude: 89.7080, openingHours: 'সর্বদা খোলা', rating: 4.2),
   ];
 
   final List<Hotel> _hotels = [
     Hotel(name: 'হোটেল সিরাজগঞ্জ গার্ডেন', address: 'স্টেশন রোড, সিরাজগঞ্জ সদর', phone: '01711-120001', priceRange: '১,২০০ - ৩,৫০০ টাকা', rating: 3.8, amenities: ['এসি', 'ওয়াইফাই', 'পার্কিং', 'রেস্টুরেন্ট']),
-    Hotel(name: 'হো���েল যমুনা ভিউ', address: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-120002', priceRange: '৮০০ - ২,০০০ টাকা', rating: 3.5, amenities: ['এসি', 'ওয়াইফাই']),
-    Hotel(name: 'হোটেল ���িরাপদ', address: 'বাস স্ট্যান��ড, সিরাজগঞ্জ', phone: '01711-120003', priceRange: '৪০০ - ১,০০০ টাকা', rating: 3.0, amenities: ['ফ্যান', 'পার্কিং']),
+    Hotel(name: 'হোটেল যমুনা ভিউ', address: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-120002', priceRange: '৮০০ - ২,০০০ টাকা', rating: 3.5, amenities: ['এসি', 'ওয়াইফাই']),
+    Hotel(name: 'হোটেল নিরাপদ', address: 'বাস স্ট্যান্ড, সিরাজগঞ্জ', phone: '01711-120003', priceRange: '৪০০ - ১,০০০ টাকা', rating: 3.0, amenities: ['ফ্যান', 'পার্কিং']),
   ];
 
   final List<Transport> _transports = [
@@ -83,7 +137,7 @@ class _TourismScreenState extends State<TourismScreen> {
     Transport(type: 'bus', typeBn: 'বাস', route: 'সিরাজগঞ্জ - বগুড়া', schedule: 'প্রতি ১ ঘন্টা পর পর', fare: '১৫০ - ২৫০ টাকা', operator: 'সিরাজগঞ্জ এক্সপ্রেস', phone: '01711-130003'),
   ];
 
-  List<String> get _categories => ['সব', 'প্রাকৃতিক', 'ঐতিহাসিক', 'ধর���মীয়'];
+  List<String> get _categories => ['সব', 'ঐতিহাসিক', 'ধর্মীয়', 'প্রাকৃতিক'];
 
   @override
   Widget build(BuildContext context) {
