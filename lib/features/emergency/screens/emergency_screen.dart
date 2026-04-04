@@ -42,13 +42,13 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
   ];
 
   final List<BloodDonor> _bloodDonors = [
-    BloodDonor(name: 'মোঃ রাকিবুল হাসান', phone: '01711-200001', bloodGroup: 'A+', area: 'সদর', lastDonation: DateTime(2026, 1, 15), isAvailable: true),
-    BloodDonor(name: 'মোঃ তানভীর আহমেদ', phone: '01711-200002', bloodGroup: 'B+', area: 'শাহজাদপুর', lastDonation: DateTime(2026, 2, 10), isAvailable: true),
-    BloodDonor(name: 'মোঃ সোহেল রানা', phone: '01711-200003', bloodGroup: 'O+', area: 'উল্লাপাড়া', lastDonation: DateTime(2025, 12, 20), isAvailable: true),
-    BloodDonor(name: 'মোঃ আরিফুল ইসলাম', phone: '01711-200004', bloodGroup: 'AB+', area: 'কাজীপুর', lastDonation: DateTime(2026, 3, 1), isAvailable: false),
-    BloodDonor(name: 'মোঃ ইমরান হোসেন', phone: '01711-200005', bloodGroup: 'A-', area: 'বেলকুচি', lastDonation: DateTime(2026, 1, 5), isAvailable: true),
-    BloodDonor(name: 'মোঃ শাকিল আহমেদ', phone: '01711-200006', bloodGroup: 'O-', area: 'তাড়াশ', lastDonation: DateTime(2025, 11, 25), isAvailable: true),
-    BloodDonor(name: 'মোঃ নাঈম হোসেন', phone: '01711-200007', bloodGroup: 'B-', area: 'সদর', lastDonation: DateTime(2026, 2, 28), isAvailable: true),
+    BloodDonor(name: 'মোঃ রাকিবুল হাসান', phone: '01711-200001', bloodGroup: 'A+', area: 'সদর, সিরাজগঞ্জ', lastDonation: DateTime(2026, 1, 15), isAvailable: true, age: 28, gender: 'পুরুষ', district: 'সিরাজগঞ্জ', upazila: 'সদর', weight: 68, profession: 'ব্যবসায়ী'),
+    BloodDonor(name: 'মোঃ তানভীর আহমেদ', phone: '01711-200002', bloodGroup: 'B+', area: 'শাহজাদপুর, সিরাজগঞ্জ', lastDonation: DateTime(2026, 2, 10), isAvailable: true, age: 25, gender: 'পুরুষ', district: 'সিরাজগঞ্জ', upazila: 'শাহজাদপুর', weight: 72, profession: 'শিক্ষক'),
+    BloodDonor(name: 'মোঃ সোহেল রানা', phone: '01711-200003', bloodGroup: 'O+', area: 'উল্লাপাড়া, সিরাজগঞ্জ', lastDonation: DateTime(2025, 12, 20), isAvailable: true, age: 30, gender: 'পুরুষ', district: 'সিরাজগঞ্জ', upazila: 'উল্লাপাড়া', weight: 75, profession: 'কৃষক'),
+    BloodDonor(name: 'মোঃ আরিফুল ইসলাম', phone: '01711-200004', bloodGroup: 'AB+', area: 'কাজীপুর, সিরাজগঞ্জ', lastDonation: DateTime(2026, 3, 1), isAvailable: false, age: 22, gender: 'পুরুষ', district: 'সিরাজগঞ্জ', upazila: 'কাজীপুর', weight: 60, profession: 'ছাত্র'),
+    BloodDonor(name: 'মোঃ ইমরান হোসেন', phone: '01711-200005', bloodGroup: 'A-', area: 'বেলকুচি, সিরাজগঞ্জ', lastDonation: DateTime(2026, 1, 5), isAvailable: true, age: 35, gender: 'পুরুষ', district: 'সিরাজগঞ্জ', upazila: 'বেলকুচি', weight: 80, profession: 'চাকরিজীবী'),
+    BloodDonor(name: 'ফাতেমা আক্তার', phone: '01711-200006', bloodGroup: 'O-', area: 'তাড়াশ, সিরাজগঞ্জ', lastDonation: DateTime(2025, 11, 25), isAvailable: true, age: 27, gender: 'মহিলা', district: 'সিরাজগঞ্জ', upazila: 'তাড়াশ', weight: 58, profession: 'গৃহিণী'),
+    BloodDonor(name: 'মোঃ নাঈম হোসেন', phone: '01711-200007', bloodGroup: 'B-', area: 'সদর, সিরাজগঞ্জ', lastDonation: DateTime(2026, 2, 28), isAvailable: true, age: 24, gender: 'পুরুষ', district: 'সিরাজগঞ্জ', upazila: 'সদর', weight: 65, profession: 'ছাত্র'),
   ];
 
   @override
@@ -382,65 +382,92 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                       itemCount: filtered.length,
                       itemBuilder: (context, index) {
                         final donor = filtered[index];
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: isDark ? AppColors.darkCard : Colors.white,
-                            borderRadius: BorderRadius.circular(14),
-                            boxShadow: isDark ? [] : AppColors.softShadow,
-                          ),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                            leading: Container(
-                              width: 44,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                color: AppColors.error.withValues(alpha: 0.08),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  donor.bloodGroup,
-                                  style: const TextStyle(color: AppColors.error, fontWeight: FontWeight.w800, fontSize: 13),
-                                ),
-                              ),
+                        return GestureDetector(
+                          onTap: () => _showDonorDetails(donor),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              color: isDark ? AppColors.darkCard : Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: isDark ? [] : AppColors.softShadow,
                             ),
-                            title: Text(donor.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                            subtitle: Row(
+                            child: Row(
                               children: [
-                                Icon(Icons.location_on_rounded, size: 12, color: Colors.grey[400]),
-                                const SizedBox(width: 2),
-                                Text('${donor.area} ', style: const TextStyle(fontSize: 12)),
+                                // Blood group badge
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                                  width: 50, height: 50,
                                   decoration: BoxDecoration(
-                                    color: donor.isAvailable
-                                        ? AppColors.success.withValues(alpha: 0.1)
-                                        : Colors.grey.withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(8),
+                                    color: AppColors.error.withValues(alpha: 0.08),
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(color: AppColors.error.withValues(alpha: 0.2)),
                                   ),
-                                  child: Text(
-                                    donor.isAvailable ? 'সচল' : 'অসচল',
-                                    style: TextStyle(
-                                      color: donor.isAvailable ? AppColors.success : Colors.grey,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                  child: Center(child: Text(donor.bloodGroup, style: const TextStyle(color: AppColors.error, fontWeight: FontWeight.w900, fontSize: 15))),
+                                ),
+                                const SizedBox(width: 12),
+                                // Info
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(child: Text(donor.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14))),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                            decoration: BoxDecoration(
+                                              color: donor.isAvailable ? AppColors.success.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                            child: Text(donor.isAvailable ? 'সচল' : 'অসচল', style: TextStyle(color: donor.isAvailable ? AppColors.success : Colors.grey, fontSize: 10, fontWeight: FontWeight.w700)),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.location_on_rounded, size: 12, color: Colors.grey[400]),
+                                          const SizedBox(width: 3),
+                                          Expanded(child: Text(donor.area, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary))),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          if (donor.age != null) ...[
+                                            Icon(Icons.cake_rounded, size: 11, color: Colors.grey[400]),
+                                            const SizedBox(width: 3),
+                                            Text('${donor.age} বছর', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                            const SizedBox(width: 10),
+                                          ],
+                                          if (donor.gender != null) ...[
+                                            Icon(Icons.person_rounded, size: 11, color: Colors.grey[400]),
+                                            const SizedBox(width: 3),
+                                            Text(donor.gender!, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                            const SizedBox(width: 10),
+                                          ],
+                                          Icon(Icons.calendar_today_rounded, size: 11, color: Colors.grey[400]),
+                                          const SizedBox(width: 3),
+                                          Text('${donor.lastDonation.day}/${donor.lastDonation.month}/${donor.lastDonation.year}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
+                                const SizedBox(width: 8),
+                                // Call button
+                                donor.isAvailable
+                                    ? GestureDetector(
+                                        onTap: () => Helpers.makePhoneCall(donor.phone),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                                          child: const Icon(Icons.call_rounded, color: AppColors.success, size: 20),
+                                        ),
+                                      )
+                                    : Icon(Icons.block_rounded, color: Colors.grey[400], size: 20),
                               ],
                             ),
-                            trailing: donor.isAvailable
-                                ? Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.success.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: const Icon(Icons.call_rounded, color: AppColors.success, size: 20),
-                                  )
-                                : Icon(Icons.block_rounded, color: Colors.grey[400], size: 20),
-                            onTap: donor.isAvailable ? () => Helpers.makePhoneCall(donor.phone) : null,
                           ),
                         );
                       },
@@ -450,12 +477,121 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
       );
   }
 
+  void _showDonorDetails(BloodDonor donor) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurface : Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Center(child: Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)))),
+            const SizedBox(height: 16),
+            // Header
+            Row(
+              children: [
+                Container(
+                  width: 56, height: 56,
+                  decoration: BoxDecoration(
+                    color: AppColors.error.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.error.withValues(alpha: 0.3), width: 2),
+                  ),
+                  child: Center(child: Text(donor.bloodGroup, style: const TextStyle(color: AppColors.error, fontWeight: FontWeight.w900, fontSize: 18))),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(donor.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 2),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: donor.isAvailable ? AppColors.success.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(donor.isAvailable ? '✅ রক্তদানে সচল' : '❌ বর্তমানে অসচল', style: TextStyle(color: donor.isAvailable ? AppColors.success : Colors.grey, fontSize: 12, fontWeight: FontWeight.w600)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            // Details grid
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkCard : const Color(0xFFF9FAFB),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  _buildDonorDetailRow('📱 মোবাইল', donor.phone),
+                  _buildDonorDetailRow('🩸 রক্তের গ্রুপ', donor.bloodGroup),
+                  _buildDonorDetailRow('📍 ঠিকানা', donor.area),
+                  if (donor.age != null) _buildDonorDetailRow('🎂 বয়স', '${donor.age} বছর'),
+                  if (donor.gender != null) _buildDonorDetailRow('⚧️ লিঙ্গ', donor.gender!),
+                  if (donor.district != null) _buildDonorDetailRow('🏛️ জেলা', donor.district!),
+                  if (donor.upazila != null) _buildDonorDetailRow('📌 উপজেলা', donor.upazila!),
+                  _buildDonorDetailRow('🗓️ সর্বশেষ রক্তদান', '${donor.lastDonation.day}/${donor.lastDonation.month}/${donor.lastDonation.year}'),
+                  if (donor.weight != null) _buildDonorDetailRow('⚖️ ওজন', '${donor.weight!.toInt()} কেজি'),
+                  if (donor.profession != null) _buildDonorDetailRow('💼 পেশা', donor.profession!),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            if (donor.isAvailable)
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () { Navigator.pop(context); Helpers.makePhoneCall(donor.phone); },
+                  icon: const Icon(Icons.call_rounded),
+                  label: Text('কল করুন: ${donor.phone}', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.success, padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))),
+                ),
+              ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDonorDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        children: [
+          SizedBox(width: 130, child: Text(label, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary))),
+          Expanded(child: Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600))),
+        ],
+      ),
+    );
+  }
+
   void _showDonorRegistrationForm() {
     final nameController = TextEditingController();
     final phoneController = TextEditingController();
     final areaController = TextEditingController();
+    final ageController = TextEditingController();
+    final weightController = TextEditingController();
+    final professionController = TextEditingController();
     String selectedGroup = 'A+';
+    String selectedGender = 'পুরুষ';
+    String selectedUpazila = 'সদর';
     final allGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
+    final genders = ['পুরুষ', 'মহিলা', 'অন্যান্য'];
+    final upazilas = ['সদর', 'বেলকুচি', 'চৌহালী', 'কামারখন্দ', 'কাজীপুর', 'রায়গঞ্জ', 'শাহজাদপুর', 'তাড়াশ', 'উল্লাপাড়া'];
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showModalBottomSheet(
@@ -503,39 +639,58 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                   const SizedBox(height: 20),
 
                   // নাম
-                  TextField(
-                    controller: nameController,
-                    decoration: const InputDecoration(
-                      labelText: 'আপনার নাম *',
-                      prefixIcon: Icon(Icons.person_rounded),
-                      hintText: 'পূর্ণ নাম লিখুন',
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-
+                  TextField(controller: nameController, decoration: const InputDecoration(labelText: 'আপনার নাম *', prefixIcon: Icon(Icons.person_rounded), hintText: 'পূর্ণ নাম লিখুন')),
+                  const SizedBox(height: 12),
                   // ফোন নম্বর
-                  TextField(
-                    controller: phoneController,
-                    keyboardType: TextInputType.phone,
-                    decoration: const InputDecoration(
-                      labelText: 'মোবাইল নম্বর *',
-                      prefixIcon: Icon(Icons.phone_rounded),
-                      hintText: '01XXXXXXXXX',
-                    ),
+                  TextField(controller: phoneController, keyboardType: TextInputType.phone, decoration: const InputDecoration(labelText: 'মোবাইল নম্বর *', prefixIcon: Icon(Icons.phone_rounded), hintText: '01XXXXXXXXX')),
+                  const SizedBox(height: 12),
+                  // বয়স ও ওজন
+                  Row(
+                    children: [
+                      Expanded(child: TextField(controller: ageController, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'বয়স *', prefixIcon: Icon(Icons.cake_rounded), hintText: 'যেমন: ২৫'))),
+                      const SizedBox(width: 10),
+                      Expanded(child: TextField(controller: weightController, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'ওজন (কেজি)', prefixIcon: Icon(Icons.monitor_weight_rounded), hintText: 'ঐচ্ছিক'))),
+                    ],
                   ),
-                  const SizedBox(height: 14),
-
+                  const SizedBox(height: 12),
+                  // লিঙ্গ
+                  const Text('লিঙ্গ *', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: genders.map((g) {
+                      final isSelected = g == selectedGender;
+                      return Expanded(
+                        child: GestureDetector(
+                          onTap: () => setModalState(() => selectedGender = g),
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 6),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            decoration: BoxDecoration(
+                              color: isSelected ? AppColors.primary : (isDark ? AppColors.darkCard : Colors.white),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: isSelected ? AppColors.primary : AppColors.primary.withValues(alpha: 0.3)),
+                            ),
+                            child: Center(child: Text(g, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: isSelected ? Colors.white : AppColors.textPrimary))),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 12),
+                  // উপজেলা
+                  DropdownButtonFormField<String>(
+                    initialValue: selectedUpazila,
+                    decoration: const InputDecoration(labelText: 'উপজেলা *', prefixIcon: Icon(Icons.location_city_rounded)),
+                    items: upazilas.map((u) => DropdownMenuItem(value: u, child: Text(u))).toList(),
+                    onChanged: (v) => setModalState(() => selectedUpazila = v ?? 'সদর'),
+                  ),
+                  const SizedBox(height: 12),
                   // এলাকা
-                  TextField(
-                    controller: areaController,
-                    decoration: const InputDecoration(
-                      labelText: 'এলাকা / ঠিকানা *',
-                      prefixIcon: Icon(Icons.location_on_rounded),
-                      hintText: 'যেমন: সদর, শাহজাদপুর',
-                    ),
-                  ),
+                  TextField(controller: areaController, decoration: const InputDecoration(labelText: 'বিস্তারিত ঠিকানা *', prefixIcon: Icon(Icons.location_on_rounded), hintText: 'গ্রাম/মহল্লা, পোস্ট অফিস')),
+                  const SizedBox(height: 12),
+                  // পেশা
+                  TextField(controller: professionController, decoration: const InputDecoration(labelText: 'পেশা (ঐচ্ছিক)', prefixIcon: Icon(Icons.work_rounded), hintText: 'যেমন: ছাত্র, চাকরিজীবী')),
                   const SizedBox(height: 16),
-
                   // রক্তের গ্রুপ
                   const Text('রক্তের গ্রুপ নির্বাচন করুন *', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                   const SizedBox(height: 10),
@@ -580,71 +735,47 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        // Validate
-                        if (nameController.text.trim().isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('আপনার নাম লিখুন'), backgroundColor: AppColors.error));
-                          return;
-                        }
-                        if (phoneController.text.trim().isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('মোবাইল নম্বর লিখুন'), backgroundColor: AppColors.error));
-                          return;
-                        }
-                        if (areaController.text.trim().isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('এলাকা / ঠিকানা লিখুন'), backgroundColor: AppColors.error));
-                          return;
-                        }
+                        if (nameController.text.trim().isEmpty) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('আপনার নাম লিখুন'), backgroundColor: AppColors.error)); return; }
+                        if (phoneController.text.trim().isEmpty) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('মোবাইল নম্বর লিখুন'), backgroundColor: AppColors.error)); return; }
+                        if (ageController.text.trim().isEmpty) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('বয়স লিখুন'), backgroundColor: AppColors.error)); return; }
+                        if (areaController.text.trim().isEmpty) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('ঠিকানা লিখুন'), backgroundColor: AppColors.error)); return; }
 
-                        // Add donor
+                        final area = '$selectedUpazila, সিরাজগঞ্জ - ${areaController.text.trim()}';
                         setState(() {
                           _bloodDonors.insert(0, BloodDonor(
                             name: nameController.text.trim(),
                             phone: phoneController.text.trim(),
                             bloodGroup: selectedGroup,
-                            area: areaController.text.trim(),
+                            area: area,
                             lastDonation: DateTime.now(),
                             isAvailable: true,
+                            age: int.tryParse(ageController.text.trim()),
+                            gender: selectedGender,
+                            district: 'সিরাজগঞ্জ',
+                            upazila: selectedUpazila,
+                            weight: double.tryParse(weightController.text.trim()),
+                            profession: professionController.text.trim().isEmpty ? null : professionController.text.trim(),
                           ));
                         });
 
                         Navigator.pop(context);
-
-                        // Success dialog
                         showDialog(
                           context: context,
-                          builder: (context) => AlertDialog(
+                          builder: (ctx) => AlertDialog(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                             content: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.success.withValues(alpha: 0.1),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 52),
-                                ),
+                                Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.1), shape: BoxShape.circle), child: const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 52)),
                                 const SizedBox(height: 16),
                                 const Text('ধন্যবাদ! 🎉', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800)),
                                 const SizedBox(height: 8),
-                                Text(
-                                  'আপনি সফলভাবে রক্তদাতা হিসেবে যোগ দিয়েছেন।\n\nনাম: ${nameController.text.trim()}\nরক্তের গ্রুপ: $selectedGroup\nএলাকা: ${areaController.text.trim()}',
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 14, height: 1.5),
-                                ),
+                                Text('আপনি সফলভাবে রক্তদাতা হিসেবে যোগ দিয়েছেন।\n\nনাম: ${nameController.text.trim()}\nরক্তের গ্রুপ: $selectedGroup\nবয়স: ${ageController.text.trim()} বছর\nলিঙ্গ: $selectedGender\nউপজেলা: $selectedUpazila', textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, height: 1.5)),
                                 const SizedBox(height: 8),
                                 const Text('আপনার তথ্য তালিকায় যোগ হয়েছে।', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
                               ],
                             ),
-                            actions: [
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text('ঠিক আছে'),
-                                ),
-                              ),
-                            ],
+                            actions: [SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () => Navigator.pop(ctx), child: const Text('ঠিক আছে')))],
                           ),
                         );
                       },

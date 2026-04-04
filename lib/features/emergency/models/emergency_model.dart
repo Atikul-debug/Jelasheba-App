@@ -47,6 +47,13 @@ class BloodDonor {
   final String area;
   final DateTime lastDonation;
   final bool isAvailable;
+  // New fields
+  final int? age;
+  final String? gender;
+  final String? district;
+  final String? upazila;
+  final double? weight;
+  final String? profession;
 
   BloodDonor({
     required this.name,
@@ -55,5 +62,11 @@ class BloodDonor {
     required this.area,
     required this.lastDonation,
     required this.isAvailable,
+    this.age,
+    this.gender,
+    this.district,
+    this.upazila,
+    this.weight,
+    this.profession,
   });
 }
