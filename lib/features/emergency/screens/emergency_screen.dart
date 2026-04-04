@@ -25,11 +25,20 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
   ];
 
   final List<PoliceStation> _policeStations = [
+    // সিরাজগঞ্জ জেলার সকল থানা (১৩টি)
     PoliceStation(name: 'Sirajganj Sadar', nameBn: 'সিরাজগঞ্জ সদর থানা', ocName: 'মোঃ মাহবুবুর রহমান', phone: '01713-373001', address: 'সদর, সিরাজগঞ্জ', latitude: 24.4534, longitude: 89.7003),
     PoliceStation(name: 'Kotwali Model', nameBn: 'কোতোয়ালী মডেল থানা', ocName: 'মোঃ জাহাঙ্গীর আলম', phone: '01713-373002', address: 'কোতোয়ালী, সিরাজগঞ্জ', latitude: 24.4520, longitude: 89.6990),
     PoliceStation(name: 'Shahjadpur', nameBn: 'শাহজাদপুর থানা', ocName: 'মোঃ সাইফুল ইসলাম', phone: '01713-373003', address: 'শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.1833, longitude: 89.5917),
     PoliceStation(name: 'Ullapara', nameBn: 'উল্লাপাড়া থানা', ocName: 'মোঃ নাজমুল হক', phone: '01713-373004', address: 'উল্লাপাড়া, সিরাজগঞ্জ', latitude: 24.3167, longitude: 89.5500),
     PoliceStation(name: 'Kazipur', nameBn: 'কাজীপুর থানা', ocName: 'মোঃ ফারুক হোসেন', phone: '01713-373005', address: 'কাজীপুর, সিরাজগঞ্জ', latitude: 24.6333, longitude: 89.6167),
+    PoliceStation(name: 'Belkuchi', nameBn: 'বেলকুচি থানা', ocName: 'মোঃ আব্দুল কাদের', phone: '01713-373006', address: 'বেলকুচি, সিরাজগঞ্জ', latitude: 24.3700, longitude: 89.6800),
+    PoliceStation(name: 'Chauhali', nameBn: 'চৌহালী থানা', ocName: 'মোঃ রশিদুল ইসলাম', phone: '01713-373007', address: 'চৌহালী, সিরাজগঞ্জ', latitude: 24.3833, longitude: 89.7500),
+    PoliceStation(name: 'Kamarkhanda', nameBn: 'কামারখন্দ থানা', ocName: 'মোঃ শাহাদাত হোসেন', phone: '01713-373008', address: 'কামারখন্দ, সিরাজগঞ্জ', latitude: 24.3500, longitude: 89.5833),
+    PoliceStation(name: 'Raiganj', nameBn: 'রায়গঞ্জ থানা', ocName: 'মোঃ তারিকুল ইসলাম', phone: '01713-373009', address: 'রায়গঞ্জ, সিরাজগঞ্জ', latitude: 24.2700, longitude: 89.5200),
+    PoliceStation(name: 'Tarash', nameBn: 'তাড়াশ থানা', ocName: 'মোঃ মোস্তাফিজুর রহমান', phone: '01713-373010', address: 'তাড়াশ, সিরাজগঞ্জ', latitude: 24.2600, longitude: 89.4600),
+    PoliceStation(name: 'Enayetpur', nameBn: 'এনায়েতপুর থানা', ocName: 'মোঃ আনোয়ার হোসেন', phone: '01713-373011', address: 'এনায়েতপুর, কামারখন্দ, সিরাজগঞ্জ', latitude: 24.3520, longitude: 89.6840),
+    PoliceStation(name: 'Salanga', nameBn: 'সলঙ্গা থানা', ocName: 'মোঃ ইকবাল হোসেন', phone: '01713-373012', address: 'সলঙ্গা, শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.2000, longitude: 89.6000),
+    PoliceStation(name: 'Chowhali Bazar', nameBn: 'চৌহালী বাজার থানা', ocName: 'মোঃ রফিকুল ইসলাম', phone: '01713-373013', address: 'চৌহালী বাজার, সিরাজগঞ্জ', latitude: 24.3900, longitude: 89.7600),
   ];
 
   final List<BloodDonor> _bloodDonors = [
