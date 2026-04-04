@@ -581,10 +581,10 @@ class _LandScreenState extends State<LandScreen> {
   Widget _buildLandOffices() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final offices = [
-      LandOffice(name: 'এসি ল্যান্ড অফিস (সদর)', officerName: 'মোঃ শরিফুল ইসলাম', designation: 'সহকারী কমিশনার (ভূমি)', phone: '01711-110001', address: 'জেলা প্রশাসকের কার্যালয়, সদর', upazila: 'সদর'),
-      LandOffice(name: 'এসি ল্যান্ড অফিস (উত্তর)', officerName: 'মোঃ কামরুজ্জামান', designation: 'সহকারী কমিশনার (ভূমি)', phone: '01711-110002', address: 'উপজেলা পরিষদ, উত্তর', upazila: 'উত্তর'),
-      LandOffice(name: 'সেটেলমেন্ট অফিস', officerName: 'মোঃ ফয়সাল আহমেদ', designation: 'সেটেলমেন্ট অফিসার', phone: '01711-110003', address: 'সেটেলমেন্ট ভবন, সদর', upazila: 'সদর'),
-      LandOffice(name: 'সাব-রেজিস্ট্রি অফিস', officerName: 'মোঃ তৌফিকুর রহমান', designation: 'সাব-রেজিস্ট্রার', phone: '01711-110004', address: 'রেজিস্ট্রি ভবন, সদর', upazila: 'সদর'),
+      LandOffice(name: 'এসি ল্যান্ড অফিস (সিরাজগঞ্জ সদর)', officerName: 'মোঃ শরিফুল ইসলাম', designation: 'সহকারী কমিশনার (ভূমি)', phone: '0751-63456', address: 'জেলা প্রশাসকের কার্যালয়, সিরাজগঞ্জ', upazila: 'সদর'),
+      LandOffice(name: 'এসি ল্যান্ড অফিস (শাহজাদপুর)', officerName: 'মোঃ কামরুজ্জামান', designation: 'সহকারী কমিশনার (ভূমি)', phone: '01711-110002', address: 'উপজেলা পরিষদ, শাহজাদপুর', upazila: 'শাহজাদপুর'),
+      LandOffice(name: 'সিরাজগঞ্জ সেটেলমেন্ট অফিস', officerName: 'মোঃ ফয়সাল আহমেদ', designation: 'সেটেলমেন্ট অফিসার', phone: '01711-110003', address: 'সেটেলমেন্ট ভবন, সিরাজগঞ্জ', upazila: 'সদর'),
+      LandOffice(name: 'সিরাজগঞ্জ সাব-রেজিস্ট্রি অফিস', officerName: 'মোঃ তৌফিকুর রহমান', designation: 'সাব-রেজিস্ট্রার', phone: '01711-110004', address: 'রেজিস্ট্রি ভবন, সিরাজগঞ্জ', upazila: 'সদর'),
     ];
 
     return ListView.builder(

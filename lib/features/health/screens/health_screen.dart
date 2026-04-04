@@ -14,18 +14,18 @@ class _HealthScreenState extends State<HealthScreen> {
   String _searchQuery = '';
 
   final List<Hospital> _hospitals = [
-    Hospital(id: '1', name: 'District Sadar Hospital', nameBn: 'জেলা সদর হাসপাতাল', type: 'government', address: 'হাসপাতাল রোড, সদর', phone: '01711-300001', bedCount: 250, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি', 'শিশু', 'অর্থোপেডিক', 'চক্ষু', 'ENT'], latitude: 23.8, longitude: 90.4),
-    Hospital(id: '2', name: 'Upazila Health Complex', nameBn: 'উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'উত্তর উপজেলা', phone: '01711-300002', bedCount: 50, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি'], latitude: 23.82, longitude: 90.42),
-    Hospital(id: '3', name: 'Modern Hospital', nameBn: 'মডার্ন হাসপাতাল', type: 'private', address: 'স্টেশন রোড, সদর', phone: '01711-300003', bedCount: 100, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'কার্ডিওলজি', 'নিউরোলজি'], latitude: 23.81, longitude: 90.41),
-    Hospital(id: '4', name: 'City Clinic', nameBn: 'সিটি ক্লিনিক', type: 'private', address: 'কলেজ রোড, সদর', phone: '01711-300004', bedCount: 50, hasEmergency: false, departments: ['মেডিসিন', 'গাইনি', 'শিশু'], latitude: 23.79, longitude: 90.39),
+    Hospital(id: '1', name: 'Sirajganj 250 Bed District Sadar Hospital', nameBn: 'সিরাজগঞ্জ ২৫০ শয্যা জেলা সদর হাসপাতাল', type: 'government', address: 'হাসপাতাল রোড, সিরাজগঞ্জ সদর', phone: '01711-300001', bedCount: 250, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি', 'শিশু', 'অর্থোপেডিক', 'চক্ষু', 'ENT'], latitude: 24.4534, longitude: 89.7003),
+    Hospital(id: '2', name: 'Shahzadpur Upazila Health Complex', nameBn: 'শাহজাদপুর উপজেলা স্বাস্থ্য কমপ্লেক্স', type: 'government', address: 'শাহজাদপুর, সিরাজগঞ্জ', phone: '01711-300002', bedCount: 50, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'গাইনি'], latitude: 24.1833, longitude: 89.5917),
+    Hospital(id: '3', name: 'Ibn Sina Hospital', nameBn: 'ইবনে সিনা হাসপাতাল', type: 'private', address: 'বড় বাজার, সিরাজগঞ্জ সদর', phone: '01711-300003', bedCount: 80, hasEmergency: true, departments: ['মেডিসিন', 'সার্জারি', 'কার্ডিওলজি'], latitude: 24.4520, longitude: 89.6990),
+    Hospital(id: '4', name: 'Sirajganj Clinic', nameBn: 'সিরাজগঞ্জ ক্লিনিক', type: 'private', address: 'স্টেশন রোড, সিরাজগঞ্জ সদর', phone: '01711-300004', bedCount: 40, hasEmergency: false, departments: ['মেডিসিন', 'গাইনি', 'শিশু'], latitude: 24.4510, longitude: 89.7020),
   ];
 
   final List<Doctor> _doctors = [
-    Doctor(id: '1', name: 'Dr. Md. Abdul Karim', nameBn: 'ডাঃ মোঃ আব্দুল করিম', specialty: 'Medicine', specialtyBn: 'মেডিসিন', qualification: 'MBBS, FCPS (Medicine)', hospital: 'জেলা সদর হাসপাতাল', chamber: 'হাসপাতাল রোড, সদর', phone: '01711-400001', visitingHours: 'সকাল ৯টা - দুপুর ২টা', fee: 500),
-    Doctor(id: '2', name: 'Dr. Fatema Khatun', nameBn: 'ডাঃ ফাতেমা খাতুন', specialty: 'Gynecology', specialtyBn: 'গাইনি ও প্রসূতি', qualification: 'MBBS, MS (Gynae)', hospital: 'জেলা সদর হাসপাতাল', chamber: 'মডার্ন হাসপাতাল', phone: '01711-400002', visitingHours: 'বিকাল ৪টা - রাত ৮টা', fee: 700),
-    Doctor(id: '3', name: 'Dr. Md. Hasan Ali', nameBn: 'ডাঃ মোঃ হাসান আলী', specialty: 'Surgery', specialtyBn: 'সার্জারি', qualification: 'MBBS, FCPS (Surgery)', hospital: 'মডার্ন হাসপাতাল', chamber: 'স্টেশন রোড', phone: '01711-400003', visitingHours: 'সকাল ১০টা - দুপুর ১টা', fee: 800),
-    Doctor(id: '4', name: 'Dr. Md. Rahim Uddin', nameBn: 'ডাঃ মোঃ রহিম উদ্দিন', specialty: 'Pediatrics', specialtyBn: 'শিশু রোগ', qualification: 'MBBS, DCH', hospital: 'সিটি ক্লিনিক', chamber: 'কলেজ রোড', phone: '01711-400004', visitingHours: 'বিকাল ৫টা - রাত ৯টা', fee: 600),
-    Doctor(id: '5', name: 'Dr. Md. Kamal', nameBn: 'ডাঃ মোঃ কামাল', specialty: 'Cardiology', specialtyBn: 'হৃদরোগ', qualification: 'MBBS, MD (Cardio)', hospital: 'মডার্ন হাসপাতাল', chamber: 'মডার্ন হাসপাতাল', phone: '01711-400005', visitingHours: 'সকাল ৮টা - দুপুর ১২টা', fee: 1000),
+    Doctor(id: '1', name: 'Dr. Md. Abdul Mojid', nameBn: 'ডাঃ মোঃ আব্দুল মজিদ', specialty: 'Medicine', specialtyBn: 'সিভিল সার্জন, মেডিসিন', qualification: 'MBBS, FCPS', hospital: 'সদর হাসপাতাল', chamber: 'সদর হাসপাতাল, সিরাজগঞ্জ', phone: '01711-400001', visitingHours: 'সকাল ৮টা - দুপুর ২টা', fee: 500),
+    Doctor(id: '2', name: 'Dr. Nasrin Akter', nameBn: 'ডাঃ নাসরিন আক্তার', specialty: 'Gynecology', specialtyBn: 'গাইনি ও প্রসূতি', qualification: 'MBBS, MS', hospital: 'সদর হাসপাতাল', chamber: 'সদর হাসপাতাল, সিরাজগঞ্জ', phone: '01711-400002', visitingHours: 'বিকাল ৪টা - রাত ৮টা', fee: 600),
+    Doctor(id: '3', name: 'Dr. Md. Rafiqul Islam', nameBn: 'ডাঃ মোঃ রফিকুল ইসলাম', specialty: 'Surgery', specialtyBn: 'সার্জারি', qualification: 'MBBS, FCPS', hospital: 'ইবনে সিনা হাসপাতাল', chamber: 'ইবনে সিনা হাসপাতাল, সিরাজগঞ্জ', phone: '01711-400003', visitingHours: 'সকাল ১০টা - দুপুর ১টা', fee: 800),
+    Doctor(id: '4', name: 'Dr. Md. Shahadat Hossain', nameBn: 'ডাঃ মোঃ শাহাদাত হোসেন', specialty: 'Pediatrics', specialtyBn: 'শিশু রোগ', qualification: 'MBBS, DCH', hospital: 'সিরাজগঞ্জ ক্লিনিক', chamber: 'সিরাজগঞ্জ ক্লিনিক', phone: '01711-400004', visitingHours: 'বিকাল ৫টা - রাত ৯টা', fee: 500),
+    Doctor(id: '5', name: 'Dr. Md. Anowar Hossain', nameBn: 'ডাঃ মোঃ আনোয়ার হোসেন', specialty: 'Cardiology', specialtyBn: 'হৃদরোগ', qualification: 'MBBS, MD', hospital: 'ইবনে সিনা হাসপাতাল', chamber: 'ইবনে সিনা হাসপাতাল, সিরাজগঞ্জ', phone: '01711-400005', visitingHours: 'সকাল ৯টা - দুপুর ১২টা', fee: 1000),
   ];
 
   @override
@@ -285,10 +285,10 @@ class _HealthScreenState extends State<HealthScreen> {
   Widget _buildPharmacyList() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final pharmacies = [
-      Pharmacy(name: 'লাজ ফার্মেসি', address: 'হাসপাতাল রোড, সদর', phone: '01711-500001', openingHours: 'সকাল ৮টা - রাত ১০টা', isOpen24Hours: false),
-      Pharmacy(name: 'পপুলার ফার্মেসি', address: 'স্টেশন রোড, সদর', phone: '01711-500002', openingHours: '২৪ ঘন্টা', isOpen24Hours: true),
-      Pharmacy(name: 'মডেল ফার্মেসি', address: 'কলেজ রোড, সদর', phone: '01711-500003', openingHours: 'সকাল ৭টা - রাত ১১টা', isOpen24Hours: false),
-      Pharmacy(name: 'সিটি ফার্মেসি', address: 'বাজার রোড, সদর', phone: '01711-500004', openingHours: '২৪ ঘন্টা', isOpen24Hours: true),
+      Pharmacy(name: 'লাজ ফার্মেসি', address: 'বড় বাজার, সিরাজগঞ্জ সদর', phone: '01711-500001', openingHours: 'সকাল ৮টা - রাত ১০টা', isOpen24Hours: false),
+      Pharmacy(name: 'পপুলার ফার্মেসি', address: 'হাসপাতাল রোড, সিরাজগঞ্জ সদর', phone: '01711-500002', openingHours: '২৪ ঘন্টা', isOpen24Hours: true),
+      Pharmacy(name: 'মডেল ফার্মেসি', address: 'স্টেশন রোড, সিরাজগঞ্জ সদর', phone: '01711-500003', openingHours: 'সকাল ৭টা - রাত ১১টা', isOpen24Hours: false),
+      Pharmacy(name: 'ন্যাশনাল ফার্মেসি', address: 'শাহজাদপুর রোড, সিরাজগঞ্জ', phone: '01711-500004', openingHours: '২৪ ঘন্টা', isOpen24Hours: true),
     ];
 
     return ListView.builder(
@@ -370,9 +370,9 @@ class _HealthScreenState extends State<HealthScreen> {
   Widget _buildDiagnosticList() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final diagnostics = [
-      DiagnosticCenter(name: 'জেলা ডায়াগনস্টিক সেন্টার', address: 'হাসপাতাল রোড, সদর', phone: '01711-600001', services: ['এক্স-রে', 'আল্ট্রাসনোগ্রাফি', 'ব্লাড টেস্ট', 'ইসিজি']),
-      DiagnosticCenter(name: 'মডার্ন ডায়াগনস্টিক', address: 'স্টেশন রোড, সদর', phone: '01711-600002', services: ['সিটি স্ক্যান', 'এমআরআই', 'এক্স-রে', 'ব্লাড টেস্ট', 'ইসিজি', 'ইকো']),
-      DiagnosticCenter(name: 'পপুলার ল্যাব', address: 'কলেজ রোড, সদর', phone: '01711-600003', services: ['ব্লাড টেস্ট', 'ইউরিন টেস্ট', 'বায়োকেমিস্ট্রি']),
+      DiagnosticCenter(name: 'সিরাজগঞ্জ ডায়াগনস্টিক সেন্টার', address: 'হাসপাতাল রোড, সিরাজগঞ্জ', phone: '01711-600001', services: ['এক্স-রে', 'আল্ট্রাসনোগ্রাফি', 'ব্লাড টেস্ট', 'ইসিজি']),
+      DiagnosticCenter(name: 'পপুলার ডায়াগনস্টিক', address: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-600002', services: ['সিটি স্ক্যান', 'এমআরআই', 'এক্স-রে', 'ব্লাড টেস্ট', 'ইসিজি', 'ইকো']),
+      DiagnosticCenter(name: 'যমুনা ল্যাব', address: 'স্টেশন রোড, সিরাজগঞ্জ', phone: '01711-600003', services: ['ব্লাড টেস্ট', 'ইউরিন টেস্ট', 'বায়োকেমিস্ট্রি']),
     ];
 
     return ListView.builder(

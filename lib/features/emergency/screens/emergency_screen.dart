@@ -25,19 +25,21 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
   ];
 
   final List<PoliceStation> _policeStations = [
-    PoliceStation(name: 'Sadar', nameBn: 'সদর থানা', ocName: 'মোঃ শফিকুল ইসলাম', phone: '01711-100001', address: 'সদর, জেলা সদর', latitude: 23.8, longitude: 90.4),
-    PoliceStation(name: 'Kotwali', nameBn: 'কোতোয়ালী থানা', ocName: 'মোঃ নজরুল ইসলাম', phone: '01711-100002', address: 'কোতোয়ালী, জেলা সদর', latitude: 23.81, longitude: 90.41),
-    PoliceStation(name: 'Model', nameBn: 'মডেল থানা', ocName: 'মোঃ হাবিবুর রহমান', phone: '01711-100003', address: 'মডেল টাউন, জেলা সদর', latitude: 23.79, longitude: 90.39),
+    PoliceStation(name: 'Sirajganj Sadar', nameBn: 'সিরাজগঞ্জ সদর থানা', ocName: 'মোঃ মাহবুবুর রহমান', phone: '01713-373001', address: 'সদর, সিরাজগঞ্জ', latitude: 24.4534, longitude: 89.7003),
+    PoliceStation(name: 'Kotwali Model', nameBn: 'কোতোয়ালী মডেল থানা', ocName: 'মোঃ জাহাঙ্গীর আলম', phone: '01713-373002', address: 'কোতোয়ালী, সিরাজগঞ্জ', latitude: 24.4520, longitude: 89.6990),
+    PoliceStation(name: 'Shahjadpur', nameBn: 'শাহজাদপুর থানা', ocName: 'মোঃ সাইফুল ইসলাম', phone: '01713-373003', address: 'শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.1833, longitude: 89.5917),
+    PoliceStation(name: 'Ullapara', nameBn: 'উল্লাপাড়া থানা', ocName: 'মোঃ নাজমুল হক', phone: '01713-373004', address: 'উল্লাপাড়া, সিরাজগঞ্জ', latitude: 24.3167, longitude: 89.5500),
+    PoliceStation(name: 'Kazipur', nameBn: 'কাজীপুর থানা', ocName: 'মোঃ ফারুক হোসেন', phone: '01713-373005', address: 'কাজীপুর, সিরাজগঞ্জ', latitude: 24.6333, longitude: 89.6167),
   ];
 
   final List<BloodDonor> _bloodDonors = [
-    BloodDonor(name: 'মোঃ রহিম উদ্দিন', phone: '01711-200001', bloodGroup: 'A+', area: 'সদর', lastDonation: DateTime(2026, 1, 15), isAvailable: true),
-    BloodDonor(name: 'মোঃ করিম হোসেন', phone: '01711-200002', bloodGroup: 'B+', area: 'উত্তর', lastDonation: DateTime(2026, 2, 10), isAvailable: true),
-    BloodDonor(name: 'মোঃ জাহিদ হাসান', phone: '01711-200003', bloodGroup: 'O+', area: 'দক্ষিণ', lastDonation: DateTime(2025, 12, 20), isAvailable: true),
-    BloodDonor(name: 'মোঃ সাইফুল ইসলাম', phone: '01711-200004', bloodGroup: 'AB+', area: 'সদর', lastDonation: DateTime(2026, 3, 1), isAvailable: false),
-    BloodDonor(name: 'মোঃ তানভীর আহমেদ', phone: '01711-200005', bloodGroup: 'A-', area: 'পূর্ব', lastDonation: DateTime(2026, 1, 5), isAvailable: true),
-    BloodDonor(name: 'মোঃ ফারুক হোসেন', phone: '01711-200006', bloodGroup: 'O-', area: 'পশ্চিম', lastDonation: DateTime(2025, 11, 25), isAvailable: true),
-    BloodDonor(name: 'মোঃ শাকিল আহমেদ', phone: '01711-200007', bloodGroup: 'B-', area: 'সদর', lastDonation: DateTime(2026, 2, 28), isAvailable: true),
+    BloodDonor(name: 'মোঃ রাকিবুল হাসান', phone: '01711-200001', bloodGroup: 'A+', area: 'সদর', lastDonation: DateTime(2026, 1, 15), isAvailable: true),
+    BloodDonor(name: 'মোঃ তানভীর আহমেদ', phone: '01711-200002', bloodGroup: 'B+', area: 'শাহজাদপুর', lastDonation: DateTime(2026, 2, 10), isAvailable: true),
+    BloodDonor(name: 'মোঃ সোহেল রানা', phone: '01711-200003', bloodGroup: 'O+', area: 'উল্লাপাড়া', lastDonation: DateTime(2025, 12, 20), isAvailable: true),
+    BloodDonor(name: 'মোঃ আরিফুল ইসলাম', phone: '01711-200004', bloodGroup: 'AB+', area: 'কাজীপুর', lastDonation: DateTime(2026, 3, 1), isAvailable: false),
+    BloodDonor(name: 'মোঃ ইমরান হোসেন', phone: '01711-200005', bloodGroup: 'A-', area: 'বেলকুচি', lastDonation: DateTime(2026, 1, 5), isAvailable: true),
+    BloodDonor(name: 'মোঃ শাকিল আহমেদ', phone: '01711-200006', bloodGroup: 'O-', area: 'তাড়াশ', lastDonation: DateTime(2025, 11, 25), isAvailable: true),
+    BloodDonor(name: 'মোঃ নাঈম হোসেন', phone: '01711-200007', bloodGroup: 'B-', area: 'সদর', lastDonation: DateTime(2026, 2, 28), isAvailable: true),
   ];
 
   @override
@@ -183,7 +185,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                 ],
               ),
               const SizedBox(height: 14),
-              _buildDisasterInfo('আশ্রয়কেন্দ্র', '২৫টি সরকারি আশ্রয়কেন্দ্র'),
+              _buildDisasterInfo('আশ্রয়কেন্দ্র', '৩৫টি সরকারি আশ্রয়কেন্দ্র'),
               _buildDisasterInfo('হেল্পলাইন', '১০৯০'),
               _buildDisasterInfo('দুর্যোগ পূর্বাভাস', 'বাংলাদেশ আবহাওয়া অধিদপ্তর'),
             ],

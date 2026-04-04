@@ -123,14 +123,14 @@ class AgricultureScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final prices = [
-      MarketPrice(cropName: 'Rice', cropNameBn: 'ধান (মোটা)', pricePerKg: 28, market: 'জেলা বাজার', date: DateTime.now()),
-      MarketPrice(cropName: 'Rice Fine', cropNameBn: 'ধান (চিকন)', pricePerKg: 42, market: 'জেলা বাজার', date: DateTime.now()),
-      MarketPrice(cropName: 'Wheat', cropNameBn: 'গম', pricePerKg: 35, market: 'জেলা বাজার', date: DateTime.now()),
-      MarketPrice(cropName: 'Potato', cropNameBn: 'আলু', pricePerKg: 25, market: 'জেলা বাজার', date: DateTime.now()),
-      MarketPrice(cropName: 'Onion', cropNameBn: 'পেঁয়াজ', pricePerKg: 60, market: 'জেলা বাজার', date: DateTime.now()),
-      MarketPrice(cropName: 'Garlic', cropNameBn: 'রসুন', pricePerKg: 120, market: 'জেলা বাজার', date: DateTime.now()),
-      MarketPrice(cropName: 'Tomato', cropNameBn: 'টমেটো', pricePerKg: 40, market: 'জেলা বাজার', date: DateTime.now()),
-      MarketPrice(cropName: 'Lentil', cropNameBn: 'মসুর ডাল', pricePerKg: 110, market: 'জেলা বাজার', date: DateTime.now()),
+      MarketPrice(cropName: 'Rice', cropNameBn: 'ধান (মোটা)', pricePerKg: 28, market: 'সিরাজগঞ্জ বাজার', date: DateTime.now()),
+      MarketPrice(cropName: 'Rice Fine', cropNameBn: 'ধান (চিকন)', pricePerKg: 42, market: 'সিরাজগঞ্জ বাজার', date: DateTime.now()),
+      MarketPrice(cropName: 'Wheat', cropNameBn: 'গম', pricePerKg: 35, market: 'সিরাজগঞ্জ বাজার', date: DateTime.now()),
+      MarketPrice(cropName: 'Potato', cropNameBn: 'আলু', pricePerKg: 25, market: 'সিরাজগঞ্জ বাজার', date: DateTime.now()),
+      MarketPrice(cropName: 'Onion', cropNameBn: 'পেঁয়াজ', pricePerKg: 60, market: 'সিরাজগঞ্জ বাজার', date: DateTime.now()),
+      MarketPrice(cropName: 'Garlic', cropNameBn: 'রসুন', pricePerKg: 120, market: 'সিরাজগঞ্জ বাজার', date: DateTime.now()),
+      MarketPrice(cropName: 'Tomato', cropNameBn: 'টমেটো', pricePerKg: 40, market: 'সিরাজগঞ্জ বাজার', date: DateTime.now()),
+      MarketPrice(cropName: 'Lentil', cropNameBn: 'মসুর ডাল', pricePerKg: 110, market: 'সিরাজগঞ্জ বাজার', date: DateTime.now()),
     ];
 
     return Column(
@@ -160,7 +160,7 @@ class AgricultureScreen extends StatelessWidget {
               ),
               const Spacer(),
               const Text(
-                'জেলা বাজার',
+                'সিরাজগঞ্জ বাজার',
                 style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 14),
               ),
             ],
@@ -211,9 +211,9 @@ class AgricultureScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final dealers = [
-      FertilizerDealer(name: 'আল-আমিন ফার্টিলাইজার', address: 'বাজার রোড, সদর', phone: '01711-800001', licenseNo: 'FD-001', availableFertilizers: ['ইউরিয়া', 'TSP', 'MOP', 'DAP']),
-      FertilizerDealer(name: 'গ্রীন এগ্রো', address: 'স্টেশন রোড, সদর', phone: '01711-800002', licenseNo: 'FD-002', availableFertilizers: ['ইউরিয়া', 'TSP', 'জিপসাম', 'জিংক']),
-      FertilizerDealer(name: 'কৃষক বন্ধু', address: 'উত্তর বাজার', phone: '01711-800003', licenseNo: 'FD-003', availableFertilizers: ['ইউরিয়া', 'MOP', 'বোরন', 'জৈব সার']),
+      FertilizerDealer(name: 'আল-আমিন ফার্টিলাইজার', address: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-800001', licenseNo: 'FD-001', availableFertilizers: ['ইউরিয়া', 'TSP', 'MOP', 'DAP']),
+      FertilizerDealer(name: 'যমুনা এগ্রো', address: 'স্টেশন রোড, সিরাজগঞ্জ', phone: '01711-800002', licenseNo: 'FD-002', availableFertilizers: ['ইউরিয়া', 'TSP', 'জিপসাম', 'জিংক']),
+      FertilizerDealer(name: 'কৃষক বন্ধু সিরাজগঞ্জ', address: 'শাহজাদপুর রোড, সিরাজগঞ্জ', phone: '01711-800003', licenseNo: 'FD-003', availableFertilizers: ['ইউরিয়া', 'MOP', 'বোরন', 'জৈব সার']),
     ];
 
     return ListView.builder(
@@ -291,10 +291,10 @@ class AgricultureScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final offices = [
-      AgricultureOffice(name: 'জেলা কৃষি সম্প্রসারণ অধিদপ্তর', officerName: 'মোঃ আনোয়ার হোসেন', designation: 'উপ-পরিচালক', phone: '01711-900001', address: 'কৃষি ভবন, সদর', upazila: 'সদর'),
-      AgricultureOffice(name: 'উপজেলা কৃষি অফিস (সদর)', officerName: 'মোঃ শামীম আহমেদ', designation: 'উপজেলা কৃষি অফিসার', phone: '01711-900002', address: 'উপজেলা পরিষদ, সদর', upazila: 'সদর'),
-      AgricultureOffice(name: 'মৎস্য অফিস', officerName: 'মোঃ জহিরুল ইসলাম', designation: 'জেলা মৎস্য অফিসার', phone: '01711-900003', address: 'মৎস্য ভবন, সদর', upazila: 'সদর'),
-      AgricultureOffice(name: 'প্রাণিসম্পদ অফিস', officerName: 'ডাঃ মোঃ রাশেদুল ইসলাম', designation: 'জেলা প্রাণিসম্পদ অফিসার', phone: '01711-900004', address: 'প্রাণিসম্পদ ভবন, সদর', upazila: 'সদর'),
+      AgricultureOffice(name: 'সিরাজগঞ্জ জেলা কৃষি সম্প্রসারণ অধিদপ্তর', officerName: 'মোঃ জাহাঙ্গীর আলম', designation: 'উপ-পরিচালক', phone: '0751-62789', address: 'কৃষি ভবন, সিরাজগঞ্জ', upazila: 'সদর'),
+      AgricultureOffice(name: 'উপজেলা কৃষি অফিস (সিরাজগঞ্জ সদর)', officerName: 'মোঃ শামীম আহমেদ', designation: 'উপজেলা কৃষি অফিসার', phone: '01711-900002', address: 'উপজেলা পরিষদ, সিরাজগঞ্জ সদর', upazila: 'সদর'),
+      AgricultureOffice(name: 'সিরাজগঞ্জ জেলা মৎস্য অফিস', officerName: 'মোঃ জহিরুল ইসলাম', designation: 'জেলা মৎস্য অফিসার', phone: '01711-900003', address: 'মৎস্য ভবন, সিরাজগঞ্জ', upazila: 'সদর'),
+      AgricultureOffice(name: 'সিরাজগঞ্জ প্রাণিসম্পদ অফিস', officerName: 'ডাঃ মোঃ রাশেদুল ইসলাম', designation: 'জেলা প্রাণিসম্পদ অফিসার', phone: '01711-900004', address: 'প্রাণিসম্পদ ভবন, সিরাজগঞ্জ', upazila: 'সদর'),
     ];
 
     return ListView.builder(

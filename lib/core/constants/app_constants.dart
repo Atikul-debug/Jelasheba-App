@@ -2,10 +2,12 @@ class AppConstants {
   static const String appName = 'জেলাশেবা';
   static const String appNameEn = 'Jelasheba';
   static const String appVersion = '1.0.0';
-  static const String districtName = 'ঢাকা';
-  static const String districtNameEn = 'Dhaka';
-  static const String dcName = 'মোঃ আব্দুল্লাহ আল মামুন';
-  static const String dcDesignation = 'জেলা প্রশাসক';
+  static const String districtName = 'সিরাজগঞ্জ';
+  static const String districtNameEn = 'Sirajganj';
+  static const String divisionName = 'রাজশাহী';
+  static const String divisionNameEn = 'Rajshahi';
+  static const String dcName = 'মোঃ আতিকুল ইসলাম';
+  static const String dcDesignation = 'জেলা প্রশাসক, সিরাজগঞ্জ';
   static const String emergency999 = '999';
   static const String fireService = '16163';
   static const String ambulance = '199';

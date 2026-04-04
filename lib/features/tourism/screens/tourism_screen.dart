@@ -14,23 +14,23 @@ class _TourismScreenState extends State<TourismScreen> {
   String _selectedCategory = 'সব';
 
   final List<TouristPlace> _places = [
-    TouristPlace(id: '1', name: 'Historical Fort', nameBn: 'ঐতিহাসিক দুর্গ', description: 'মোগল আমলে নির্মিত এই দুর্গটি জেলার অন্যতম প্রাচীন স্থাপনা। ইতিহাস ও স্থাপত্যের অনন্য নিদর্শন।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'সদর উপজেলা', latitude: 23.8, longitude: 90.4, entryFee: '২০ টাকা', openingHours: 'সকাল ৯টা - বিকাল ৫টা', rating: 4.5),
-    TouristPlace(id: '2', name: 'Lake Park', nameBn: 'লেক পার্ক', description: 'প্রাকৃতিক সৌন্দর্যে ভরপুর এই লেক পার্কটি পরিবার নিয়ে ঘুরে বেড়ানোর জন্য আদর্শ।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'উত্তর উপজেলা', latitude: 23.82, longitude: 90.42, entryFee: '১০ টাকা', openingHours: 'সকাল ৬টা - সন্ধ্যা ৬টা', rating: 4.2),
-    TouristPlace(id: '3', name: 'Ancient Mosque', nameBn: 'প্রাচীন মসজিদ', description: 'সুলতানি আমলের এই মসজিদটি স্থাপত্য শিল্পের অনন্য নিদর্শন। প্রতিদিন শত শত দর্শনার্থী আসেন।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'দক্ষিণ উপজেলা', latitude: 23.78, longitude: 90.38, openingHours: 'সর্বদা খোলা', rating: 4.7),
-    TouristPlace(id: '4', name: 'Eco Park', nameBn: 'ইকো পার্ক', description: 'জীববৈচিত্র্যে সমৃদ্ধ এই ইকো পার্কে বিভিন্ন প্রজাতির গাছ ও পাখি দেখা যায়।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'পূর্ব উপজেলা', latitude: 23.81, longitude: 90.43, entryFee: '৩০ টাকা', openingHours: 'সকাল ৮টা - বিকাল ৫টা', rating: 4.0),
-    TouristPlace(id: '5', name: 'Hindu Temple', nameBn: 'প্রাচীন মন্দির', description: 'শতবর্ষ প্রাচীন এই মন্দিরটি হিন্দু সম্প্রদায়ের একটি গুরুত্বপূর্ণ তীর্থস্থান।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'পশ্চিম উপজেলা', latitude: 23.79, longitude: 90.37, openingHours: 'সকাল ৬টা - সন্ধ্যা ৭টা', rating: 4.3),
+    TouristPlace(id: '1', name: 'Enayetpur Shrine', nameBn: 'এনায়েতপুর দরবার শরীফ', description: 'সিরাজগঞ্জের ঐতিহাসিক এনায়েতপুর দরবার শরীফ একটি বিখ্যাত ধর্মীয় স্থান। প্রতি বছর লক্ষ লক্ষ ভক্ত এখানে আসেন।', category: 'religious', categoryBn: 'ধর্মীয়', address: 'কামারখন্দ, সিরাজগঞ্জ', latitude: 24.3500, longitude: 89.6833, openingHours: 'সর্বদা খোলা', rating: 4.8),
+    TouristPlace(id: '2', name: 'Baghbari Ghat', nameBn: 'বাঘাবাড়ী ঘাট', description: 'যমুনা নদীর তীরে অবস্থিত বাঘাবাড়ী ঘাট সিরাজগঞ্জের অন্যতম দর্শনীয় স্থান। নদীর অপরূপ সৌন্দর্য উপভোগ করা যায়।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.1700, longitude: 89.6000, openingHours: 'সকাল ৬টা - সন্ধ্যা ৬টা', rating: 4.3),
+    TouristPlace(id: '3', name: 'Harding Bridge', nameBn: 'হার্ডিঞ্জ ব্রিজ দর্শন', description: 'ঐতিহাসিক হার্ডিঞ্জ ব্রিজ বাংলাদেশের দীর্ঘতম রেলসেতুগুলির একটি। ব্রিটিশ আমলে নির্মিত এই সেতুটি ইতিহাসের সাক্ষী।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'পাকশী-সিরাজগঞ্জ সীমান্ত', latitude: 24.0700, longitude: 89.0200, entryFee: 'বিনামূল্যে', openingHours: 'সর্বদা খোলা', rating: 4.5),
+    TouristPlace(id: '4', name: 'Shahzadpur Kuthibari', nameBn: 'শাহজাদপুর কুঠিবাড়ী', description: 'রবীন্দ্রনাথ ঠাকুরের স্মৃতিবিজড়িত শাহজাদপুর কুঠিবাড়ী। এখানে বসে তিনি অনেক বিখ্যাত রচনা লিখেছিলেন।', category: 'historical', categoryBn: 'ঐতিহাসিক', address: 'শাহজাদপুর, সিরাজগঞ্জ', latitude: 24.1833, longitude: 89.5917, entryFee: '২০ টাকা', openingHours: 'সকাল ৯টা - বিকাল ৫টা', rating: 4.7),
+    TouristPlace(id: '5', name: 'Jamuna Eco Park', nameBn: 'যমুনা ইকো পার্ক', description: 'যমুনা নদীর চরে গড়ে ওঠা এই ইকো পার্কে বিভিন্ন প্রজাতির গাছ, পাখি ও প্রাকৃতিক সৌন্দর্য উপভোগ করা যায়।', category: 'scenic', categoryBn: 'প্রাকৃতিক', address: 'সিরাজগঞ্জ সদর', latitude: 24.4600, longitude: 89.7100, entryFee: '১০ টাকা', openingHours: 'সকাল ৮টা - বিকাল ৫টা', rating: 4.0),
   ];
 
   final List<Hotel> _hotels = [
-    Hotel(name: 'হোটেল গ্র্যান্ড প্যালেস', address: 'স্টেশন রোড, সদর', phone: '01711-120001', priceRange: '১,৫০০ - ৫,০০০ টাকা', rating: 4.0, amenities: ['এসি', 'ওয়াইফাই', 'পার্কিং', 'রেস্টুরেন্ট']),
-    Hotel(name: 'হোটেল রয়েল', address: 'কলেজ রোড, সদর', phone: '01711-120002', priceRange: '৮০০ - ২,৫০০ টাকা', rating: 3.5, amenities: ['এসি', 'ওয়াইফাই']),
-    Hotel(name: 'হোটেল সিটি ইন', address: 'বাস স্ট্যান্ড, সদর', phone: '01711-120003', priceRange: '৫০০ - ১,৫০০ টাকা', rating: 3.0, amenities: ['ফ্যান', 'পার্কিং']),
+    Hotel(name: 'হোটেল সিরাজগঞ্জ গার্ডেন', address: 'স্টেশন রোড, সিরাজগঞ্জ সদর', phone: '01711-120001', priceRange: '১,২০০ - ৩,৫০০ টাকা', rating: 3.8, amenities: ['এসি', 'ওয়াইফাই', 'পার্কিং', 'রেস্টুরেন্ট']),
+    Hotel(name: 'হোটেল যমুনা ভিউ', address: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-120002', priceRange: '৮০০ - ২,০০০ টাকা', rating: 3.5, amenities: ['এসি', 'ওয়াইফাই']),
+    Hotel(name: 'হোটেল নিরাপদ', address: 'বাস স্ট্যান্ড, সিরাজগঞ্জ', phone: '01711-120003', priceRange: '৪০০ - ১,০০০ টাকা', rating: 3.0, amenities: ['ফ্যান', 'পার্কিং']),
   ];
 
   final List<Transport> _transports = [
-    Transport(type: 'bus', typeBn: 'বাস', route: 'ঢাকা - জেলা সদর', schedule: 'প্রতি ৩০ মিনিট পর পর', fare: '৪০০ - ৬০০ টাকা', operator: 'গ্রীনলাইন পরিবহন', phone: '01711-130001'),
-    Transport(type: 'bus', typeBn: 'বাস', route: 'জেলা সদর - চট্টগ্রাম', schedule: 'সকাল ৬টা, ৯টা, দুপুর ১২টা', fare: '৫০০ - ৮০০ টাকা', operator: 'শ্যামলী পরিবহন', phone: '01711-130002'),
-    Transport(type: 'train', typeBn: 'ট্রেন', route: 'ঢাকা - জেলা সদর', schedule: 'সকাল ৭টা, বিকাল ৩টা', fare: '২০০ - ৫০০ টাকা', operator: 'বাংলাদেশ রেলওয়ে', phone: '131'),
+    Transport(type: 'bus', typeBn: 'বাস', route: 'ঢাকা - সিরাজগঞ্জ', schedule: 'প্রতি ৩০ মিনিট পর পর', fare: '৪০০ - ৬০০ টাকা', operator: 'শ্যামলী পরিবহন / হানিফ', phone: '01711-130001'),
+    Transport(type: 'bus', typeBn: 'বাস', route: 'সিরাজগঞ্জ - রাজশাহী', schedule: 'সকাল ৬টা, ৯টা, দুপুর ১২টা', fare: '২৫০ - ৪০০ টাকা', operator: 'আল-হামরা পরিবহন', phone: '01711-130002'),
+    Transport(type: 'bus', typeBn: 'বাস', route: 'সিরাজগঞ্জ - বগুড়া', schedule: 'প্রতি ১ ঘন্টা পর পর', fare: '১৫০ - ২৫০ টাকা', operator: 'সিরাজগঞ্জ এক্সপ্রেস', phone: '01711-130003'),
   ];
 
   List<String> get _categories => ['সব', 'প্রাকৃতিক', 'ঐতিহাসিক', 'ধর্মীয়'];

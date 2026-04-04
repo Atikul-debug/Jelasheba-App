@@ -84,25 +84,25 @@ class DistrictInfoScreen extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              _buildStatCard('আয়তন', '১,৪৬৩.৬০', 'বর্গ কি.মি.', Icons.straighten_rounded, const Color(0xFF3B82F6), isDark),
+              _buildStatCard('আয়তন', '২,৪৯৭.৯২', 'বর্গ কি.মি.', Icons.straighten_rounded, const Color(0xFF3B82F6), isDark),
               const SizedBox(width: 10),
-              _buildStatCard('জনসংখ্যা', '১২.৩৪', 'লক্ষ', Icons.people_rounded, const Color(0xFF8B5CF6), isDark),
+              _buildStatCard('জনসংখ্যা', '৩২.৫১', 'লক্ষ', Icons.people_rounded, const Color(0xFF8B5CF6), isDark),
             ],
           ),
           const SizedBox(height: 10),
           Row(
             children: [
-              _buildStatCard('সাক্ষরতা', '৭৬.৫', '%', Icons.school_rounded, const Color(0xFF10B981), isDark),
+              _buildStatCard('সাক্ষরতা', '৪৩.৭', '%', Icons.school_rounded, const Color(0xFF10B981), isDark),
               const SizedBox(width: 10),
-              _buildStatCard('উপজেলা', '৫', 'টি', Icons.location_city_rounded, const Color(0xFFF59E0B), isDark),
+              _buildStatCard('উপজেলা', '৯', 'টি', Icons.location_city_rounded, const Color(0xFFF59E0B), isDark),
             ],
           ),
           const SizedBox(height: 10),
           Row(
             children: [
-              _buildStatCard('পৌরসভা', '৭', 'টি', Icons.apartment_rounded, const Color(0xFFEF4444), isDark),
+              _buildStatCard('পৌরসভা', '৩', 'টি', Icons.apartment_rounded, const Color(0xFFEF4444), isDark),
               const SizedBox(width: 10),
-              _buildStatCard('ইউনিয়ন', '৫৪', 'টি', Icons.villa_rounded, const Color(0xFF06B6D4), isDark),
+              _buildStatCard('ইউনিয়ন', '৮৪', 'টি', Icons.villa_rounded, const Color(0xFF06B6D4), isDark),
             ],
           ),
           const SizedBox(height: 20),
@@ -130,7 +130,7 @@ class DistrictInfoScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 14),
                 const Text(
-                  'জেলার ইতিহাস সুপ্রাচীনকাল থেকে সমৃদ্ধ। বিভিন্ন শাসনামলে এই অঞ্চল গুরুত্বপূর্ণ ভূমিকা পালন করেছে। ব্রিটিশ শাসনামলে জেলা হিসেবে প্রতিষ্ঠিত হয়ে পরবর্তীতে বাংলাদেশের একটি গুরুত্বপূর্ণ প্রশাসনিক একক হিসেবে আত্মপ্রকাশ করে।',
+                  'সিরাজগঞ্জ জেলা রাজশাহী বিভাগের অন্তর্গত একটি প্রাচীন জনপদ। যমুনা নদীর তীরে অবস্থিত এই জেলাটি তাঁত শিল্পের জন্য বিখ্যাত। ১৯৮৪ সালে পাবনা জেলা থেকে বিভক্ত হয়ে সিরাজগঞ্জ পৃথক জেলা হিসেবে প্রতিষ্ঠিত হয়। এনায়েতপুর, বাঘাবাড়ী ঘাট ও হার্ডিঞ্জ ব্রিজ এই জেলার উল্লেখযোগ্য স্থান।',
                   style: TextStyle(fontSize: 14, height: 1.6, color: AppColors.textSecondary),
                 ),
               ],
@@ -180,11 +180,15 @@ class DistrictInfoScreen extends StatelessWidget {
   Widget _buildUpazilaList(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final upazilas = [
-      Upazila(name: 'Sadar', nameBn: 'সদর', unoName: 'মোঃ রফিকুল ইসলাম', phone: '01711-111111', unionCount: 12, population: 300000),
-      Upazila(name: 'North', nameBn: 'উত্তর', unoName: 'মোঃ আলী হোসেন', phone: '01711-222222', unionCount: 10, population: 250000),
-      Upazila(name: 'South', nameBn: 'দক্ষিণ', unoName: 'মোঃ কামাল উদ্দিন', phone: '01711-333333', unionCount: 11, population: 270000),
-      Upazila(name: 'East', nameBn: 'পূর্ব', unoName: 'মোঃ জামাল উদ্দিন', phone: '01711-444444', unionCount: 9, population: 220000),
-      Upazila(name: 'West', nameBn: 'পশ্চিম', unoName: 'মোঃ নাসির উদ্দিন', phone: '01711-555555', unionCount: 12, population: 280000),
+      Upazila(name: 'Sirajganj Sadar', nameBn: 'সিরাজগঞ্জ সদর', unoName: 'মোঃ তানভীর হাসান', phone: '01711-111001', unionCount: 11, population: 450000),
+      Upazila(name: 'Belkuchi', nameBn: 'বেলকুচি', unoName: 'মোঃ শাহীন আলম', phone: '01711-111002', unionCount: 8, population: 280000),
+      Upazila(name: 'Chauhali', nameBn: 'চৌহালী', unoName: 'মোঃ ইমরান হোসেন', phone: '01711-111003', unionCount: 5, population: 180000),
+      Upazila(name: 'Kamarkhanda', nameBn: 'কামারখন্দ', unoName: 'মোঃ সাইফুল ইসলাম', phone: '01711-111004', unionCount: 7, population: 220000),
+      Upazila(name: 'Kazipur', nameBn: 'কাজীপুর', unoName: 'মোঃ আমিনুল ইসলাম', phone: '01711-111005', unionCount: 12, population: 400000),
+      Upazila(name: 'Raiganj', nameBn: 'রায়গঞ্জ', unoName: 'মোঃ মাহবুবুর রহমান', phone: '01711-111006', unionCount: 10, population: 320000),
+      Upazila(name: 'Shahjadpur', nameBn: 'শাহজাদপুর', unoName: 'মোঃ ফারুক আহমেদ', phone: '01711-111007', unionCount: 12, population: 480000),
+      Upazila(name: 'Tarash', nameBn: 'তাড়াশ', unoName: 'মোঃ রাশেদুল ইসলাম', phone: '01711-111008', unionCount: 9, population: 300000),
+      Upazila(name: 'Ullahpara', nameBn: 'উল্লাপাড়া', unoName: 'মোঃ জাহিদুল ইসলাম', phone: '01711-111009', unionCount: 10, population: 420000),
     ];
 
     return ListView.builder(
@@ -251,12 +255,12 @@ class DistrictInfoScreen extends StatelessWidget {
 
   Widget _buildOfficerList(BuildContext context) {
     final officers = [
-      Officer(name: 'মোঃ আব্দুল্লাহ আল মামুন', designation: 'জেলা প্রশাসক', phone: '01711-000001', email: 'dc@district.gov.bd', office: 'জেলা প্রশাসকের কার্যালয়'),
-      Officer(name: 'মোঃ ফজলুল হক', designation: 'অতিরিক্ত জেলা প্রশাসক (সার্বিক)', phone: '01711-000002', email: 'adc@district.gov.bd', office: 'জেলা প্রশাসকের কার্যালয়'),
-      Officer(name: 'মোঃ শরিফুল ইসলাম', designation: 'অতিরিক্ত জেলা প্রশাসক (রাজস্ব)', phone: '01711-000003', email: 'adcrev@district.gov.bd', office: 'জেলা প্রশাসকের কার্যালয়'),
-      Officer(name: 'মোঃ আনিসুর রহমান', designation: 'জেলা পুলিশ সুপার', phone: '01711-000004', email: 'sp@police.gov.bd', office: 'জেলা পুলিশ সুপারের কার্যালয়'),
-      Officer(name: 'ডাঃ মোঃ হাসান আলী', designation: 'সিভিল সার্জন', phone: '01711-000005', email: 'cs@health.gov.bd', office: 'সিভিল সার্জন অফিস'),
-      Officer(name: 'মোঃ কামরুজ্জামান', designation: 'জেলা শিক্ষা অফিসার', phone: '01711-000006', email: 'deo@education.gov.bd', office: 'জেলা শিক্ষা অফিস'),
+      Officer(name: 'মোঃ আতিকুল ইসলাম', designation: 'জেলা প্রশাসক', phone: '01711-000001', email: 'dc@sirajganj.gov.bd', office: 'জেলা প্রশাসকের কার্যালয়, সিরাজগঞ্জ'),
+      Officer(name: 'মোঃ মোস্তাফিজুর রহমান', designation: 'অতিরিক্ত জেলা প্রশাসক (সার্বিক)', phone: '01711-000002', email: 'adc@sirajganj.gov.bd', office: 'জেলা প্রশাসকের কার্যালয়, সিরাজগঞ্জ'),
+      Officer(name: 'মোঃ শফিকুল ইসলাম', designation: 'অতিরিক্ত জেলা প্রশাসক (রাজস্ব)', phone: '01711-000003', email: 'adcrev@sirajganj.gov.bd', office: 'জেলা প্রশাসকের কার্যালয়, সিরাজগঞ্জ'),
+      Officer(name: 'মোঃ আশরাফুল ইসলাম', designation: 'জেলা পুলিশ সুপার', phone: '01711-000004', email: 'sp@sirajganj.police.gov.bd', office: 'জেলা পুলিশ সুপারের কার্যালয়, সিরাজগঞ্জ'),
+      Officer(name: 'ডাঃ মোঃ আব্দুল মজিদ', designation: 'সিভিল সার্জন', phone: '01711-000005', email: 'cs@sirajganj.health.gov.bd', office: 'সিভিল সার্জন অফিস, সিরাজগঞ্জ'),
+      Officer(name: 'মোঃ রেজাউল করিম', designation: 'জেলা শিক্ষা অফিসার', phone: '01711-000006', email: 'deo@sirajganj.education.gov.bd', office: 'জেলা শিক্ষা অফিস, সিরাজগঞ্জ'),
     ];
 
     return ListView.builder(
@@ -337,7 +341,7 @@ class DistrictInfoScreen extends StatelessWidget {
                   'আসসালামু আলাইকুম। জেলাশেবা অ্যাপে আপনাকে স্বাগতম। এই অ্যাপের মাধ্যমে আপনি জেলা প্রশাসনের সকল সেবা সহজেই পেতে পারবেন।\n\n'
                   'আমাদের লক্ষ্য হচ্ছে জনগণের দোরগোড়ায় সেবা পৌঁছে দেওয়া। আপনাদের যেকোনো সমস্যা, অভিযোগ বা পরামর্শ এই অ্যাপের মাধ্যমে জানাতে পারবেন।\n\n'
                   'আসুন, আমরা সবাই মিলে একটি সুন্দর ও সমৃদ্ধ জেলা গড়ে তুলি।\n\n'
-                  'ধন্যবাদান্তে,\nমোঃ আব্দুল্লাহ আল মামুন\nজেলা প্রশাসক',
+                  'ধন্যবাদান্তে,\nমোঃ আতিকুল ইসলাম\nজেলা প্রশাসক, সিরাজগঞ্জ',
                   style: TextStyle(fontSize: 15, height: 1.7),
                 ),
               ],

@@ -396,9 +396,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 children: [
                   _buildStatItem('১৫+', 'সেবা', const Color(0xFF3B82F6)),
                   _buildStatDivider(isDark),
-                  _buildStatItem('৫', 'উপজেলা', const Color(0xFF10B981)),
+                  _buildStatItem('৯', 'উপজেলা', const Color(0xFF10B981)),
                   _buildStatDivider(isDark),
-                  _buildStatItem('৫৪', 'ইউনিয়ন', const Color(0xFF8B5CF6)),
+                  _buildStatItem('৮৪', 'ইউনিয়ন', const Color(0xFF8B5CF6)),
                   _buildStatDivider(isDark),
                   _buildStatItem('২৪/৭', 'সেবা', const Color(0xFFF59E0B)),
                 ],
