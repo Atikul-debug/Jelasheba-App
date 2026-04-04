@@ -81,7 +81,7 @@ class _HealthScreenState extends State<HealthScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 6,
+      length: 5,
       child: Builder(
         builder: (ctx) {
           final tabController = DefaultTabController.of(ctx);
@@ -100,7 +100,6 @@ class _HealthScreenState extends State<HealthScreen> {
                       Tab(text: 'হাসপাতাল'),
                       Tab(text: 'ডাক্তার'),
                       Tab(text: 'ফার্মেসি'),
-                      Tab(text: 'হসপিটাল'),
                       Tab(text: 'অ্যাম্বুলেন্স'),
                       Tab(text: 'রক্তদাতা'),
                     ],
@@ -111,12 +110,11 @@ class _HealthScreenState extends State<HealthScreen> {
                     _buildHospitalList(),
                     _buildDoctorList(),
                     _buildPharmacyList(),
-                    _buildDiagnosticList(),
                     _buildAmbulanceList(),
                     _buildBloodDonors(),
                   ],
                 ),
-                floatingActionButton: tabController.index == 5
+                floatingActionButton: tabController.index == 4
                     ? FloatingActionButton.extended(
                         onPressed: () => _showDonorRegistrationForm(),
                         backgroundColor: AppColors.error,
@@ -477,78 +475,6 @@ class _HealthScreenState extends State<HealthScreen> {
                   child: IconButton(
                     icon: const Icon(Icons.call_rounded, color: AppColors.success),
                     onPressed: () => Helpers.makePhoneCall(pharmacy.phone),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildDiagnosticList() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final diagnostics = [
-      DiagnosticCenter(name: 'সিরাজগঞ্জ ডায়াগনস্টিক সেন্টার', address: 'হাসপাতাল রোড, সিরাজগঞ্জ', phone: '01711-600001', services: ['এক্স-রে', 'আল্ট্রাসনোগ্রাফি', 'ব্লাড টেস্ট', 'ইসিজি']),
-      DiagnosticCenter(name: 'পপুলার ডায়াগনস্টিক', address: 'বড় বাজার, সিরাজগঞ্জ', phone: '01711-600002', services: ['সিটি স্ক্যান', 'এমআরআই', 'এক্স-রে', 'ব্লাড টেস্ট', 'ইসিজি', 'ইকো']),
-      DiagnosticCenter(name: 'যমুনা ল্যাব', address: 'স্টেশন রোড, সিরাজগঞ্জ', phone: '01711-600003', services: ['ব্লাড টেস্ট', 'ইউরিন টেস্ট', 'বায়োকেমিস্ট্রি']),
-    ];
-
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(12),
-      itemCount: diagnostics.length,
-      itemBuilder: (context, index) {
-        final d = diagnostics[index];
-        return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.darkCard : Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: isDark ? [] : AppColors.softShadow,
-          ),
-          child: Theme(
-            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-            child: ExpansionTile(
-              leading: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: isDark ? 0.15 : 0.08),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.biotech_rounded, color: Colors.blue),
-              ),
-              title: Text(d.name, style: const TextStyle(fontWeight: FontWeight.w700)),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(d.address, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textSecondary)),
-              ),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('সেবাসমূহ:', style: TextStyle(fontWeight: FontWeight.w700)),
-                      const SizedBox(height: 6),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 4,
-                        children: d.services.map((s) => Chip(
-                          label: Text(s, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.blue)),
-                          padding: EdgeInsets.zero,
-                          side: BorderSide(color: Colors.blue.withValues(alpha: 0.3)),
-                          backgroundColor: Colors.blue.withValues(alpha: isDark ? 0.15 : 0.05),
-                        )).toList(),
-                      ),
-                      const SizedBox(height: 14),
-                      ElevatedButton.icon(
-                        onPressed: () => Helpers.makePhoneCall(d.phone),
-                        icon: const Icon(Icons.call_rounded),
-                        label: Text('কল: ${d.phone}'),
-                      ),
-                    ],
                   ),
                 ),
               ],
