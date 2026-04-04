@@ -33,7 +33,7 @@ class _HealthScreenState extends State<HealthScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 5,
+      length: 6,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('চিকিৎসা'),
@@ -47,6 +47,7 @@ class _HealthScreenState extends State<HealthScreen> {
               Tab(text: 'ডাক্তার'),
               Tab(text: 'ফার্মেসি'),
               Tab(text: 'ডায়াগনস্টিক'),
+              Tab(text: 'অ্যাম্বুলেন্স'),
               Tab(text: 'রক্তদাতা'),
             ],
           ),
@@ -57,6 +58,7 @@ class _HealthScreenState extends State<HealthScreen> {
             _buildDoctorList(),
             _buildPharmacyList(),
             _buildDiagnosticList(),
+            _buildAmbulanceList(),
             _buildBloodDonors(),
           ],
         ),
@@ -459,6 +461,170 @@ class _HealthScreenState extends State<HealthScreen> {
     BloodDonor(name: 'ফাতেমা আক্তার', phone: '01711-200006', bloodGroup: 'O-', area: 'তাড়াশ, সিরাজগঞ্জ', lastDonation: DateTime(2025, 11, 25), isAvailable: true, age: 27, gender: 'মহিলা', district: 'সিরাজগঞ্জ', upazila: 'তাড়াশ', weight: 58, profession: 'গৃহিণী'),
     BloodDonor(name: 'মোঃ নাঈম হোসেন', phone: '01711-200007', bloodGroup: 'B-', area: 'সদর, সিরাজগঞ্জ', lastDonation: DateTime(2026, 2, 28), isAvailable: true, age: 24, gender: 'পুরুষ', district: 'সিরাজগঞ্জ', upazila: 'সদর', weight: 65, profession: 'ছাত্র'),
   ];
+
+  Widget _buildAmbulanceList() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final ambulances = [
+      // সিরাজগঞ্জ সদর
+      {'name': 'সদর হাসপাতাল অ্যাম্বুলেন্স-১', 'area': 'সিরাজগঞ্জ সদর', 'phone': '01711-301001', 'type': 'সরকারি', 'available': true},
+      {'name': 'সদর হাসপাতাল অ্যাম্বুলেন্স-২', 'area': 'সিরাজগঞ্জ সদর', 'phone': '01711-301002', 'type': 'সরকারি', 'available': true},
+      {'name': 'ইবনে সিনা অ্যাম্বুলেন্স', 'area': 'সিরাজগঞ্জ সদর', 'phone': '01711-301003', 'type': 'বেসরকারি', 'available': true},
+      {'name': 'সিরাজগঞ্জ ক্লিনিক অ্যাম্বুলেন্স', 'area': 'সিরাজগঞ্জ সদর', 'phone': '01711-301004', 'type': 'বেসরকারি', 'available': true},
+      {'name': 'রেড ক্রিসেন্ট অ্যাম্বুলেন্স', 'area': 'সিরাজগঞ্জ সদর', 'phone': '01711-301005', 'type': 'সংস্থা', 'available': true},
+      // শাহজাদপুর
+      {'name': 'শাহজাদপুর স্বাস্থ্য কমপ্লেক্স অ্যাম্বুলেন্স', 'area': 'শাহজাদপুর', 'phone': '01711-301006', 'type': 'সরকারি', 'available': true},
+      {'name': 'শাহজাদপুর বেসরকারি অ্যাম্বুলেন্স', 'area': 'শাহজাদপুর', 'phone': '01711-301007', 'type': 'বেসরকারি', 'available': true},
+      // উল্লাপাড়া
+      {'name': 'উল্লাপাড়া স্বাস্থ্য কমপ্লেক্স অ্যাম্বুলেন্স', 'area': 'উল্লাপাড়া', 'phone': '01711-301008', 'type': 'সরকারি', 'available': true},
+      {'name': 'উল্লাপাড়া প্রাইভেট অ্যাম্বুলেন্স', 'area': 'উল্লাপাড়া', 'phone': '01711-301009', 'type': 'বেসরকারি', 'available': false},
+      // কাজীপুর
+      {'name': 'কাজীপুর স্বাস্থ্য কমপ্লেক্স অ্যাম্বুলেন্স', 'area': 'কাজীপুর', 'phone': '01711-301010', 'type': 'সরকারি', 'available': true},
+      // বেলকুচি
+      {'name': 'বেলকুচি স্বাস্থ্য কমপ্লেক্স অ্যাম্বুলেন্স', 'area': 'বেলকুচি', 'phone': '01711-301011', 'type': 'সরকারি', 'available': true},
+      // তাড়াশ
+      {'name': 'তাড়াশ স্বাস্থ্য কমপ্লেক্স অ্যাম্বুলেন্স', 'area': 'তাড়াশ', 'phone': '01711-301012', 'type': 'সরকারি', 'available': true},
+      // কামারখন্দ
+      {'name': 'খাজা ইউনুছ আলী হাসপাতাল অ্যাম্বুলেন্স-১', 'area': 'কামারখন্দ (এনায়েতপুর)', 'phone': '01711-301013', 'type': 'বেসরকারি', 'available': true},
+      {'name': 'খাজা ইউনুছ আলী হাসপাতাল অ্যাম্বুলেন্স-২', 'area': 'কামারখন্দ (এনায়েতপুর)', 'phone': '01711-301014', 'type': 'বেসরকারি', 'available': true},
+      {'name': 'কামারখন্দ স্বাস্থ্য কমপ্লেক্স অ্যাম্বুলেন্স', 'area': 'কামারখন্দ', 'phone': '01711-301015', 'type': 'সরকারি', 'available': true},
+      // রায়গঞ্জ
+      {'name': 'রায়গঞ্জ স্বাস্থ্য কমপ্লেক্স অ্যাম্বুলেন্স', 'area': 'রায়গঞ্জ', 'phone': '01711-301016', 'type': 'সরকারি', 'available': true},
+      // চৌহালী
+      {'name': 'চৌহালী স্বাস্থ্য কমপ্লেক্স অ্যাম্বুলেন্স', 'area': 'চৌহালী', 'phone': '01711-301017', 'type': 'সরকারি', 'available': true},
+    ];
+
+    return ListView(
+      padding: const EdgeInsets.all(12),
+      physics: const BouncingScrollPhysics(),
+      children: [
+        // Emergency 199 call banner
+        Container(
+          margin: const EdgeInsets.fromLTRB(4, 4, 4, 12),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(colors: [Color(0xFFDC2626), Color(0xFFEF4444)]),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [BoxShadow(color: AppColors.error.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => Helpers.makePhoneCall('199'),
+              borderRadius: BorderRadius.circular(16),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(12)),
+                      child: const Icon(Icons.local_hospital_rounded, color: Colors.white, size: 24),
+                    ),
+                    const SizedBox(width: 14),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('জরুরি অ্যাম্বুলেন্স', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16)),
+                          Text('জাতীয় অ্যাম্বুলেন্স সেবা কল করুন', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+                      child: const Text('১৯৯', style: TextStyle(color: Color(0xFFDC2626), fontWeight: FontWeight.w900, fontSize: 18)),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        // Count
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+          child: Row(
+            children: [
+              Container(width: 4, height: 16, decoration: BoxDecoration(color: AppColors.error, borderRadius: BorderRadius.circular(2))),
+              const SizedBox(width: 8),
+              Text('সিরাজগঞ্জ জেলায় মোট ${ambulances.length}টি অ্যাম্বুলেন্স', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+            ],
+          ),
+        ),
+        // Ambulance list
+        ...ambulances.map((amb) {
+          final isGovt = amb['type'] == 'সরকারি';
+          final isAvailable = amb['available'] as bool;
+          final color = isGovt ? AppColors.primary : const Color(0xFF8B5CF6);
+          return Container(
+            margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkCard : Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: isDark ? [] : AppColors.softShadow,
+            ),
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              leading: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.error.withValues(alpha: isDark ? 0.15 : 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.local_shipping_rounded, color: AppColors.error, size: 22),
+              ),
+              title: Text(amb['name'] as String, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      Icon(Icons.location_on_rounded, size: 12, color: Colors.grey[400]),
+                      const SizedBox(width: 3),
+                      Text(amb['area'] as String, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                        decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6)),
+                        child: Text(amb['type'] as String, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w600)),
+                      ),
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: isAvailable ? AppColors.success.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(isAvailable ? 'সচল' : 'অসচল', style: TextStyle(fontSize: 10, color: isAvailable ? AppColors.success : Colors.grey, fontWeight: FontWeight.w600)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              trailing: isAvailable
+                  ? GestureDetector(
+                      onTap: () => Helpers.makePhoneCall(amb['phone'] as String),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                        child: const Icon(Icons.call_rounded, color: AppColors.success, size: 20),
+                      ),
+                    )
+                  : Icon(Icons.block_rounded, color: Colors.grey[400], size: 20),
+              isThreeLine: true,
+              onTap: isAvailable ? () => Helpers.makePhoneCall(amb['phone'] as String) : null,
+            ),
+          );
+        }),
+      ],
+    );
+  }
 
   Widget _buildBloodDonors() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
