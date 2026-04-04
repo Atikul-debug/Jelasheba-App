@@ -139,7 +139,6 @@ class _TourismScreenState extends State<TourismScreen> {
     Transport(type: 'bus', typeBn: 'বাস', route: 'সিরাজগঞ্জ - বগুড়া', schedule: 'প্রতি ১ ঘন্টা পর পর', fare: '১৫০ - ২৫০ টাকা', operator: 'সিরাজগঞ্জ এক্সপ্রেস', phone: '01711-130003'),
   ];
 
-  List<String> get _categories => ['সব', 'ঐতিহাসিক', 'ধর্মীয়', 'প্রাকৃতিক'];
 
   @override
   Widget build(BuildContext context) {
@@ -167,42 +166,48 @@ class _TourismScreenState extends State<TourismScreen> {
     );
   }
 
+  Color _getCategoryColor(String cat) {
+    switch (cat) {
+      case 'ঐতিহাসিক': return const Color(0xFF7C3AED);
+      case 'ধর্মীয়': return const Color(0xFF059669);
+      case 'প্রাকৃতিক': return const Color(0xFF0891B2);
+      default: return AppColors.primary;
+    }
+  }
+
+  IconData _getCategoryIcon(String cat) {
+    switch (cat) {
+      case 'ঐতিহাসিক': return Icons.account_balance_rounded;
+      case 'ধর্মীয়': return Icons.mosque_rounded;
+      case 'প্রাকৃতিক': return Icons.nature_rounded;
+      default: return Icons.place_rounded;
+    }
+  }
+
   Widget _buildPlaces() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final filtered = _selectedCategory == 'সব' ? _places : _places.where((p) => p.categoryBn == _selectedCategory).toList();
+
+    // Count per category
+    final historicalCount = _places.where((p) => p.categoryBn == 'ঐতিহাসিক').length;
+    final religiousCount = _places.where((p) => p.categoryBn == 'ধর্মীয়').length;
+    final scenicCount = _places.where((p) => p.categoryBn == 'প্রাকৃতিক').length;
+
     return Column(
       children: [
-        // Category filter + count
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+        // Category filter cards
+        Container(
+          padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
           child: Row(
             children: [
-              Text('${filtered.length}টি স্থান', style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
-              const Spacer(),
+              _buildCategoryButton('সব', Icons.apps_rounded, '${_places.length}', AppColors.primary, isDark),
+              const SizedBox(width: 6),
+              _buildCategoryButton('ঐতিহাসিক', Icons.account_balance_rounded, '$historicalCount', const Color(0xFF7C3AED), isDark),
+              const SizedBox(width: 6),
+              _buildCategoryButton('ধর্মীয়', Icons.mosque_rounded, '$religiousCount', const Color(0xFF059669), isDark),
+              const SizedBox(width: 6),
+              _buildCategoryButton('প্রাকৃতিক', Icons.nature_rounded, '$scenicCount', const Color(0xFF0891B2), isDark),
             ],
-          ),
-        ),
-        SizedBox(
-          height: 52,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            itemCount: _categories.length,
-            itemBuilder: (context, index) {
-              final cat = _categories[index];
-              final isSelected = cat == _selectedCategory;
-              return Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: FilterChip(
-                  label: Text(cat, style: TextStyle(fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400)),
-                  selected: isSelected,
-                  onSelected: (_) => setState(() => _selectedCategory = cat),
-                  selectedColor: AppColors.accent.withValues(alpha: 0.15),
-                  checkmarkColor: AppColors.accent,
-                  side: BorderSide(color: isSelected ? AppColors.accent.withValues(alpha: 0.3) : Colors.grey.withValues(alpha: 0.3)),
-                ),
-              );
-            },
           ),
         ),
         Expanded(
@@ -218,6 +223,38 @@ class _TourismScreenState extends State<TourismScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildCategoryButton(String label, IconData icon, String count, Color color, bool isDark) {
+    final isSelected = _selectedCategory == label;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedCategory = label),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? color.withValues(alpha: isDark ? 0.25 : 0.12)
+                : (isDark ? AppColors.darkCard : Colors.white),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: isSelected ? color.withValues(alpha: 0.5) : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.grey.withValues(alpha: 0.15)),
+              width: isSelected ? 2 : 1,
+            ),
+            boxShadow: isSelected ? [BoxShadow(color: color.withValues(alpha: 0.15), blurRadius: 8, offset: const Offset(0, 3))] : [],
+          ),
+          child: Column(
+            children: [
+              Icon(icon, size: 18, color: isSelected ? color : AppColors.textSecondary),
+              const SizedBox(height: 3),
+              Text(count, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: isSelected ? color : AppColors.textSecondary)),
+              Text(label == 'সব' ? 'সব' : label.substring(0, label.length > 6 ? 6 : label.length), style: TextStyle(fontSize: 9, fontWeight: FontWeight.w500, color: isSelected ? color : AppColors.textSecondary), overflow: TextOverflow.ellipsis),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -271,9 +308,20 @@ class _TourismScreenState extends State<TourismScreen> {
                       ),
                       const SizedBox(height: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
-                        child: Text(place.categoryBn, style: TextStyle(color: Colors.white.withValues(alpha: 0.9), fontSize: 11, fontWeight: FontWeight.w600)),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: _getCategoryColor(place.categoryBn).withValues(alpha: 0.8),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(_getCategoryIcon(place.categoryBn), size: 12, color: Colors.white),
+                            const SizedBox(width: 4),
+                            Text(place.categoryBn, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -326,7 +374,16 @@ class _TourismScreenState extends State<TourismScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(place.nameBn, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800, height: 1.2)),
+                Row(
+                  children: [
+                    Container(
+                      width: 4, height: 20,
+                      decoration: BoxDecoration(color: _getCategoryColor(place.categoryBn), borderRadius: BorderRadius.circular(2)),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(child: Text(place.nameBn, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800, height: 1.2))),
+                  ],
+                ),
                 const SizedBox(height: 8),
                 Text(place.description, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13, height: 1.5)),
                 const SizedBox(height: 12),
