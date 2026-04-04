@@ -10,8 +10,22 @@ class EmergencyScreen extends StatefulWidget {
   State<EmergencyScreen> createState() => _EmergencyScreenState();
 }
 
-class _EmergencyScreenState extends State<EmergencyScreen> {
+class _EmergencyScreenState extends State<EmergencyScreen> with SingleTickerProviderStateMixin {
   String _selectedBloodGroup = 'সব';
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   final List<Map<String, dynamic>> _emergencyNumbers = [
     {'name': 'জাতীয় জরুরি সেবা', 'number': '999', 'icon': Icons.emergency, 'color': AppColors.error},
@@ -53,27 +67,35 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text('জরুরি সেবা'),
-          bottom: const TabBar(
-            tabs: [
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
               Tab(text: 'হেল্পলাইন'),
               Tab(text: 'থানা'),
               Tab(text: 'রক্তদাতা'),
             ],
           ),
         ),
+        floatingActionButton: _tabController.index == 2
+            ? FloatingActionButton.extended(
+                onPressed: () => _showDonorRegistrationForm(),
+                backgroundColor: AppColors.error,
+                icon: const Icon(Icons.volunteer_activism_rounded, color: Colors.white),
+                label: const Text('রক্তদাতা যোগ দিন', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                elevation: 6,
+              )
+            : null,
         body: TabBarView(
+          controller: _tabController,
           children: [
             _buildHelplines(),
             _buildPoliceStations(),
             _buildBloodDonors(),
           ],
         ),
-      ),
     );
   }
 
@@ -309,10 +331,8 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
         ? _bloodDonors
         : _bloodDonors.where((d) => d.bloodGroup == _selectedBloodGroup).toList();
 
-    return Stack(
+    return Column(
       children: [
-        Column(
-          children: [
             // Blood group filter
             SizedBox(
               height: 56,
@@ -372,7 +392,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                       ),
                     )
                   : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 80),
+                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 70),
                       physics: const BouncingScrollPhysics(),
                       itemCount: filtered.length,
                       itemBuilder: (context, index) {
@@ -441,39 +461,8 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
                       },
                     ),
             ),
-          ],
-        ),
-        // FAB - রক্তদাতা হিসেবে যোগ দিন
-        Positioned(
-          bottom: 16,
-          left: 16,
-          right: 16,
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => _showDonorRegistrationForm(),
-              borderRadius: BorderRadius.circular(16),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(colors: [Color(0xFFDC2626), Color(0xFFEF4444)]),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [BoxShadow(color: AppColors.error.withValues(alpha: 0.4), blurRadius: 12, offset: const Offset(0, 4))],
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.volunteer_activism_rounded, color: Colors.white, size: 22),
-                    SizedBox(width: 10),
-                    Text('রক্তদাতা হিসেবে যোগ দিন', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
+        ],
+      );
   }
 
   void _showDonorRegistrationForm() {
