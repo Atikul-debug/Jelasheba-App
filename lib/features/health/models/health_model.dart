@@ -10,6 +10,7 @@ class Hospital {
   final List<String> departments;
   final double latitude;
   final double longitude;
+  final int doctorCount;
 
   Hospital({
     required this.id,
@@ -23,6 +24,7 @@ class Hospital {
     required this.departments,
     required this.latitude,
     required this.longitude,
+    this.doctorCount = 0,
   });
 }
 
