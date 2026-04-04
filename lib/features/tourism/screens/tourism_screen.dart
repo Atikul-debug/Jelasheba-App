@@ -188,54 +188,47 @@ class _TourismScreenState extends State<TourismScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final filtered = _selectedCategory == 'সব' ? _places : _places.where((p) => p.categoryBn == _selectedCategory).toList();
 
-    // Count per category
-    final historicalCount = _places.where((p) => p.categoryBn == 'ঐতিহাসিক').length;
-    final religiousCount = _places.where((p) => p.categoryBn == 'ধর্মীয়').length;
-    final scenicCount = _places.where((p) => p.categoryBn == 'প্রাকৃতিক').length;
+    final categories = ['সব', 'ঐতিহাসিক', 'ধর্মীয়', 'প্রাকৃতিক'];
 
     return Column(
       children: [
-        // Category filter - large visible buttons
-        Container(
-          padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
-          child: Column(
-            children: [
-              // First row: সব + ঐতিহাসিক
-              Row(
-                children: [
-                  _buildCategoryButton('সব', Icons.apps_rounded, '${_places.length}', AppColors.primary, isDark),
-                  const SizedBox(width: 8),
-                  _buildCategoryButton('ঐতিহাসিক', Icons.account_balance_rounded, '$historicalCount', const Color(0xFF7C3AED), isDark),
-                ],
-              ),
-              const SizedBox(height: 8),
-              // Second row: ধর্মীয় + প্রাকৃতিক
-              Row(
-                children: [
-                  _buildCategoryButton('ধর্মীয়', Icons.mosque_rounded, '$religiousCount', const Color(0xFF059669), isDark),
-                  const SizedBox(width: 8),
-                  _buildCategoryButton('প্রাকৃতিক', Icons.nature_rounded, '$scenicCount', const Color(0xFF0891B2), isDark),
-                ],
-              ),
-            ],
+        SizedBox(
+          height: 52,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            itemCount: categories.length,
+            itemBuilder: (context, index) {
+              final cat = categories[index];
+              final isSelected = cat == _selectedCategory;
+              final color = cat == 'সব' ? AppColors.primary : _getCategoryColor(cat);
+              final count = cat == 'সব' ? _places.length : _places.where((p) => p.categoryBn == cat).length;
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: FilterChip(
+                  avatar: Icon(_getCategoryIcon(cat), size: 16, color: isSelected ? Colors.white : color),
+                  label: Text(
+                    '$cat ($count)',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: isSelected ? Colors.white : (isDark ? Colors.white : AppColors.textPrimary),
+                    ),
+                  ),
+                  selected: isSelected,
+                  showCheckmark: false,
+                  onSelected: (_) => setState(() => _selectedCategory = cat),
+                  selectedColor: color,
+                  backgroundColor: isDark ? AppColors.darkCard : Colors.white,
+                  side: BorderSide(color: isSelected ? color : color.withValues(alpha: 0.3), width: isSelected ? 0 : 1),
+                  elevation: isSelected ? 3 : 0,
+                  shadowColor: color.withValues(alpha: 0.4),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                ),
+              );
+            },
           ),
         ),
-        const SizedBox(height: 4),
-        // Result count
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              Container(width: 4, height: 16, decoration: BoxDecoration(color: _selectedCategory == 'সব' ? AppColors.primary : _getCategoryColor(_selectedCategory), borderRadius: BorderRadius.circular(2))),
-              const SizedBox(width: 8),
-              Text(
-                _selectedCategory == 'সব' ? 'সকল দর্শনীয় স্থান (${filtered.length}টি)' : '$_selectedCategory স্থান (${filtered.length}টি)',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: _selectedCategory == 'সব' ? AppColors.primary : _getCategoryColor(_selectedCategory)),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 6),
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -249,86 +242,6 @@ class _TourismScreenState extends State<TourismScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildCategoryButton(String label, IconData icon, String count, Color color, bool isDark) {
-    final isSelected = _selectedCategory == label;
-    return Expanded(
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => setState(() => _selectedCategory = label),
-          borderRadius: BorderRadius.circular(16),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 250),
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? (isDark ? color.withValues(alpha: 0.2) : color)
-                  : (isDark ? AppColors.darkCard : Colors.white),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: isSelected ? color : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.grey.withValues(alpha: 0.15)),
-                width: isSelected ? 2 : 1,
-              ),
-              boxShadow: isSelected
-                  ? [BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4))]
-                  : (isDark ? [] : AppColors.softShadow),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? Colors.white.withValues(alpha: isDark ? 0.15 : 0.25)
-                        : color.withValues(alpha: isDark ? 0.15 : 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(icon, size: 16, color: isSelected ? (isDark ? color : Colors.white) : color),
-                ),
-                const SizedBox(width: 6),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        label,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: isSelected ? (isDark ? color : Colors.white) : (isDark ? Colors.white : AppColors.textPrimary),
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 2),
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? Colors.white.withValues(alpha: isDark ? 0.1 : 0.2)
-                              : color.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          '$countটি',
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w800,
-                            color: isSelected ? (isDark ? color : Colors.white) : color,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 
