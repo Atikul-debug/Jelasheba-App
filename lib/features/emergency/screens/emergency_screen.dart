@@ -314,12 +314,21 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: FilterChip(
-                  label: Text(group, style: TextStyle(fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400)),
+                  label: Text(
+                    group,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: isSelected ? Colors.white : (isDark ? Colors.white : AppColors.textPrimary),
+                    ),
+                  ),
                   selected: isSelected,
+                  showCheckmark: false,
                   onSelected: (_) => setState(() => _selectedBloodGroup = group),
-                  selectedColor: AppColors.error.withValues(alpha: 0.15),
-                  checkmarkColor: AppColors.error,
-                  side: BorderSide(color: isSelected ? AppColors.error.withValues(alpha: 0.3) : Colors.grey.withValues(alpha: 0.3)),
+                  selectedColor: AppColors.error,
+                  backgroundColor: isDark ? AppColors.darkCard : Colors.white,
+                  side: BorderSide(color: isSelected ? AppColors.error : AppColors.error.withValues(alpha: 0.3)),
+                  elevation: isSelected ? 3 : 0,
+                  shadowColor: AppColors.error.withValues(alpha: 0.4),
                 ),
               );
             },

@@ -90,12 +90,22 @@ class _ContactDirectoryScreenState extends State<ContactDirectoryScreen> {
                 return Padding(
                   padding: const EdgeInsets.only(right: 6),
                   child: FilterChip(
-                    label: Text(cat, style: TextStyle(fontSize: 12, fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400)),
+                    label: Text(
+                      cat,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: isSelected ? Colors.white : (isDark ? Colors.white : AppColors.textPrimary),
+                      ),
+                    ),
                     selected: isSelected,
+                    showCheckmark: false,
                     onSelected: (_) => setState(() => _selectedCategory = cat),
-                    selectedColor: AppColors.primary.withValues(alpha: 0.15),
-                    checkmarkColor: AppColors.primary,
-                    side: BorderSide(color: isSelected ? AppColors.primary.withValues(alpha: 0.3) : Colors.grey.withValues(alpha: 0.3)),
+                    selectedColor: AppColors.primary,
+                    backgroundColor: isDark ? AppColors.darkCard : Colors.white,
+                    side: BorderSide(color: isSelected ? AppColors.primary : AppColors.primary.withValues(alpha: 0.3)),
+                    elevation: isSelected ? 3 : 0,
+                    shadowColor: AppColors.primary.withValues(alpha: 0.4),
                   ),
                 );
               },

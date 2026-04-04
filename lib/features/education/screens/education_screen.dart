@@ -105,14 +105,22 @@ class _EducationScreenState extends State<EducationScreen> {
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: FilterChip(
-                  label: Text(type),
-                  selected: isSelected,
-                  onSelected: (_) => setState(() => _selectedType = type),
-                  selectedColor: AppColors.primary.withValues(alpha: 0.2),
-                  checkmarkColor: AppColors.primary,
-                  side: BorderSide(
-                    color: isSelected ? AppColors.primary : (isDark ? Colors.white24 : Colors.grey.shade300),
+                  label: Text(
+                    type,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      color: isSelected ? Colors.white : (isDark ? Colors.white : AppColors.textPrimary),
+                    ),
                   ),
+                  selected: isSelected,
+                  showCheckmark: false,
+                  onSelected: (_) => setState(() => _selectedType = type),
+                  selectedColor: const Color(0xFF7C3AED),
+                  backgroundColor: isDark ? AppColors.darkCard : Colors.white,
+                  side: BorderSide(color: isSelected ? const Color(0xFF7C3AED) : const Color(0xFF7C3AED).withValues(alpha: 0.3)),
+                  elevation: isSelected ? 3 : 0,
+                  shadowColor: const Color(0xFF7C3AED).withValues(alpha: 0.4),
                 ),
               );
             },
