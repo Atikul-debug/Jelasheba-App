@@ -3,9 +3,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Helpers {
   static Future<void> makePhoneCall(String phoneNumber) async {
-    final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
+    final cleanNumber = phoneNumber.replaceAll(RegExp(r'[^0-9+]'), '');
+    final Uri uri = Uri(scheme: 'tel', path: cleanNumber);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
+    } else {
+      await launchUrl(Uri.parse('tel:$cleanNumber'));
     }
   }
 
