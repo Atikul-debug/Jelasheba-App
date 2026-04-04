@@ -43,9 +43,6 @@ class _TourismScreenState extends State<TourismScreen> {
         appBar: AppBar(
           title: const Text('পর্যটন'),
           bottom: const TabBar(
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white70,
-            indicatorColor: Colors.white,
             tabs: [
               Tab(text: 'দর্শনীয় স্থান'),
               Tab(text: 'হোটেল'),
@@ -65,24 +62,28 @@ class _TourismScreenState extends State<TourismScreen> {
   }
 
   Widget _buildPlaces() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final filtered = _selectedCategory == 'সব' ? _places : _places.where((p) => p.categoryBn == _selectedCategory).toList();
     return Column(
       children: [
         SizedBox(
-          height: 50,
+          height: 52,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             itemCount: _categories.length,
             itemBuilder: (context, index) {
               final cat = _categories[index];
+              final isSelected = cat == _selectedCategory;
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: FilterChip(
-                  label: Text(cat),
-                  selected: cat == _selectedCategory,
+                  label: Text(cat, style: TextStyle(fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400)),
+                  selected: isSelected,
                   onSelected: (_) => setState(() => _selectedCategory = cat),
-                  selectedColor: AppColors.accent.withValues(alpha: 0.2),
+                  selectedColor: AppColors.accent.withValues(alpha: 0.15),
+                  checkmarkColor: AppColors.accent,
+                  side: BorderSide(color: isSelected ? AppColors.accent.withValues(alpha: 0.3) : Colors.grey.withValues(alpha: 0.3)),
                 ),
               );
             },
@@ -90,21 +91,51 @@ class _TourismScreenState extends State<TourismScreen> {
         ),
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            physics: const BouncingScrollPhysics(),
             itemCount: filtered.length,
             itemBuilder: (context, index) {
               final place = filtered[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkCard : Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: isDark ? [] : AppColors.softShadow,
+                ),
                 clipBehavior: Clip.antiAlias,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 150,
+                      height: 140,
                       width: double.infinity,
-                      color: AppColors.accent.withValues(alpha: 0.1),
-                      child: const Center(child: Icon(Icons.photo_camera, size: 50, color: AppColors.accent)),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [AppColors.accent.withValues(alpha: 0.15), AppColors.accent.withValues(alpha: 0.05)],
+                        ),
+                      ),
+                      child: Stack(
+                        children: [
+                          Positioned(top: -15, right: -15, child: Container(width: 60, height: 60, decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.accent.withValues(alpha: 0.08)))),
+                          Center(child: Icon(Icons.photo_camera_rounded, size: 44, color: AppColors.accent.withValues(alpha: 0.5))),
+                          Positioned(
+                            top: 10, right: 10,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.5), borderRadius: BorderRadius.circular(20)),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.star_rounded, color: Colors.amber, size: 16),
+                                  const SizedBox(width: 2),
+                                  Text('${place.rating}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 13)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16),
@@ -112,38 +143,33 @@ class _TourismScreenState extends State<TourismScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Expanded(child: Text(place.nameBn, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
-                              Row(children: [const Icon(Icons.star, color: Colors.amber, size: 18), Text(' ${place.rating}', style: const TextStyle(fontWeight: FontWeight.bold))]),
+                              Expanded(child: Text(place.nameBn, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800))),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                decoration: BoxDecoration(color: AppColors.accent.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+                                child: Text(place.categoryBn, style: const TextStyle(fontSize: 11, color: AppColors.accent, fontWeight: FontWeight.w600)),
+                              ),
                             ],
                           ),
-                          const SizedBox(height: 4),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(color: AppColors.accent.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                            child: Text(place.categoryBn, style: const TextStyle(fontSize: 12, color: AppColors.accent)),
-                          ),
                           const SizedBox(height: 8),
-                          Text(place.description, style: const TextStyle(color: AppColors.textSecondary)),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              const Icon(Icons.location_on, size: 14, color: AppColors.textSecondary),
-                              const SizedBox(width: 4),
-                              Text(place.address, style: const TextStyle(fontSize: 12)),
-                            ],
-                          ),
-                          if (place.entryFee != null)
-                            Row(children: [const Icon(Icons.confirmation_number, size: 14, color: AppColors.textSecondary), const SizedBox(width: 4), Text('প্রবেশ মূল্য: ${place.entryFee}', style: const TextStyle(fontSize: 12))]),
-                          if (place.openingHours != null)
-                            Row(children: [const Icon(Icons.access_time, size: 14, color: AppColors.textSecondary), const SizedBox(width: 4), Text('সময়: ${place.openingHours}', style: const TextStyle(fontSize: 12))]),
+                          Text(place.description, style: const TextStyle(color: AppColors.textSecondary, fontSize: 13, height: 1.4)),
                           const SizedBox(height: 12),
+                          Wrap(
+                            spacing: 16,
+                            runSpacing: 6,
+                            children: [
+                              _buildPlaceInfo(Icons.location_on_rounded, place.address),
+                              if (place.entryFee != null) _buildPlaceInfo(Icons.confirmation_number_rounded, 'প্রবেশ: ${place.entryFee}'),
+                              if (place.openingHours != null) _buildPlaceInfo(Icons.access_time_rounded, place.openingHours!),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
                           SizedBox(
                             width: double.infinity,
                             child: OutlinedButton.icon(
                               onPressed: () => Helpers.openMap(place.latitude, place.longitude),
-                              icon: const Icon(Icons.map),
+                              icon: const Icon(Icons.map_rounded, size: 18),
                               label: const Text('ম্যাপে দেখুন'),
                             ),
                           ),
@@ -160,36 +186,65 @@ class _TourismScreenState extends State<TourismScreen> {
     );
   }
 
+  Widget _buildPlaceInfo(IconData icon, String text) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 14, color: AppColors.textSecondary),
+        const SizedBox(width: 4),
+        Text(text, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+      ],
+    );
+  }
+
   Widget _buildHotels() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ListView.builder(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(12),
+      physics: const BouncingScrollPhysics(),
       itemCount: _hotels.length,
       itemBuilder: (context, index) {
         final hotel = _hotels[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(child: Text(hotel.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
-                    Row(children: [const Icon(Icons.star, color: Colors.amber, size: 16), Text(' ${hotel.rating}')]),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Row(children: [const Icon(Icons.location_on, size: 14, color: AppColors.textSecondary), const SizedBox(width: 4), Text(hotel.address, style: const TextStyle(fontSize: 13))]),
-                const SizedBox(height: 4),
-                Text('ভাড়া: ${hotel.priceRange}', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 8),
-                Wrap(spacing: 8, children: hotel.amenities.map((a) => Chip(label: Text(a, style: const TextStyle(fontSize: 11)), padding: EdgeInsets.zero, materialTapTargetSize: MaterialTapTargetSize.shrinkWrap)).toList()),
-                const SizedBox(height: 8),
-                ElevatedButton.icon(onPressed: () => Helpers.makePhoneCall(hotel.phone), icon: const Icon(Icons.call), label: const Text('বুকিং করুন')),
-              ],
-            ),
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkCard : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: isDark ? [] : AppColors.softShadow,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(color: const Color(0xFF8B5CF6).withValues(alpha: isDark ? 0.15 : 0.08), borderRadius: BorderRadius.circular(12)),
+                    child: const Icon(Icons.hotel_rounded, color: Color(0xFF8B5CF6), size: 22),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(child: Text(hotel.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700))),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(color: Colors.amber.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.star_rounded, color: Colors.amber, size: 14), Text(' ${hotel.rating}', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12))]),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(children: [const Icon(Icons.location_on_rounded, size: 14, color: AppColors.textSecondary), const SizedBox(width: 4), Text(hotel.address, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary))]),
+              const SizedBox(height: 4),
+              Text('ভাড়া: ${hotel.priceRange}', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 10),
+              Wrap(spacing: 6, runSpacing: 4, children: hotel.amenities.map((a) => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(color: isDark ? AppColors.darkSurface : const Color(0xFFF3F4F6), borderRadius: BorderRadius.circular(8)),
+                child: Text(a, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
+              )).toList()),
+              const SizedBox(height: 12),
+              ElevatedButton.icon(onPressed: () => Helpers.makePhoneCall(hotel.phone), icon: const Icon(Icons.call_rounded, size: 18), label: const Text('বুকিং করুন')),
+            ],
           ),
         );
       },
@@ -197,29 +252,46 @@ class _TourismScreenState extends State<TourismScreen> {
   }
 
   Widget _buildTransport() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ListView.builder(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(12),
+      physics: const BouncingScrollPhysics(),
       itemCount: _transports.length,
       itemBuilder: (context, index) {
         final t = _transports[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        final isTrail = t.type == 'train';
+        final color = isTrail ? const Color(0xFFEF4444) : const Color(0xFF3B82F6);
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkCard : Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: isDark ? [] : AppColors.softShadow,
+          ),
           child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: AppColors.info.withValues(alpha: 0.1),
-              child: Icon(t.type == 'bus' ? Icons.directions_bus : t.type == 'train' ? Icons.train : Icons.directions_boat, color: AppColors.info),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+            leading: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(color: color.withValues(alpha: isDark ? 0.15 : 0.08), borderRadius: BorderRadius.circular(12)),
+              child: Icon(isTrail ? Icons.train_rounded : Icons.directions_bus_rounded, color: color, size: 22),
             ),
-            title: Text(t.route, style: const TextStyle(fontWeight: FontWeight.bold)),
+            title: Text(t.route, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${t.typeBn} | ${t.operator}'),
-                Text('সময়: ${t.schedule}', style: const TextStyle(fontSize: 12)),
-                Text('ভাড়া: ${t.fare}', style: const TextStyle(fontSize: 12, color: AppColors.primary)),
+                const SizedBox(height: 2),
+                Text('${t.typeBn} | ${t.operator}', style: const TextStyle(fontSize: 12)),
+                Text('সময়: ${t.schedule}', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                Text('ভাড়া: ${t.fare}', style: const TextStyle(fontSize: 12, color: AppColors.primary, fontWeight: FontWeight.w600)),
               ],
             ),
             isThreeLine: true,
-            trailing: IconButton(icon: const Icon(Icons.call, color: AppColors.success), onPressed: () => Helpers.makePhoneCall(t.phone)),
+            trailing: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(color: AppColors.success.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+              child: const Icon(Icons.call_rounded, color: AppColors.success, size: 20),
+            ),
+            onTap: () => Helpers.makePhoneCall(t.phone),
           ),
         );
       },

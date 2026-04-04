@@ -40,30 +40,36 @@ class _CitizenServicesScreenState extends State<CitizenServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(title: const Text('নাগরিক সেবা')),
       body: Column(
         children: [
-          // Search
           Padding(
-            padding: const EdgeInsets.all(16),
-            child: TextField(
-              onChanged: (v) => setState(() => _searchQuery = v),
-              decoration: InputDecoration(
-                hintText: 'সেবা অনুসন্ধান করুন...',
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Theme.of(context).cardTheme.color,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Container(
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkCard : Colors.white,
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: isDark ? [] : AppColors.softShadow,
+              ),
+              child: TextField(
+                onChanged: (v) => setState(() => _searchQuery = v),
+                decoration: InputDecoration(
+                  hintText: 'সেবা অনুসন্ধান করুন...',
+                  prefixIcon: const Icon(Icons.search_rounded, color: AppColors.textSecondary),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+                  filled: true,
+                  fillColor: isDark ? AppColors.darkCard : Colors.white,
+                ),
               ),
             ),
           ),
-          // Category Filter
           SizedBox(
-            height: 40,
+            height: 48,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
               itemCount: _categories.length,
               itemBuilder: (context, index) {
                 final cat = _categories[index];
@@ -71,26 +77,23 @@ class _CitizenServicesScreenState extends State<CitizenServicesScreen> {
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: FilterChip(
-                    label: Text(cat),
+                    label: Text(cat, style: TextStyle(fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400, fontSize: 13)),
                     selected: isSelected,
                     onSelected: (_) => setState(() => _selectedCategory = cat),
-                    selectedColor: AppColors.primary.withValues(alpha: 0.2),
+                    selectedColor: AppColors.primary.withValues(alpha: 0.15),
                     checkmarkColor: AppColors.primary,
+                    side: BorderSide(color: isSelected ? AppColors.primary.withValues(alpha: 0.3) : Colors.grey.withValues(alpha: 0.3)),
                   ),
                 );
               },
             ),
           ),
-          const SizedBox(height: 8),
-          // Service List
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(12),
+              physics: const BouncingScrollPhysics(),
               itemCount: _filteredServices.length,
-              itemBuilder: (context, index) {
-                final service = _filteredServices[index];
-                return _buildServiceCard(service);
-              },
+              itemBuilder: (context, index) => _buildServiceCard(_filteredServices[index]),
             ),
           ),
         ],
@@ -99,54 +102,85 @@ class _CitizenServicesScreenState extends State<CitizenServicesScreen> {
   }
 
   Widget _buildServiceCard(CitizenService service) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: ExpansionTile(
-        leading: CircleAvatar(
-          backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-          child: const Icon(Icons.description, color: AppColors.primary),
-        ),
-        title: Text(service.nameBn, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(service.category, style: const TextStyle(fontSize: 12)),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(service.description, style: const TextStyle(height: 1.5)),
-                const SizedBox(height: 12),
-                _buildDetailItem('প্রয়োজনীয় কাগজপত্র:', service.requiredDocuments.join('\n• ')),
-                _buildDetailItem('ফি:', service.fee),
-                _buildDetailItem('সময়সীমা:', service.timeLimit),
-                _buildDetailItem('অফিস:', service.office),
-                const SizedBox(height: 12),
-                if (service.applicationUrl.isNotEmpty)
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () => Helpers.openUrl(service.applicationUrl),
-                      icon: const Icon(Icons.open_in_new),
-                      label: const Text('অনলাইনে আবেদন করুন'),
-                    ),
-                  ),
-              ],
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkCard : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: isDark ? [] : AppColors.softShadow,
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+          leading: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.info.withValues(alpha: isDark ? 0.15 : 0.08),
+              borderRadius: BorderRadius.circular(12),
             ),
+            child: const Icon(Icons.description_rounded, color: AppColors.info, size: 22),
           ),
-        ],
+          title: Text(service.nameBn, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+          subtitle: Container(
+            margin: const EdgeInsets.only(top: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(8)),
+            child: Text(service.category, style: const TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.w500)),
+          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Divider(),
+                  const SizedBox(height: 4),
+                  Text(service.description, style: const TextStyle(height: 1.5, fontSize: 13)),
+                  const SizedBox(height: 14),
+                  _buildDetailItem(Icons.folder_rounded, 'প্রয়োজনীয় কাগজপত্র:', service.requiredDocuments.map((d) => '• $d').join('\n')),
+                  _buildDetailItem(Icons.payments_rounded, 'ফি:', service.fee),
+                  _buildDetailItem(Icons.schedule_rounded, 'সময়সীমা:', service.timeLimit),
+                  _buildDetailItem(Icons.business_rounded, 'অফিস:', service.office),
+                  if (service.applicationUrl.isNotEmpty) ...[
+                    const SizedBox(height: 14),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () => Helpers.openUrl(service.applicationUrl),
+                        icon: const Icon(Icons.open_in_new_rounded, size: 18),
+                        label: const Text('অনলাইনে আবেদন করুন'),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildDetailItem(String label, String value) {
+  Widget _buildDetailItem(IconData icon, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Column(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary)),
-          const SizedBox(height: 2),
-          Text('• $value', style: const TextStyle(height: 1.4)),
+          Icon(icon, size: 16, color: AppColors.primary),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.primary, fontSize: 13)),
+                const SizedBox(height: 2),
+                Text(value, style: const TextStyle(height: 1.4, fontSize: 13)),
+              ],
+            ),
+          ),
         ],
       ),
     );

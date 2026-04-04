@@ -69,18 +69,26 @@ class _EducationScreenState extends State<EducationScreen> {
   }
 
   Widget _buildInstitutions() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(16),
-          child: TextField(
-            onChanged: (v) => setState(() => _searchQuery = v),
-            decoration: InputDecoration(
-              hintText: 'প্রতিষ্ঠান অনুসন্ধান...',
-              prefixIcon: const Icon(Icons.search),
-              filled: true,
-              fillColor: Theme.of(context).cardTheme.color,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          child: Container(
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkCard : Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: isDark ? [] : AppColors.softShadow,
+            ),
+            child: TextField(
+              onChanged: (v) => setState(() => _searchQuery = v),
+              decoration: InputDecoration(
+                hintText: 'প্রতিষ্ঠান অনুসন্ধান...',
+                prefixIcon: const Icon(Icons.search_rounded),
+                filled: true,
+                fillColor: Colors.transparent,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+              ),
             ),
           ),
         ),
@@ -88,17 +96,23 @@ class _EducationScreenState extends State<EducationScreen> {
           height: 40,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: _types.length,
             itemBuilder: (context, index) {
               final type = _types[index];
+              final isSelected = type == _selectedType;
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
                 child: FilterChip(
                   label: Text(type),
-                  selected: type == _selectedType,
+                  selected: isSelected,
                   onSelected: (_) => setState(() => _selectedType = type),
                   selectedColor: AppColors.primary.withValues(alpha: 0.2),
+                  checkmarkColor: AppColors.primary,
+                  side: BorderSide(
+                    color: isSelected ? AppColors.primary : (isDark ? Colors.white24 : Colors.grey.shade300),
+                  ),
                 ),
               );
             },
@@ -106,43 +120,56 @@ class _EducationScreenState extends State<EducationScreen> {
         ),
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.all(8),
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.all(12),
             itemCount: _filtered.length,
             itemBuilder: (context, index) {
               final inst = _filtered[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: ExpansionTile(
-                  leading: CircleAvatar(
-                    backgroundColor: const Color(0xFF9C27B0).withValues(alpha: 0.1),
-                    child: const Icon(Icons.school, color: Color(0xFF9C27B0)),
-                  ),
-                  title: Text(inst.nameBn, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text('${inst.typeBn} | ${inst.mpoStatus}'),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          _buildDetail('ঠিকানা', inst.address),
-                          _buildDetail('প্রধান', inst.principalName),
-                          _buildDetail('EIIN', inst.eiin ?? 'N/A'),
-                          _buildDetail('শিক্ষার্থী', '${inst.studentCount}'),
-                          _buildDetail('শিক্ষক', '${inst.teacherCount}'),
-                          _buildDetail('ফোন', inst.phone),
-                          const SizedBox(height: 8),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton.icon(
-                              onPressed: () => Helpers.makePhoneCall(inst.phone),
-                              icon: const Icon(Icons.call),
-                              label: const Text('যোগাযোগ করুন'),
-                            ),
-                          ),
-                        ],
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkCard : Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: isDark ? [] : AppColors.softShadow,
+                ),
+                child: Theme(
+                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF9C27B0).withValues(alpha: isDark ? 0.15 : 0.08),
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      child: const Icon(Icons.school_rounded, color: Color(0xFF9C27B0)),
                     ),
-                  ],
+                    title: Text(inst.nameBn, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                    subtitle: Text('${inst.typeBn} | ${inst.mpoStatus}'),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            _buildDetail('ঠিকানা', inst.address),
+                            _buildDetail('প্রধান', inst.principalName),
+                            _buildDetail('EIIN', inst.eiin ?? 'N/A'),
+                            _buildDetail('শিক্ষার্থী', '${inst.studentCount}'),
+                            _buildDetail('শিক্ষক', '${inst.teacherCount}'),
+                            _buildDetail('ফোন', inst.phone),
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: () => Helpers.makePhoneCall(inst.phone),
+                                icon: const Icon(Icons.call_rounded),
+                                label: const Text('যোগাযোগ করুন'),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -165,13 +192,20 @@ class _EducationScreenState extends State<EducationScreen> {
   }
 
   Widget _buildScholarships() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.all(16),
       itemCount: _scholarships.length,
       itemBuilder: (context, index) {
         final s = _scholarships[index];
-        return Card(
+        return Container(
           margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkCard : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: isDark ? [] : AppColors.softShadow,
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -179,12 +213,19 @@ class _EducationScreenState extends State<EducationScreen> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.school, color: AppColors.primary),
-                    const SizedBox(width: 8),
-                    Expanded(child: Text(s.nameBn, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: isDark ? 0.15 : 0.08),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(Icons.school_rounded, color: AppColors.primary),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text(s.nameBn, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700))),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Text(s.description),
                 const SizedBox(height: 8),
                 _buildDetail('যোগ্যতা', s.eligibility),
@@ -199,30 +240,55 @@ class _EducationScreenState extends State<EducationScreen> {
   }
 
   Widget _buildResults() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final results = [
-      {'name': 'PSC ফলাফল', 'url': 'http://www.dpe.gov.bd', 'icon': Icons.grade},
-      {'name': 'JSC ফলাফল', 'url': 'http://www.educationboardresults.gov.bd', 'icon': Icons.grade},
-      {'name': 'SSC ফলাফল', 'url': 'http://www.educationboardresults.gov.bd', 'icon': Icons.grade},
-      {'name': 'HSC ফলাফল', 'url': 'http://www.educationboardresults.gov.bd', 'icon': Icons.grade},
+      {'name': 'PSC ফলাফল', 'url': 'http://www.dpe.gov.bd', 'icon': Icons.grade_rounded},
+      {'name': 'JSC ফলাফল', 'url': 'http://www.educationboardresults.gov.bd', 'icon': Icons.grade_rounded},
+      {'name': 'SSC ফলাফল', 'url': 'http://www.educationboardresults.gov.bd', 'icon': Icons.grade_rounded},
+      {'name': 'HSC ফলাফল', 'url': 'http://www.educationboardresults.gov.bd', 'icon': Icons.grade_rounded},
     ];
 
     return ListView(
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.all(16),
       children: [
-        const Text('পরীক্ষার ফলাফল', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Row(
+          children: [
+            Container(
+              width: 4,
+              height: 20,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Text('পরীক্ষার ফলাফল', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+          ],
+        ),
         const SizedBox(height: 8),
         const Text('নিচের লিংকে ক্লিক করে আপনার ফলাফল দেখুন', style: TextStyle(color: AppColors.textSecondary)),
         const SizedBox(height: 16),
-        ...results.map((r) => Card(
-          margin: const EdgeInsets.only(bottom: 8),
+        ...results.map((r) => Container(
+          margin: const EdgeInsets.only(bottom: 10),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkCard : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: isDark ? [] : AppColors.softShadow,
+          ),
           child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            leading: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: isDark ? 0.15 : 0.08),
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Icon(r['icon'] as IconData, color: AppColors.primary),
             ),
-            title: Text(r['name'] as String, style: const TextStyle(fontWeight: FontWeight.bold)),
+            title: Text(r['name'] as String, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
             subtitle: Text(r['url'] as String, style: const TextStyle(fontSize: 12)),
-            trailing: const Icon(Icons.open_in_new, color: AppColors.primary),
+            trailing: const Icon(Icons.open_in_new_rounded, color: AppColors.primary),
             onTap: () => Helpers.openUrl(r['url'] as String),
           ),
         )),

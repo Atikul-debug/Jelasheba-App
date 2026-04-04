@@ -61,65 +61,108 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   Widget _buildHospitalList() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ListView.builder(
-      padding: const EdgeInsets.all(8),
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.all(12),
       itemCount: _hospitals.length,
       itemBuilder: (context, index) {
         final hospital = _hospitals[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: ExpansionTile(
-            leading: CircleAvatar(
-              backgroundColor: hospital.type == 'government' ? AppColors.primary.withValues(alpha: 0.1) : AppColors.secondary.withValues(alpha: 0.1),
-              child: Icon(Icons.local_hospital, color: hospital.type == 'government' ? AppColors.primary : AppColors.secondary),
-            ),
-            title: Text(hospital.nameBn, style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: hospital.type == 'government' ? AppColors.primary.withValues(alpha: 0.1) : AppColors.secondary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(hospital.type == 'government' ? 'সরকারি' : 'বেসরকারি', style: TextStyle(fontSize: 10, color: hospital.type == 'government' ? AppColors.primary : AppColors.secondary)),
+        final color = hospital.type == 'government' ? AppColors.primary : AppColors.secondary;
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkCard : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: isDark ? [] : AppColors.softShadow,
+          ),
+          child: Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: isDark ? 0.15 : 0.08),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                const SizedBox(width: 8),
-                if (hospital.hasEmergency)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
-                    child: const Text('জরুরি বিভাগ', style: TextStyle(fontSize: 10, color: AppColors.error)),
-                  ),
-              ],
-            ),
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Icon(Icons.local_hospital_rounded, color: color),
+              ),
+              title: Text(hospital.nameBn, style: const TextStyle(fontWeight: FontWeight.w700)),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Row(
                   children: [
-                    _buildHospitalDetail('ঠিকানা', hospital.address),
-                    _buildHospitalDetail('ফোন', hospital.phone),
-                    _buildHospitalDetail('বেড সংখ্যা', '${hospital.bedCount}'),
-                    const SizedBox(height: 8),
-                    const Text('বিভাগসমূহ:', style: TextStyle(fontWeight: FontWeight.bold)),
-                    Wrap(
-                      spacing: 8,
-                      children: hospital.departments.map((d) => Chip(label: Text(d, style: const TextStyle(fontSize: 12)), padding: EdgeInsets.zero)).toList(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: isDark ? 0.15 : 0.08),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        hospital.type == 'government' ? 'সরকারি' : 'বেসরকারি',
+                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: color),
+                      ),
                     ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(child: ElevatedButton.icon(onPressed: () => Helpers.makePhoneCall(hospital.phone), icon: const Icon(Icons.call), label: const Text('কল'))),
-                        const SizedBox(width: 8),
-                        Expanded(child: OutlinedButton.icon(onPressed: () => Helpers.openMap(hospital.latitude, hospital.longitude), icon: const Icon(Icons.map), label: const Text('ম্যাপ'))),
-                      ],
-                    ),
+                    const SizedBox(width: 8),
+                    if (hospital.hasEmergency)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withValues(alpha: isDark ? 0.15 : 0.08),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Text('জরুরি বিভাগ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: AppColors.error)),
+                      ),
                   ],
                 ),
               ),
-            ],
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHospitalDetail('ঠিকানা', hospital.address),
+                      _buildHospitalDetail('ফোন', hospital.phone),
+                      _buildHospitalDetail('বেড সংখ্যা', '${hospital.bedCount}'),
+                      const SizedBox(height: 8),
+                      const Text('বিভাগসমূহ:', style: TextStyle(fontWeight: FontWeight.w700)),
+                      const SizedBox(height: 4),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        children: hospital.departments.map((d) => Chip(
+                          label: Text(d, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: color)),
+                          padding: EdgeInsets.zero,
+                          side: BorderSide(color: color.withValues(alpha: 0.3)),
+                          backgroundColor: color.withValues(alpha: isDark ? 0.15 : 0.05),
+                        )).toList(),
+                      ),
+                      const SizedBox(height: 14),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton.icon(
+                              onPressed: () => Helpers.makePhoneCall(hospital.phone),
+                              icon: const Icon(Icons.call_rounded),
+                              label: const Text('কল'),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: () => Helpers.openMap(hospital.latitude, hospital.longitude),
+                              icon: const Icon(Icons.map_rounded),
+                              label: const Text('ম্যাপ'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -128,11 +171,11 @@ class _HealthScreenState extends State<HealthScreen> {
 
   Widget _buildHospitalDetail(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 100, child: Text(label, style: const TextStyle(color: AppColors.textSecondary))),
+          SizedBox(width: 100, child: Text(label, style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w500))),
           Expanded(child: Text(value, style: const TextStyle(fontWeight: FontWeight.w600))),
         ],
       ),
@@ -140,48 +183,95 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   Widget _buildDoctorList() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final filteredDoctors = _doctors.where((d) => _searchQuery.isEmpty || d.nameBn.contains(_searchQuery) || d.specialtyBn.contains(_searchQuery)).toList();
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(16),
-          child: TextField(
-            onChanged: (v) => setState(() => _searchQuery = v),
-            decoration: InputDecoration(
-              hintText: 'ডাক্তার অনুসন্ধান...',
-              prefixIcon: const Icon(Icons.search),
-              filled: true,
-              fillColor: Theme.of(context).cardTheme.color,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+          child: Container(
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkCard : Colors.white,
+              borderRadius: BorderRadius.circular(14),
+              boxShadow: isDark ? [] : AppColors.softShadow,
+            ),
+            child: TextField(
+              onChanged: (v) => setState(() => _searchQuery = v),
+              decoration: InputDecoration(
+                hintText: 'ডাক্তার অনুসন্ধান...',
+                hintStyle: const TextStyle(color: AppColors.textSecondary),
+                prefixIcon: const Icon(Icons.search_rounded),
+                filled: true,
+                fillColor: Colors.transparent,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
+              ),
             ),
           ),
         ),
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.all(8),
-            itemCount: _doctors.where((d) => _searchQuery.isEmpty || d.nameBn.contains(_searchQuery) || d.specialtyBn.contains(_searchQuery)).length,
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            itemCount: filteredDoctors.length,
             itemBuilder: (context, index) {
-              final doctor = _doctors.where((d) => _searchQuery.isEmpty || d.nameBn.contains(_searchQuery) || d.specialtyBn.contains(_searchQuery)).toList()[index];
-              return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: ListTile(
-                  leading: const CircleAvatar(
-                    backgroundColor: Color(0xFFE8F5E9),
-                    child: Icon(Icons.medical_services, color: AppColors.primary),
-                  ),
-                  title: Text(doctor.nameBn, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Column(
+              final doctor = filteredDoctors[index];
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkCard : Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: isDark ? [] : AppColors.softShadow,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(doctor.specialtyBn, style: const TextStyle(color: AppColors.primary)),
-                      Text(doctor.qualification, style: const TextStyle(fontSize: 12)),
-                      Text('${doctor.hospital} | ফি: ৳${doctor.fee.toInt()}', style: const TextStyle(fontSize: 12)),
-                      Text('সময়: ${doctor.visitingHours}', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withValues(alpha: isDark ? 0.15 : 0.08),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.medical_services_rounded, color: AppColors.primary),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(doctor.nameBn, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                            const SizedBox(height: 4),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withValues(alpha: isDark ? 0.15 : 0.08),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(doctor.specialtyBn, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.primary)),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(doctor.qualification, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.textSecondary)),
+                            const SizedBox(height: 2),
+                            Text('${doctor.hospital} | ফি: ৳${doctor.fee.toInt()}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                            const SizedBox(height: 2),
+                            Text('সময়: ${doctor.visitingHours}', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.success.withValues(alpha: isDark ? 0.15 : 0.08),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.call_rounded, color: AppColors.success),
+                          onPressed: () => Helpers.makePhoneCall(doctor.phone),
+                        ),
+                      ),
                     ],
-                  ),
-                  isThreeLine: true,
-                  trailing: IconButton(
-                    icon: const Icon(Icons.call, color: AppColors.success),
-                    onPressed: () => Helpers.makePhoneCall(doctor.phone),
                   ),
                 ),
               );
@@ -193,6 +283,7 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   Widget _buildPharmacyList() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final pharmacies = [
       Pharmacy(name: 'লাজ ফার্মেসি', address: 'হাসপাতাল রোড, সদর', phone: '01711-500001', openingHours: 'সকাল ৮টা - রাত ১০টা', isOpen24Hours: false),
       Pharmacy(name: 'পপুলার ফার্মেসি', address: 'স্টেশন রোড, সদর', phone: '01711-500002', openingHours: '২৪ ঘন্টা', isOpen24Hours: true),
@@ -201,32 +292,75 @@ class _HealthScreenState extends State<HealthScreen> {
     ];
 
     return ListView.builder(
-      padding: const EdgeInsets.all(8),
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.all(12),
       itemCount: pharmacies.length,
       itemBuilder: (context, index) {
         final pharmacy = pharmacies[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.green.withValues(alpha: 0.1),
-              child: const Icon(Icons.local_pharmacy, color: Colors.green),
-            ),
-            title: Text(pharmacy.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkCard : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: isDark ? [] : AppColors.softShadow,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
               children: [
-                Text(pharmacy.address),
-                Row(
-                  children: [
-                    Icon(Icons.access_time, size: 14, color: pharmacy.isOpen24Hours ? AppColors.success : AppColors.textSecondary),
-                    const SizedBox(width: 4),
-                    Text(pharmacy.openingHours, style: TextStyle(fontSize: 12, color: pharmacy.isOpen24Hours ? AppColors.success : AppColors.textSecondary)),
-                  ],
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withValues(alpha: isDark ? 0.15 : 0.08),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.local_pharmacy_rounded, color: Colors.green),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(pharmacy.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                      const SizedBox(height: 4),
+                      Text(pharmacy.address, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textSecondary)),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(Icons.access_time_rounded, size: 14, color: pharmacy.isOpen24Hours ? AppColors.success : AppColors.textSecondary),
+                          const SizedBox(width: 4),
+                          Text(
+                            pharmacy.openingHours,
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: pharmacy.isOpen24Hours ? AppColors.success : AppColors.textSecondary),
+                          ),
+                          if (pharmacy.isOpen24Hours) ...[
+                            const SizedBox(width: 6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: AppColors.success.withValues(alpha: isDark ? 0.15 : 0.08),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Text('Open', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: AppColors.success)),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.success.withValues(alpha: isDark ? 0.15 : 0.08),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.call_rounded, color: AppColors.success),
+                    onPressed: () => Helpers.makePhoneCall(pharmacy.phone),
+                  ),
                 ),
               ],
             ),
-            trailing: IconButton(icon: const Icon(Icons.call, color: AppColors.success), onPressed: () => Helpers.makePhoneCall(pharmacy.phone)),
           ),
         );
       },
@@ -234,6 +368,7 @@ class _HealthScreenState extends State<HealthScreen> {
   }
 
   Widget _buildDiagnosticList() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final diagnostics = [
       DiagnosticCenter(name: 'জেলা ডায়াগনস্টিক সেন্টার', address: 'হাসপাতাল রোড, সদর', phone: '01711-600001', services: ['এক্স-রে', 'আল্ট্রাসনোগ্রাফি', 'ব্লাড টেস্ট', 'ইসিজি']),
       DiagnosticCenter(name: 'মডার্ন ডায়াগনস্টিক', address: 'স্টেশন রোড, সদর', phone: '01711-600002', services: ['সিটি স্ক্যান', 'এমআরআই', 'এক্স-রে', 'ব্লাড টেস্ট', 'ইসিজি', 'ইকো']),
@@ -241,33 +376,63 @@ class _HealthScreenState extends State<HealthScreen> {
     ];
 
     return ListView.builder(
-      padding: const EdgeInsets.all(8),
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.all(12),
       itemCount: diagnostics.length,
       itemBuilder: (context, index) {
         final d = diagnostics[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: ExpansionTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.blue.withValues(alpha: 0.1),
-              child: const Icon(Icons.biotech, color: Colors.blue),
-            ),
-            title: Text(d.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text(d.address),
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('সেবাসমূহ:', style: TextStyle(fontWeight: FontWeight.bold)),
-                    Wrap(spacing: 8, runSpacing: 4, children: d.services.map((s) => Chip(label: Text(s, style: const TextStyle(fontSize: 12)), padding: EdgeInsets.zero)).toList()),
-                    const SizedBox(height: 12),
-                    ElevatedButton.icon(onPressed: () => Helpers.makePhoneCall(d.phone), icon: const Icon(Icons.call), label: Text('কল: ${d.phone}')),
-                  ],
+        return Container(
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkCard : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: isDark ? [] : AppColors.softShadow,
+          ),
+          child: Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withValues(alpha: isDark ? 0.15 : 0.08),
+                  borderRadius: BorderRadius.circular(12),
                 ),
+                child: const Icon(Icons.biotech_rounded, color: Colors.blue),
               ),
-            ],
+              title: Text(d.name, style: const TextStyle(fontWeight: FontWeight.w700)),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(d.address, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textSecondary)),
+              ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('সেবাসমূহ:', style: TextStyle(fontWeight: FontWeight.w700)),
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 4,
+                        children: d.services.map((s) => Chip(
+                          label: Text(s, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.blue)),
+                          padding: EdgeInsets.zero,
+                          side: BorderSide(color: Colors.blue.withValues(alpha: 0.3)),
+                          backgroundColor: Colors.blue.withValues(alpha: isDark ? 0.15 : 0.05),
+                        )).toList(),
+                      ),
+                      const SizedBox(height: 14),
+                      ElevatedButton.icon(
+                        onPressed: () => Helpers.makePhoneCall(d.phone),
+                        icon: const Icon(Icons.call_rounded),
+                        label: Text('কল: ${d.phone}'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
