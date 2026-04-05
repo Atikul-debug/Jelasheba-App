@@ -31,6 +31,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int _currentIndex = 0;
   final PageController _bannerController = PageController();
   int _currentBanner = 0;
+  String _searchQuery = '';
+  final FocusNode _searchFocus = FocusNode();
+  final TextEditingController _searchController = TextEditingController();
 
   final List<Map<String, dynamic>> _banners = [
     {'title': 'জেলাশেবায় স্বাগতম', 'subtitle': 'সকল সরকারি সেবা এখন আপনার হাতের মুঠোয়', 'icon': Icons.account_balance_rounded, 'gradient': const [Color(0xFF006A4E), Color(0xFF00897B)]},
@@ -57,6 +60,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void dispose() {
     _bannerController.dispose();
+    _searchController.dispose();
+    _searchFocus.dispose();
     super.dispose();
   }
 
@@ -253,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ],
         ),
 
-        // Search Bar with Elevated Style
+        // Search Bar - Working
         SliverToBoxAdapter(
           child: Transform.translate(
             offset: const Offset(0, -8),
@@ -268,32 +273,40 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ],
                 ),
                 child: TextField(
+                  controller: _searchController,
+                  focusNode: _searchFocus,
                   decoration: InputDecoration(
-                    hintText: 'সেবা অনুসন্ধান করুন...',
-                    hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey[400], fontSize: 14),
-                    prefixIcon: Icon(Icons.search_rounded, color: isDark ? Colors.white38 : Colors.grey[400]),
-                    suffixIcon: Container(
-                      margin: const EdgeInsets.all(6),
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [AppColors.primary.withValues(alpha: 0.15), AppColors.primary.withValues(alpha: 0.08)]),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(Icons.tune_rounded, color: AppColors.primary, size: 18),
-                    ),
+                    hintText: 'সেবা অনুসন্ধান করুন... (যেমন: চিকিৎসা, কৃষি)',
+                    hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey[400], fontSize: 13),
+                    prefixIcon: Icon(Icons.search_rounded, color: _searchQuery.isNotEmpty ? AppColors.primary : (isDark ? Colors.white38 : Colors.grey[400])),
+                    suffixIcon: _searchQuery.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.close_rounded, size: 20),
+                            onPressed: () { _searchController.clear(); setState(() => _searchQuery = ''); _searchFocus.unfocus(); },
+                          )
+                        : Container(
+                            margin: const EdgeInsets.all(6),
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(colors: [AppColors.primary.withValues(alpha: 0.15), AppColors.primary.withValues(alpha: 0.08)]),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Icon(Icons.tune_rounded, color: AppColors.primary, size: 18),
+                          ),
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  onChanged: (value) {},
+                  onChanged: (value) => setState(() => _searchQuery = value),
                 ),
               ),
             ),
           ),
         ),
 
-        // Auto-scroll Banner
+        // Auto-scroll Banner (hidden during search)
+        if (_searchQuery.isEmpty)
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 8, 0, 4),
@@ -361,7 +374,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
 
-        // Quick Actions - Horizontal Cards
+        // Quick Actions (hidden during search)
+        if (_searchQuery.isEmpty)
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
@@ -381,7 +395,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
 
-        // Stats Row
+        // Stats Row (hidden during search)
+        if (_searchQuery.isEmpty)
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
@@ -407,7 +422,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
 
-        // Section Title - Services
+        // Section Title - Services (search aware)
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
@@ -421,7 +436,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       decoration: BoxDecoration(gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.primary, Color(0xFF26A69A)]), borderRadius: BorderRadius.circular(2)),
                     ),
                     const SizedBox(width: 10),
-                    const Text('সকল সেবা', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, letterSpacing: 0.3)),
+                    Text(
+                      _searchQuery.isEmpty ? 'সকল সেবা' : '"$_searchQuery" এর ফলাফল',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, letterSpacing: 0.3),
+                    ),
                   ],
                 ),
                 Container(
@@ -430,14 +448,31 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     color: AppColors.primary.withValues(alpha: isDark ? 0.15 : 0.06),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Text('${_buildServiceItems().length} টি', style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600)),
+                  child: Text('${_getFilteredServices().length} টি', style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600)),
                 ),
               ],
             ),
           ),
         ),
 
-        // Service Grid - 4 columns for top row, 3 for rest
+        // Search results or No results
+        if (_searchQuery.isNotEmpty && _getFilteredServices().isEmpty)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(40),
+              child: Column(
+                children: [
+                  Icon(Icons.search_off_rounded, size: 56, color: Colors.grey[300]),
+                  const SizedBox(height: 12),
+                  Text('"$_searchQuery" পাওয়া যায়নি', style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                  const SizedBox(height: 4),
+                  const Text('অন্য কিছু অনুসন্ধান করুন', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                ],
+              ),
+            ),
+          ),
+
+        // Service Grid
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           sliver: SliverGrid(
@@ -447,13 +482,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
             ),
-            delegate: SliverChildListDelegate(_buildServiceItems()),
+            delegate: SliverChildListDelegate(_getFilteredServices()),
           ),
         ),
 
-        // DC Message Card - Enhanced
+        // DC Message + Emergency (hidden during search)
+        if (_searchQuery.isEmpty)
         SliverToBoxAdapter(child: _buildDCMessage(isDark)),
 
+        if (_searchQuery.isEmpty)
         // Emergency Helpline Strip
         SliverToBoxAdapter(
           child: Padding(
@@ -591,6 +628,63 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _buildStatDivider(bool isDark) {
     return Container(width: 1, height: 30, color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFE5E7EB));
+  }
+
+  // Search keywords mapping for each service
+  static const Map<String, List<String>> _searchKeywords = {
+    'জেলা তথ্য': ['জেলা', 'তথ্য', 'উপজেলা', 'ইউনিয়ন', 'ডিসি', 'district'],
+    'নাগরিক সেবা': ['নাগরিক', 'সেবা', 'জন্ম', 'নিবন্ধন', 'পাসপোর্ট', 'NID', 'সনদ', 'লাইসেন্স', 'citizen'],
+    'অভিযোগ': ['অভিযোগ', 'গ্রিভেন্স', 'complaint', 'সমস্যা', 'রিপোর্ট'],
+    'জরুরি সেবা': ['জরুরি', '৯৯৯', '999', 'পুলিশ', 'থানা', 'ফায়ার', 'emergency'],
+    'চিকিৎসা': ['চিকিৎসা', 'স্বাস্থ্য', 'হাসপাতাল', 'ডাক্তার', 'ফার্মেসি', 'অ্যাম্বুলেন্স', 'রক্ত', 'health', 'hospital', 'doctor'],
+    'শিক্ষা': ['শিক্ষা', 'স্কুল', 'কলেজ', 'মাদ্রাসা', 'বৃত্তি', 'ফলাফল', 'education', 'school'],
+    'কৃষি': ['কৃষি', 'ফসল', 'ধান', 'সার', 'বাজারদর', 'agriculture', 'crop', 'fertilizer'],
+    'ভূমি সেবা': ['ভূমি', 'জমি', 'খতিয়ান', 'নামজারি', 'land', 'কর'],
+    'নোটিশ': ['নোটিশ', 'বিজ্ঞপ্তি', 'notice', 'টেন্ডার', 'নিয়োগ'],
+    'ই-সেবা': ['ই-সেবা', 'অনলাইন', 'ডিজিটাল', 'বিল', 'ট্র্যাকিং', 'e-service'],
+    'পর্যটন': ['পর্যটন', 'ভ্রমণ', 'হোটেল', 'দর্শনীয়', 'tourism', 'travel'],
+    'যোগাযোগ': ['যোগাযোগ', 'ফোন', 'নম্বর', 'অফিস', 'contact', 'phone'],
+    'প্রোফাইল': ['প্রোফাইল', 'অ্যাকাউন্ট', 'লগইন', 'profile', 'login'],
+    'অ্যাডমিন': ['অ্যাডমিন', 'admin', 'ড্যাশবোর্ড', 'ম্যানেজমেন্ট'],
+  };
+
+  List<Widget> _getFilteredServices() {
+    final all = _buildServiceItems();
+    if (_searchQuery.isEmpty) return all;
+
+    final query = _searchQuery.toLowerCase();
+    final allServices = _getAllServices();
+
+    final filtered = <Widget>[];
+    for (int i = 0; i < allServices.length; i++) {
+      final title = allServices[i]['title'] as String;
+      final keywords = _searchKeywords[title] ?? [];
+      final match = title.toLowerCase().contains(query) ||
+          keywords.any((k) => k.toLowerCase().contains(query));
+      if (match && i < all.length) {
+        filtered.add(all[i]);
+      }
+    }
+    return filtered;
+  }
+
+  List<Map<String, dynamic>> _getAllServices() {
+    return [
+      {'title': 'জেলা তথ্য', 'icon': Icons.info_outline_rounded, 'color': AppColors.primary, 'screen': const DistrictInfoScreen()},
+      {'title': 'নাগরিক সেবা', 'icon': Icons.people_rounded, 'color': AppColors.info, 'screen': const CitizenServicesScreen()},
+      {'title': 'অভিযোগ', 'icon': Icons.report_problem_rounded, 'color': const Color(0xFFF59E0B), 'screen': const GrievanceScreen()},
+      {'title': 'জরুরি সেবা', 'icon': Icons.emergency_rounded, 'color': AppColors.error, 'screen': const EmergencyScreen()},
+      {'title': 'চিকিৎসা', 'icon': Icons.local_hospital_rounded, 'color': const Color(0xFFE91E63), 'screen': const HealthScreen()},
+      {'title': 'শিক্ষা', 'icon': Icons.school_rounded, 'color': const Color(0xFF7C3AED), 'screen': const EducationScreen()},
+      {'title': 'কৃষি', 'icon': Icons.agriculture_rounded, 'color': const Color(0xFF059669), 'screen': const AgricultureScreen()},
+      {'title': 'ভূমি সেবা', 'icon': Icons.terrain_rounded, 'color': const Color(0xFF92400E), 'screen': const LandScreen()},
+      {'title': 'নোটিশ', 'icon': Icons.campaign_rounded, 'color': const Color(0xFFEA580C), 'screen': const NoticeboardScreen()},
+      {'title': 'ই-সেবা', 'icon': Icons.computer_rounded, 'color': const Color(0xFF0891B2), 'screen': const EServicesScreen()},
+      {'title': 'পর্যটন', 'icon': Icons.tour_rounded, 'color': const Color(0xFFD97706), 'screen': const TourismScreen()},
+      {'title': 'যোগাযোগ', 'icon': Icons.contacts_rounded, 'color': const Color(0xFF475569), 'screen': const ContactDirectoryScreen()},
+      {'title': 'প্রোফাইল', 'icon': Icons.person_rounded, 'color': const Color(0xFF4F46E5), 'screen': const UserPanelScreen()},
+      {'title': 'অ্যাডমিন', 'icon': Icons.admin_panel_settings_rounded, 'color': const Color(0xFF6B7280), 'screen': const AdminPanelScreen()},
+    ];
   }
 
   List<Widget> _buildServiceItems() {
