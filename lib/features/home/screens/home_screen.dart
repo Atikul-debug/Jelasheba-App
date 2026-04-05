@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
-import '../../../core/constants/app_constants.dart';
 import '../../../core/providers/app_provider.dart';
 import '../../../core/utils/helpers.dart';
 import '../../district_info/screens/district_info_screen.dart';
@@ -173,71 +172,98 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        // Premium Header
+        // Clean Modern Header
         SliverAppBar(
-          expandedHeight: 180,
+          expandedHeight: 160,
           floating: false,
           pinned: true,
           stretch: true,
           backgroundColor: isDark ? AppColors.darkSurface : AppColors.primary,
           flexibleSpace: FlexibleSpaceBar(
             titlePadding: const EdgeInsets.only(left: 20, bottom: 14),
-            title: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [Colors.white.withValues(alpha: 0.3), Colors.white.withValues(alpha: 0.1)]),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(Icons.account_balance_rounded, size: 16, color: Colors.white),
-                ),
-                const SizedBox(width: 8),
-                const Text('জেলাশেবা', style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white, fontSize: 18, letterSpacing: 0.5)),
-              ],
+            title: Text(
+              _getGreeting(),
+              style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.white, fontSize: 16),
             ),
             background: Container(
-              decoration: const BoxDecoration(gradient: AppColors.headerGradient),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [AppColors.darkSurface, const Color(0xFF1A2332)]
+                      : [const Color(0xFF006A4E), const Color(0xFF00897B), const Color(0xFF26A69A)],
+                ),
+              ),
               child: Stack(
                 children: [
-                  // Animated pattern
-                  ..._buildDecorativeCircles(),
-                  // Greeting content
-                  Positioned(
-                    left: 24, top: 70, right: 80,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${_getGreeting()} 👋',
-                          style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 14, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          appProvider.isLoggedIn ? appProvider.userName : AppConstants.districtName,
-                          style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800, letterSpacing: 0.3),
-                        ),
-                        const SizedBox(height: 6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(20)),
-                          child: Text('জেলা প্রশাসকের কার্যালয়', style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 11, fontWeight: FontWeight.w500)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Right side decoration
-                  Positioned(
-                    right: 20, top: 75,
-                    child: Container(
-                      padding: const EdgeInsets.all(18),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.15), width: 2),
+                  // Subtle pattern
+                  Positioned(top: -50, right: -50, child: Container(width: 180, height: 180, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.04)))),
+                  Positioned(bottom: -30, left: -30, child: Container(width: 120, height: 120, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.03)))),
+                  // Content
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 8),
+                          // User greeting
+                          Row(
+                            children: [
+                              // Avatar
+                              Container(
+                                width: 46, height: 46,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1.5),
+                                ),
+                                child: Center(
+                                  child: appProvider.isLoggedIn
+                                      ? Text(appProvider.userName.isNotEmpty ? appProvider.userName[0].toUpperCase() : 'U', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800))
+                                      : const Icon(Icons.person_rounded, color: Colors.white70, size: 24),
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${_getGreeting()} 👋',
+                                      style: TextStyle(color: Colors.white.withValues(alpha: 0.75), fontSize: 13, fontWeight: FontWeight.w400),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      appProvider.isLoggedIn ? appProvider.userName : 'সিরাজগঞ্জবাসী',
+                                      style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
+                          // Location badge
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.location_on_rounded, size: 14, color: Colors.white.withValues(alpha: 0.7)),
+                                const SizedBox(width: 4),
+                                Text('সিরাজগঞ্জ, রাজশাহী বিভাগ', style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w500)),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      child: const Icon(Icons.account_balance_rounded, size: 28, color: Colors.white70),
                     ),
                   ),
                 ],
@@ -632,14 +658,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  List<Positioned> _buildDecorativeCircles() {
-    return [
-      Positioned(top: -40, right: -40, child: Container(width: 160, height: 160, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.04)))),
-      Positioned(bottom: 10, left: -50, child: Container(width: 120, height: 120, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.03)))),
-      Positioned(top: 30, left: MediaQuery.of(context).size.width * 0.4, child: Container(width: 40, height: 40, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.04)))),
-      Positioned(top: 60, right: 60, child: Container(width: 20, height: 20, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.06)))),
-    ];
-  }
 
   Widget _buildAppBarAction({required IconData icon, required VoidCallback onTap, bool showBadge = false}) {
     return Container(
