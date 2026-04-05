@@ -18,6 +18,7 @@ import '../../tourism/screens/tourism_screen.dart';
 import '../../contact_directory/screens/contact_directory_screen.dart';
 import '../../user_panel/screens/user_panel_screen.dart';
 import '../../admin_panel/screens/admin_panel_screen.dart';
+import '../../search/screens/search_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,9 +31,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int _currentIndex = 0;
   final PageController _bannerController = PageController();
   int _currentBanner = 0;
-  String _searchQuery = '';
-  final FocusNode _searchFocus = FocusNode();
-  final TextEditingController _searchController = TextEditingController();
 
   final List<Map<String, dynamic>> _banners = [
     {'title': 'জেলাশেবায় স্বাগতম', 'subtitle': 'সকল সরকারি সেবা এখন আপনার হাতের মুঠোয়', 'icon': Icons.account_balance_rounded, 'gradient': const [Color(0xFF006A4E), Color(0xFF00897B)]},
@@ -59,8 +57,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void dispose() {
     _bannerController.dispose();
-    _searchController.dispose();
-    _searchFocus.dispose();
     super.dispose();
   }
 
@@ -240,22 +236,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
 
-        // Sticky Search Bar - stays pinned on scroll, below status bar
+        // Search Bar - Tap to open search page
         SliverPersistentHeader(
           pinned: true,
           delegate: _SearchBarDelegate(
             isDark: isDark,
-            searchQuery: _searchQuery,
-            searchController: _searchController,
-            searchFocus: _searchFocus,
             statusBarHeight: MediaQuery.of(context).padding.top,
-            onChanged: (value) => setState(() => _searchQuery = value),
-            onClear: () { _searchController.clear(); setState(() => _searchQuery = ''); _searchFocus.unfocus(); },
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen())),
           ),
         ),
 
-        // Auto-scroll Banner (hidden during search)
-        if (_searchQuery.isEmpty)
+        // Auto-scroll Banner
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 8, 0, 4),
@@ -323,8 +314,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
 
-        // Quick Actions (hidden during search)
-        if (_searchQuery.isEmpty)
+        // Quick Actions
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
@@ -344,8 +334,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
 
-        // Stats Row (hidden during search)
-        if (_searchQuery.isEmpty)
+        // Stats Row
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
@@ -371,123 +360,40 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
 
-        // Section Title - Services (search aware)
+        // Section Title
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 4, height: 22,
-                      decoration: BoxDecoration(gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.primary, Color(0xFF26A69A)]), borderRadius: BorderRadius.circular(2)),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      _searchQuery.isEmpty ? 'সকল সেবা' : '"$_searchQuery" এর ফলাফল',
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, letterSpacing: 0.3),
-                    ),
-                  ],
-                ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: isDark ? 0.15 : 0.06),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text('${_getFilteredServices().length} টি', style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600)),
+                  width: 4, height: 22,
+                  decoration: BoxDecoration(gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [AppColors.primary, Color(0xFF26A69A)]), borderRadius: BorderRadius.circular(2)),
                 ),
+                const SizedBox(width: 10),
+                const Text('সকল সেবা', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, letterSpacing: 0.3)),
               ],
             ),
           ),
         ),
 
-        // Search results as list OR grid
-        if (_searchQuery.isNotEmpty && _getFilteredServiceData().isEmpty)
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(40),
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.06), shape: BoxShape.circle),
-                    child: Icon(Icons.search_off_rounded, size: 48, color: Colors.grey[300]),
-                  ),
-                  const SizedBox(height: 16),
-                  Text('"$_searchQuery" পাওয়া যায়নি', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
-                  const SizedBox(height: 4),
-                  const Text('অন্য কিছু অনুসন্ধান করুন', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
-                ],
-              ),
+        // Service Grid
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              childAspectRatio: 0.78,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
             ),
-          )
-        else if (_searchQuery.isNotEmpty)
-          // Search results as LIST (better for search)
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final services = _getFilteredServiceData();
-                if (index >= services.length) return null;
-                final service = services[index];
-                final color = service['color'] as Color;
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkCard : Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: isDark ? [] : AppColors.softShadow,
-                  ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                    leading: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [color.withValues(alpha: 0.14), color.withValues(alpha: 0.05)]),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(service['icon'] as IconData, color: color, size: 24),
-                    ),
-                    title: Text(service['title'] as String, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
-                    subtitle: Text(
-                      (_searchKeywords[service['title']] ?? []).take(4).join(', '),
-                      style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
-                      maxLines: 1, overflow: TextOverflow.ellipsis,
-                    ),
-                    trailing: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
-                      child: Icon(Icons.arrow_forward_rounded, color: color, size: 18),
-                    ),
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => service['screen'] as Widget)),
-                  ),
-                );
-              },
-              childCount: _getFilteredServiceData().length,
-            ),
-          )
-        else
-          // Normal grid view
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            sliver: SliverGrid(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                childAspectRatio: 0.78,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-              ),
-              delegate: SliverChildListDelegate(_buildServiceItems()),
-            ),
+            delegate: SliverChildListDelegate(_buildServiceItems()),
           ),
+        ),
 
-        // DC Message + Emergency (hidden during search)
-        if (_searchQuery.isEmpty)
+        // DC Message
         SliverToBoxAdapter(child: _buildDCMessage(isDark)),
 
-        if (_searchQuery.isEmpty)
         // Emergency Helpline Strip
         SliverToBoxAdapter(
           child: Padding(
@@ -619,66 +525,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return Container(width: 1, height: 30, color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFE5E7EB));
   }
 
-  // Search keywords mapping for each service
-  static const Map<String, List<String>> _searchKeywords = {
-    'জেলা তথ্য': ['জেলা', 'তথ্য', 'উপজেলা', 'ইউনিয়ন', 'ডিসি', 'district'],
-    'নাগরিক সেবা': ['নাগরিক', 'সেবা', 'জন্ম', 'নিবন্ধন', 'পাসপোর্ট', 'NID', 'সনদ', 'লাইসেন্স', 'citizen'],
-    'অভিযোগ': ['অভিযোগ', 'গ্রিভেন্স', 'complaint', 'সমস্যা', 'রিপোর্ট'],
-    'জরুরি সেবা': ['জরুরি', '৯৯৯', '999', 'পুলিশ', 'থানা', 'ফায়ার', 'emergency'],
-    'চিকিৎসা': ['চিকিৎসা', 'স্বাস্থ্য', 'হাসপাতাল', 'ডাক্তার', 'ফার্মেসি', 'অ্যাম্বুলেন্স', 'রক্ত', 'health', 'hospital', 'doctor'],
-    'শিক্ষা': ['শিক্ষা', 'স্কুল', 'কলেজ', 'মাদ্রাসা', 'বৃত্তি', 'ফলাফল', 'education', 'school'],
-    'কৃষি': ['কৃষি', 'ফসল', 'ধান', 'সার', 'বাজারদর', 'agriculture', 'crop', 'fertilizer'],
-    'ভূমি সেবা': ['ভূমি', 'জমি', 'খতিয়ান', 'নামজারি', 'land', 'কর'],
-    'নোটিশ': ['নোটিশ', 'বিজ্ঞপ্তি', 'notice', 'টেন্ডার', 'নিয়োগ'],
-    'ই-সেবা': ['ই-সেবা', 'অনলাইন', 'ডিজিটাল', 'বিল', 'ট্র্যাকিং', 'e-service'],
-    'পর্যটন': ['পর্যটন', 'ভ্রমণ', 'হোটেল', 'দর্শনীয়', 'tourism', 'travel'],
-    'যোগাযোগ': ['যোগাযোগ', 'ফোন', 'নম্বর', 'অফিস', 'contact', 'phone'],
-    'প্রোফাইল': ['প্রোফাইল', 'অ্যাকাউন্ট', 'লগইন', 'profile', 'login'],
-    'অ্যাডমিন': ['অ্যাডমিন', 'admin', 'ড্যাশবোর্ড', 'ম্যানেজমেন্ট'],
-  };
-
-  List<Map<String, dynamic>> _getFilteredServiceData() {
-    final allServices = _getAllServices();
-    if (_searchQuery.isEmpty) return allServices;
-
-    final query = _searchQuery.toLowerCase();
-    return allServices.where((service) {
-      final title = (service['title'] as String).toLowerCase();
-      final keywords = _searchKeywords[service['title']] ?? [];
-      return title.contains(query) || keywords.any((k) => k.toLowerCase().contains(query));
-    }).toList();
-  }
-
-  List<Widget> _getFilteredServices() {
-    final filtered = _getFilteredServiceData();
-    return filtered.map((service) {
-      return _buildServiceCard(
-        service['title'] as String,
-        service['icon'] as IconData,
-        service['color'] as Color,
-        () => Navigator.push(context, MaterialPageRoute(builder: (_) => service['screen'] as Widget)),
-      );
-    }).toList();
-  }
-
-  List<Map<String, dynamic>> _getAllServices() {
-    return [
-      {'title': 'জেলা তথ্য', 'icon': Icons.info_outline_rounded, 'color': AppColors.primary, 'screen': const DistrictInfoScreen()},
-      {'title': 'নাগরিক সেবা', 'icon': Icons.people_rounded, 'color': AppColors.info, 'screen': const CitizenServicesScreen()},
-      {'title': 'অভিযোগ', 'icon': Icons.report_problem_rounded, 'color': const Color(0xFFF59E0B), 'screen': const GrievanceScreen()},
-      {'title': 'জরুরি সেবা', 'icon': Icons.emergency_rounded, 'color': AppColors.error, 'screen': const EmergencyScreen()},
-      {'title': 'চিকিৎসা', 'icon': Icons.local_hospital_rounded, 'color': const Color(0xFFE91E63), 'screen': const HealthScreen()},
-      {'title': 'শিক্ষা', 'icon': Icons.school_rounded, 'color': const Color(0xFF7C3AED), 'screen': const EducationScreen()},
-      {'title': 'কৃষি', 'icon': Icons.agriculture_rounded, 'color': const Color(0xFF059669), 'screen': const AgricultureScreen()},
-      {'title': 'ভূমি সেবা', 'icon': Icons.terrain_rounded, 'color': const Color(0xFF92400E), 'screen': const LandScreen()},
-      {'title': 'নোটিশ', 'icon': Icons.campaign_rounded, 'color': const Color(0xFFEA580C), 'screen': const NoticeboardScreen()},
-      {'title': 'ই-সেবা', 'icon': Icons.computer_rounded, 'color': const Color(0xFF0891B2), 'screen': const EServicesScreen()},
-      {'title': 'পর্যটন', 'icon': Icons.tour_rounded, 'color': const Color(0xFFD97706), 'screen': const TourismScreen()},
-      {'title': 'যোগাযোগ', 'icon': Icons.contacts_rounded, 'color': const Color(0xFF475569), 'screen': const ContactDirectoryScreen()},
-      {'title': 'প্রোফাইল', 'icon': Icons.person_rounded, 'color': const Color(0xFF4F46E5), 'screen': const UserPanelScreen()},
-      {'title': 'অ্যাডমিন', 'icon': Icons.admin_panel_settings_rounded, 'color': const Color(0xFF6B7280), 'screen': const AdminPanelScreen()},
-    ];
-  }
 
   List<Widget> _buildServiceItems() {
     final services = [
@@ -948,28 +794,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 }
 
-// Sticky search bar delegate
+// Sticky search bar - tap to open search page
 class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
   final bool isDark;
-  final String searchQuery;
-  final TextEditingController searchController;
-  final FocusNode searchFocus;
-  final ValueChanged<String> onChanged;
-  final VoidCallback onClear;
+  final double statusBarHeight;
+  final VoidCallback onTap;
 
   _SearchBarDelegate({
     required this.isDark,
-    required this.searchQuery,
-    required this.searchController,
-    required this.searchFocus,
-    required this.onChanged,
-    required this.onClear,
     required this.statusBarHeight,
+    required this.onTap,
   });
 
-  final double statusBarHeight;
-
-  // 52 (search bar) + 4 (top pad) + 4 (bottom pad) + statusBar = 60 + statusBar
   @override
   double get maxExtent => 60 + statusBarHeight;
 
@@ -977,111 +813,64 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => 60 + statusBarHeight;
 
   @override
-  bool shouldRebuild(covariant _SearchBarDelegate oldDelegate) =>
-      oldDelegate.searchQuery != searchQuery || oldDelegate.isDark != isDark;
+  bool shouldRebuild(covariant _SearchBarDelegate oldDelegate) => oldDelegate.isDark != isDark;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final statusBarHeight = MediaQuery.of(context).padding.top;
+    final topPad = MediaQuery.of(context).padding.top;
     final isScrolled = shrinkOffset > 0;
-    final isActive = searchQuery.isNotEmpty;
 
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkBackground : AppColors.background,
         boxShadow: isScrolled ? [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2))] : [],
       ),
-      padding: EdgeInsets.fromLTRB(16, statusBarHeight + 4, 16, 4),
-      child: Container(
-        height: 52,
-        clipBehavior: Clip.none,
-        decoration: BoxDecoration(
-          gradient: isActive
-              ? LinearGradient(colors: [
-                  isDark ? const Color(0xFF1A3A2E) : const Color(0xFFE8F5E9),
-                  isDark ? const Color(0xFF1A2E3A) : const Color(0xFFE3F2FD),
-                ])
-              : null,
-          color: isActive ? null : (isDark ? AppColors.darkCard : Colors.white),
-          borderRadius: BorderRadius.circular(26),
-          border: Border.all(
-            color: isActive
-                ? const Color(0xFF00897B).withValues(alpha: 0.4)
-                : (isDark ? Colors.white.withValues(alpha: 0.08) : const Color(0xFFE0E0E0)),
-            width: isActive ? 1.5 : 1,
+      padding: EdgeInsets.fromLTRB(16, topPad + 4, 16, 4),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          height: 52,
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkCard : Colors.white,
+            borderRadius: BorderRadius.circular(26),
+            border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.08) : const Color(0xFFE0E0E0)),
+            boxShadow: [
+              BoxShadow(color: const Color(0xFF00897B).withValues(alpha: isDark ? 0.08 : 0.06), blurRadius: 12, offset: const Offset(0, 3)),
+            ],
           ),
-          boxShadow: [
-            BoxShadow(
-              color: isActive
-                  ? const Color(0xFF00897B).withValues(alpha: 0.15)
-                  : Colors.black.withValues(alpha: isDark ? 0.15 : 0.06),
-              blurRadius: isActive ? 16 : 10,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // Search icon with color
-            Container(
-              margin: const EdgeInsets.only(left: 4),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                gradient: isActive
-                    ? const LinearGradient(colors: [Color(0xFF00897B), Color(0xFF26A69A)])
-                    : null,
-                color: isActive ? null : (isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF5F5F5)),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.search_rounded,
-                color: isActive ? Colors.white : (isDark ? Colors.white38 : Colors.grey[500]),
-                size: 18,
-              ),
-            ),
-            // Text field
-            Expanded(
-              child: TextField(
-                controller: searchController,
-                focusNode: searchFocus,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: isDark ? Colors.white : AppColors.textPrimary),
-                decoration: InputDecoration(
-                  hintText: 'সেবা খুঁজুন...',
-                  hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.grey[400], fontSize: 14),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+          child: Row(
+            children: [
+              // Search icon
+              Container(
+                margin: const EdgeInsets.only(left: 4),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(colors: [Color(0xFF00897B), Color(0xFF26A69A)]),
+                  shape: BoxShape.circle,
+                  boxShadow: [BoxShadow(color: const Color(0xFF00897B).withValues(alpha: 0.3), blurRadius: 6, offset: const Offset(0, 2))],
                 ),
-                onChanged: onChanged,
+                child: const Icon(Icons.search_rounded, color: Colors.white, size: 18),
               ),
-            ),
-            // Clear button or filter icon
-            if (isActive)
-              GestureDetector(
-                onTap: onClear,
-                child: Container(
-                  margin: const EdgeInsets.only(right: 4),
-                  padding: const EdgeInsets.all(10),
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(colors: [Color(0xFFEF5350), Color(0xFFE53935)]),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.close_rounded, color: Colors.white, size: 16),
+              const SizedBox(width: 12),
+              // Hint text
+              Expanded(
+                child: Text(
+                  'সেবা খুঁজুন...',
+                  style: TextStyle(color: isDark ? Colors.white30 : Colors.grey[400], fontSize: 14, fontWeight: FontWeight.w400),
                 ),
-              )
-            else
+              ),
+              // Filter icon
               Container(
                 margin: const EdgeInsets.only(right: 4),
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    const Color(0xFF00897B).withValues(alpha: isDark ? 0.3 : 0.15),
-                    const Color(0xFF26A69A).withValues(alpha: isDark ? 0.2 : 0.08),
-                  ]),
+                  color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF5F5F5),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.tune_rounded, color: isDark ? const Color(0xFF26A69A) : const Color(0xFF00897B), size: 16),
+                child: Icon(Icons.tune_rounded, color: isDark ? Colors.white38 : Colors.grey[500], size: 16),
               ),
-          ],
+            ],
+          ),
         ),
       ),
     );
