@@ -455,36 +455,84 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
 
-        // Search results or No results
-        if (_searchQuery.isNotEmpty && _getFilteredServices().isEmpty)
+        // Search results as list OR grid
+        if (_searchQuery.isNotEmpty && _getFilteredServiceData().isEmpty)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(40),
               child: Column(
                 children: [
-                  Icon(Icons.search_off_rounded, size: 56, color: Colors.grey[300]),
-                  const SizedBox(height: 12),
-                  Text('"$_searchQuery" পাওয়া যায়নি', style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.textSecondary)),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.06), shape: BoxShape.circle),
+                    child: Icon(Icons.search_off_rounded, size: 48, color: Colors.grey[300]),
+                  ),
+                  const SizedBox(height: 16),
+                  Text('"$_searchQuery" পাওয়া যায়নি', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
                   const SizedBox(height: 4),
-                  const Text('অন্য কিছু অনুসন্ধান করুন', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                  const Text('অন্য কিছু অনুসন্ধান করুন', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
                 ],
               ),
             ),
-          ),
-
-        // Service Grid
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          sliver: SliverGrid(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              childAspectRatio: 0.78,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
+          )
+        else if (_searchQuery.isNotEmpty)
+          // Search results as LIST (better for search)
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final services = _getFilteredServiceData();
+                if (index >= services.length) return null;
+                final service = services[index];
+                final color = service['color'] as Color;
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkCard : Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: isDark ? [] : AppColors.softShadow,
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    leading: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [color.withValues(alpha: 0.14), color.withValues(alpha: 0.05)]),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(service['icon'] as IconData, color: color, size: 24),
+                    ),
+                    title: Text(service['title'] as String, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                    subtitle: Text(
+                      (_searchKeywords[service['title']] ?? []).take(4).join(', '),
+                      style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                      maxLines: 1, overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(color: color.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
+                      child: Icon(Icons.arrow_forward_rounded, color: color, size: 18),
+                    ),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => service['screen'] as Widget)),
+                  ),
+                );
+              },
+              childCount: _getFilteredServiceData().length,
             ),
-            delegate: SliverChildListDelegate(_getFilteredServices()),
+          )
+        else
+          // Normal grid view
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                childAspectRatio: 0.78,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              delegate: SliverChildListDelegate(_buildServiceItems()),
+            ),
           ),
-        ),
 
         // DC Message + Emergency (hidden during search)
         if (_searchQuery.isEmpty)
@@ -648,24 +696,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     'অ্যাডমিন': ['অ্যাডমিন', 'admin', 'ড্যাশবোর্ড', 'ম্যানেজমেন্ট'],
   };
 
-  List<Widget> _getFilteredServices() {
-    final all = _buildServiceItems();
-    if (_searchQuery.isEmpty) return all;
+  List<Map<String, dynamic>> _getFilteredServiceData() {
+    final allServices = _getAllServices();
+    if (_searchQuery.isEmpty) return allServices;
 
     final query = _searchQuery.toLowerCase();
-    final allServices = _getAllServices();
+    return allServices.where((service) {
+      final title = (service['title'] as String).toLowerCase();
+      final keywords = _searchKeywords[service['title']] ?? [];
+      return title.contains(query) || keywords.any((k) => k.toLowerCase().contains(query));
+    }).toList();
+  }
 
-    final filtered = <Widget>[];
-    for (int i = 0; i < allServices.length; i++) {
-      final title = allServices[i]['title'] as String;
-      final keywords = _searchKeywords[title] ?? [];
-      final match = title.toLowerCase().contains(query) ||
-          keywords.any((k) => k.toLowerCase().contains(query));
-      if (match && i < all.length) {
-        filtered.add(all[i]);
-      }
-    }
-    return filtered;
+  List<Widget> _getFilteredServices() {
+    final filtered = _getFilteredServiceData();
+    return filtered.map((service) {
+      return _buildServiceCard(
+        service['title'] as String,
+        service['icon'] as IconData,
+        service['color'] as Color,
+        () => Navigator.push(context, MaterialPageRoute(builder: (_) => service['screen'] as Widget)),
+      );
+    }).toList();
   }
 
   List<Map<String, dynamic>> _getAllServices() {
