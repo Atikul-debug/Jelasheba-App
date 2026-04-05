@@ -982,41 +982,59 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     final statusBarHeight = MediaQuery.of(context).padding.top;
+    final isScrolled = shrinkOffset > 0;
+    final isActive = searchQuery.isNotEmpty;
+
     return Container(
-      color: isDark ? AppColors.darkBackground : AppColors.background,
-      padding: EdgeInsets.fromLTRB(16, statusBarHeight + 8, 16, 8),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkBackground : AppColors.background,
+        boxShadow: isScrolled ? [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2))] : [],
+      ),
+      padding: EdgeInsets.fromLTRB(16, statusBarHeight + 6, 16, 6),
       child: Container(
+        height: 52,
         decoration: BoxDecoration(
-          color: isDark ? AppColors.darkCard : Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            if (shrinkOffset > 0)
-              BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, 4)),
-            BoxShadow(color: AppColors.primary.withValues(alpha: isDark ? 0.08 : 0.06), blurRadius: 16, offset: const Offset(0, 4)),
-          ],
+          gradient: isActive
+              ? LinearGradient(colors: [
+                  isDark ? const Color(0xFF1A3A2E) : const Color(0xFFE8F5E9),
+                  isDark ? const Color(0xFF1A2E3A) : const Color(0xFFE3F2FD),
+                ])
+              : null,
+          color: isActive ? null : (isDark ? AppColors.darkCard : Colors.white),
+          borderRadius: BorderRadius.circular(26),
           border: Border.all(
-            color: searchQuery.isNotEmpty
-                ? AppColors.primary.withValues(alpha: 0.3)
-                : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.grey.withValues(alpha: 0.1)),
-            width: searchQuery.isNotEmpty ? 1.5 : 1,
+            color: isActive
+                ? const Color(0xFF00897B).withValues(alpha: 0.4)
+                : (isDark ? Colors.white.withValues(alpha: 0.08) : const Color(0xFFE0E0E0)),
+            width: isActive ? 1.5 : 1,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: isActive
+                  ? const Color(0xFF00897B).withValues(alpha: 0.15)
+                  : Colors.black.withValues(alpha: isDark ? 0.15 : 0.06),
+              blurRadius: isActive ? 16 : 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: Row(
           children: [
-            // Search icon
-            Padding(
-              padding: const EdgeInsets.only(left: 14),
-              child: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: searchQuery.isNotEmpty ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(
-                  Icons.search_rounded,
-                  color: searchQuery.isNotEmpty ? AppColors.primary : (isDark ? Colors.white30 : Colors.grey[400]),
-                  size: 20,
-                ),
+            // Search icon with color
+            Container(
+              margin: const EdgeInsets.only(left: 4),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: isActive
+                    ? const LinearGradient(colors: [Color(0xFF00897B), Color(0xFF26A69A)])
+                    : null,
+                color: isActive ? null : (isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFF5F5F5)),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.search_rounded,
+                color: isActive ? Colors.white : (isDark ? Colors.white38 : Colors.grey[500]),
+                size: 18,
               ),
             ),
             // Text field
@@ -1024,40 +1042,42 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
               child: TextField(
                 controller: searchController,
                 focusNode: searchFocus,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: isDark ? Colors.white : AppColors.textPrimary),
                 decoration: InputDecoration(
-                  hintText: 'হাসপাতাল, ডাক্তার, কৃষি, ভূমি...',
-                  hintStyle: TextStyle(color: isDark ? Colors.white24 : Colors.grey[400], fontSize: 14),
+                  hintText: 'সেবা খুঁজুন...',
+                  hintStyle: TextStyle(color: isDark ? Colors.white30 : Colors.grey[400], fontSize: 14),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
                 ),
                 onChanged: onChanged,
               ),
             ),
-            // Clear or mic
-            if (searchQuery.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: GestureDetector(
-                  onTap: onClear,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
-                    child: const Icon(Icons.close_rounded, color: AppColors.error, size: 16),
+            // Clear button or filter icon
+            if (isActive)
+              GestureDetector(
+                onTap: onClear,
+                child: Container(
+                  margin: const EdgeInsets.only(right: 4),
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(colors: [Color(0xFFEF5350), Color(0xFFE53935)]),
+                    shape: BoxShape.circle,
                   ),
+                  child: const Icon(Icons.close_rounded, color: Colors.white, size: 16),
                 ),
               )
             else
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: isDark ? 0.12 : 0.06),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(Icons.mic_rounded, color: AppColors.primary, size: 16),
+              Container(
+                margin: const EdgeInsets.only(right: 4),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: [
+                    const Color(0xFF00897B).withValues(alpha: isDark ? 0.3 : 0.15),
+                    const Color(0xFF26A69A).withValues(alpha: isDark ? 0.2 : 0.08),
+                  ]),
+                  shape: BoxShape.circle,
                 ),
+                child: Icon(Icons.tune_rounded, color: isDark ? const Color(0xFF26A69A) : const Color(0xFF00897B), size: 16),
               ),
           ],
         ),
