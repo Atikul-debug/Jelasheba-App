@@ -969,11 +969,12 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
 
   final double statusBarHeight;
 
+  // 52 (search bar) + 4 (top pad) + 4 (bottom pad) + statusBar = 60 + statusBar
   @override
-  double get maxExtent => 68 + statusBarHeight;
+  double get maxExtent => 60 + statusBarHeight;
 
   @override
-  double get minExtent => 68 + statusBarHeight;
+  double get minExtent => 60 + statusBarHeight;
 
   @override
   bool shouldRebuild(covariant _SearchBarDelegate oldDelegate) =>
@@ -990,9 +991,10 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
         color: isDark ? AppColors.darkBackground : AppColors.background,
         boxShadow: isScrolled ? [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2))] : [],
       ),
-      padding: EdgeInsets.fromLTRB(16, statusBarHeight + 6, 16, 6),
+      padding: EdgeInsets.fromLTRB(16, statusBarHeight + 4, 16, 4),
       child: Container(
         height: 52,
+        clipBehavior: Clip.none,
         decoration: BoxDecoration(
           gradient: isActive
               ? LinearGradient(colors: [
