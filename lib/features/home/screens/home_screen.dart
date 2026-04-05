@@ -174,17 +174,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       slivers: [
         // Clean Modern Header
         SliverAppBar(
-          expandedHeight: 160,
+          expandedHeight: 155,
           floating: false,
           pinned: true,
           stretch: true,
           backgroundColor: isDark ? AppColors.darkSurface : AppColors.primary,
           flexibleSpace: FlexibleSpaceBar(
-            titlePadding: const EdgeInsets.only(left: 20, bottom: 14),
-            title: Text(
-              _getGreeting(),
-              style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.white, fontSize: 16),
-            ),
+            titlePadding: EdgeInsets.zero,
+            title: const SizedBox.shrink(),
             background: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -284,47 +281,88 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ],
         ),
 
-        // Search Bar - Working
+        // Search Bar - Premium Design
         SliverToBoxAdapter(
           child: Transform.translate(
-            offset: const Offset(0, -8),
+            offset: const Offset(0, -12),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
                 decoration: BoxDecoration(
                   color: isDark ? AppColors.darkCard : Colors.white,
-                  borderRadius: BorderRadius.circular(18),
+                  borderRadius: BorderRadius.circular(16),
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.08), blurRadius: 20, offset: const Offset(0, 4)),
+                    BoxShadow(color: AppColors.primary.withValues(alpha: isDark ? 0.15 : 0.12), blurRadius: 24, offset: const Offset(0, 8)),
+                    BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2)),
                   ],
                 ),
-                child: TextField(
-                  controller: _searchController,
-                  focusNode: _searchFocus,
-                  decoration: InputDecoration(
-                    hintText: 'সেবা অনুসন্ধান করুন... (যেমন: চিকিৎসা, কৃষি)',
-                    hintStyle: TextStyle(color: isDark ? Colors.white38 : Colors.grey[400], fontSize: 13),
-                    prefixIcon: Icon(Icons.search_rounded, color: _searchQuery.isNotEmpty ? AppColors.primary : (isDark ? Colors.white38 : Colors.grey[400])),
-                    suffixIcon: _searchQuery.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.close_rounded, size: 20),
-                            onPressed: () { _searchController.clear(); setState(() => _searchQuery = ''); _searchFocus.unfocus(); },
-                          )
-                        : Container(
-                            margin: const EdgeInsets.all(6),
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: [AppColors.primary.withValues(alpha: 0.15), AppColors.primary.withValues(alpha: 0.08)]),
-                              borderRadius: BorderRadius.circular(12),
+                child: Row(
+                  children: [
+                    // Search icon
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: _searchQuery.isNotEmpty ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          Icons.search_rounded,
+                          color: _searchQuery.isNotEmpty ? AppColors.primary : (isDark ? Colors.white30 : Colors.grey[400]),
+                          size: 22,
+                        ),
+                      ),
+                    ),
+                    // Text field
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        focusNode: _searchFocus,
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                        decoration: InputDecoration(
+                          hintText: 'হাসপাতাল, ডাক্তার, কৃষি, পর্যটন...',
+                          hintStyle: TextStyle(color: isDark ? Colors.white24 : Colors.grey[350], fontSize: 14),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
+                        ),
+                        onChanged: (value) => setState(() => _searchQuery = value),
+                      ),
+                    ),
+                    // Clear / mic button
+                    if (_searchQuery.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 6),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () { _searchController.clear(); setState(() => _searchQuery = ''); _searchFocus.unfocus(); },
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: AppColors.error.withValues(alpha: 0.08),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(Icons.close_rounded, color: AppColors.error, size: 18),
                             ),
-                            child: const Icon(Icons.tune_rounded, color: AppColors.primary, size: 18),
                           ),
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  onChanged: (value) => setState(() => _searchQuery = value),
+                        ),
+                      )
+                    else
+                      Padding(
+                        padding: const EdgeInsets.only(right: 6),
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(colors: [AppColors.primary.withValues(alpha: 0.12), AppColors.primary.withValues(alpha: 0.06)]),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.mic_rounded, color: AppColors.primary, size: 18),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
