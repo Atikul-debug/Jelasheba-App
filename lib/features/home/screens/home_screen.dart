@@ -172,66 +172,122 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        // Fixed Header - scrolls with content, never collapses
+        // Premium Header
         SliverToBoxAdapter(
           child: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: isDark
-                    ? [AppColors.darkSurface, const Color(0xFF1A2332)]
-                    : [const Color(0xFF006A4E), const Color(0xFF00897B), const Color(0xFF26A69A)],
-              ),
+              color: isDark ? AppColors.darkSurface : AppColors.primary,
             ),
             child: SafeArea(
               bottom: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 12, 16, 18),
-                child: Row(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(20, 8, 16, 20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: isDark
+                        ? [AppColors.darkSurface, AppColors.darkBackground]
+                        : [const Color(0xFF006A4E), const Color(0xFF00795C)],
+                  ),
+                ),
+                child: Column(
                   children: [
-                    // Avatar
-                    Container(
-                      width: 46, height: 46,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1.5),
-                      ),
-                      child: Center(
-                        child: appProvider.isLoggedIn
-                            ? Text(appProvider.userName.isNotEmpty ? appProvider.userName[0].toUpperCase() : 'U', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800))
-                            : const Icon(Icons.person_rounded, color: Colors.white70, size: 24),
-                      ),
+                    // Top row - actions
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // App name
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.grid_view_rounded, size: 18, color: Colors.white),
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('জেলাশেবা', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: 0.5)),
+                                Text('সিরাজগঞ্জ', style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 11, fontWeight: FontWeight.w500)),
+                              ],
+                            ),
+                          ],
+                        ),
+                        // Actions
+                        Row(
+                          children: [
+                            _buildAppBarAction(
+                              icon: appProvider.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                              onTap: () => appProvider.toggleDarkMode(),
+                            ),
+                            const SizedBox(width: 6),
+                            _buildAppBarAction(
+                              icon: Icons.notifications_outlined,
+                              onTap: () => _showNotifications(),
+                              showBadge: appProvider.notifications.isNotEmpty,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 12),
-                    // Greeting + Name
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    const SizedBox(height: 16),
+                    // Greeting card
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                      ),
+                      child: Row(
                         children: [
-                          Text(
-                            '${_getGreeting()} 👋',
-                            style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 13),
+                          // Avatar
+                          Container(
+                            width: 50, height: 50,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Colors.white.withValues(alpha: 0.2), Colors.white.withValues(alpha: 0.08)],
+                              ),
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Center(
+                              child: appProvider.isLoggedIn
+                                  ? Text(appProvider.userName.isNotEmpty ? appProvider.userName[0].toUpperCase() : 'U', style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800))
+                                  : const Icon(Icons.person_rounded, color: Colors.white, size: 26),
+                            ),
                           ),
-                          const SizedBox(height: 2),
-                          Text(
-                            appProvider.isLoggedIn ? appProvider.userName : 'সিরাজগঞ্জবাসী',
-                            style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800),
+                          const SizedBox(width: 14),
+                          // Text
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(_getGreeting(), style: TextStyle(color: Colors.white.withValues(alpha: 0.65), fontSize: 12)),
+                                const SizedBox(height: 3),
+                                Text(
+                                  appProvider.isLoggedIn ? appProvider.userName : 'সিরাজগঞ্জবাসী',
+                                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Arrow
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.white60),
                           ),
                         ],
                       ),
-                    ),
-                    // Action buttons
-                    _buildAppBarAction(
-                      icon: appProvider.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                      onTap: () => appProvider.toggleDarkMode(),
-                    ),
-                    const SizedBox(width: 6),
-                    _buildAppBarAction(
-                      icon: Icons.notifications_outlined,
-                      onTap: () => _showNotifications(),
-                      showBadge: appProvider.notifications.isNotEmpty,
                     ),
                   ],
                 ),
