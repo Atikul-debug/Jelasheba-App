@@ -281,91 +281,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ],
         ),
 
-        // Search Bar - Premium Design
-        SliverToBoxAdapter(
-          child: Transform.translate(
-            offset: const Offset(0, -12),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkCard : Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(color: AppColors.primary.withValues(alpha: isDark ? 0.15 : 0.12), blurRadius: 24, offset: const Offset(0, 8)),
-                    BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2)),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    // Search icon
-                    Padding(
-                      padding: const EdgeInsets.only(left: 16),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: _searchQuery.isNotEmpty ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          Icons.search_rounded,
-                          color: _searchQuery.isNotEmpty ? AppColors.primary : (isDark ? Colors.white30 : Colors.grey[400]),
-                          size: 22,
-                        ),
-                      ),
-                    ),
-                    // Text field
-                    Expanded(
-                      child: TextField(
-                        controller: _searchController,
-                        focusNode: _searchFocus,
-                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        decoration: InputDecoration(
-                          hintText: 'হাসপাতাল, ডাক্তার, কৃষি, পর্যটন...',
-                          hintStyle: TextStyle(color: isDark ? Colors.white24 : Colors.grey[350], fontSize: 14),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
-                        ),
-                        onChanged: (value) => setState(() => _searchQuery = value),
-                      ),
-                    ),
-                    // Clear / mic button
-                    if (_searchQuery.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 6),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () { _searchController.clear(); setState(() => _searchQuery = ''); _searchFocus.unfocus(); },
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: AppColors.error.withValues(alpha: 0.08),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Icon(Icons.close_rounded, color: AppColors.error, size: 18),
-                            ),
-                          ),
-                        ),
-                      )
-                    else
-                      Padding(
-                        padding: const EdgeInsets.only(right: 6),
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(colors: [AppColors.primary.withValues(alpha: 0.12), AppColors.primary.withValues(alpha: 0.06)]),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(Icons.mic_rounded, color: AppColors.primary, size: 18),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
+        // Sticky Search Bar - stays pinned on scroll
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: _SearchBarDelegate(
+            isDark: isDark,
+            searchQuery: _searchQuery,
+            searchController: _searchController,
+            searchFocus: _searchFocus,
+            onChanged: (value) => setState(() => _searchQuery = value),
+            onClear: () { _searchController.clear(); setState(() => _searchQuery = ''); _searchFocus.unfocus(); },
           ),
         ),
 
@@ -1056,6 +981,120 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 title: Text(n, style: const TextStyle(fontSize: 14)),
               )),
             const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Sticky search bar delegate
+class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
+  final bool isDark;
+  final String searchQuery;
+  final TextEditingController searchController;
+  final FocusNode searchFocus;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onClear;
+
+  _SearchBarDelegate({
+    required this.isDark,
+    required this.searchQuery,
+    required this.searchController,
+    required this.searchFocus,
+    required this.onChanged,
+    required this.onClear,
+  });
+
+  @override
+  double get maxExtent => 68;
+
+  @override
+  double get minExtent => 68;
+
+  @override
+  bool shouldRebuild(covariant _SearchBarDelegate oldDelegate) =>
+      oldDelegate.searchQuery != searchQuery || oldDelegate.isDark != isDark;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: isDark ? AppColors.darkBackground : AppColors.background,
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkCard : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            if (shrinkOffset > 0)
+              BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 12, offset: const Offset(0, 4)),
+            BoxShadow(color: AppColors.primary.withValues(alpha: isDark ? 0.08 : 0.06), blurRadius: 16, offset: const Offset(0, 4)),
+          ],
+          border: Border.all(
+            color: searchQuery.isNotEmpty
+                ? AppColors.primary.withValues(alpha: 0.3)
+                : (isDark ? Colors.white.withValues(alpha: 0.06) : Colors.grey.withValues(alpha: 0.1)),
+            width: searchQuery.isNotEmpty ? 1.5 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            // Search icon
+            Padding(
+              padding: const EdgeInsets.only(left: 14),
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: searchQuery.isNotEmpty ? AppColors.primary.withValues(alpha: 0.1) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.search_rounded,
+                  color: searchQuery.isNotEmpty ? AppColors.primary : (isDark ? Colors.white30 : Colors.grey[400]),
+                  size: 20,
+                ),
+              ),
+            ),
+            // Text field
+            Expanded(
+              child: TextField(
+                controller: searchController,
+                focusNode: searchFocus,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                decoration: InputDecoration(
+                  hintText: 'হাসপাতাল, ডাক্তার, কৃষি, ভূমি...',
+                  hintStyle: TextStyle(color: isDark ? Colors.white24 : Colors.grey[400], fontSize: 14),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+                ),
+                onChanged: onChanged,
+              ),
+            ),
+            // Clear or mic
+            if (searchQuery.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: GestureDetector(
+                  onTap: onClear,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(color: AppColors.error.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(10)),
+                    child: const Icon(Icons.close_rounded, color: AppColors.error, size: 16),
+                  ),
+                ),
+              )
+            else
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: isDark ? 0.12 : 0.06),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.mic_rounded, color: AppColors.primary, size: 16),
+                ),
+              ),
           ],
         ),
       ),
