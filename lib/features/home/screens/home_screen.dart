@@ -240,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
 
-        // Sticky Search Bar - stays pinned on scroll
+        // Sticky Search Bar - stays pinned on scroll, below status bar
         SliverPersistentHeader(
           pinned: true,
           delegate: _SearchBarDelegate(
@@ -248,6 +248,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             searchQuery: _searchQuery,
             searchController: _searchController,
             searchFocus: _searchFocus,
+            statusBarHeight: MediaQuery.of(context).padding.top,
             onChanged: (value) => setState(() => _searchQuery = value),
             onClear: () { _searchController.clear(); setState(() => _searchQuery = ''); _searchFocus.unfocus(); },
           ),
@@ -963,13 +964,16 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
     required this.searchFocus,
     required this.onChanged,
     required this.onClear,
+    required this.statusBarHeight,
   });
 
-  @override
-  double get maxExtent => 68;
+  final double statusBarHeight;
 
   @override
-  double get minExtent => 68;
+  double get maxExtent => 68 + statusBarHeight;
+
+  @override
+  double get minExtent => 68 + statusBarHeight;
 
   @override
   bool shouldRebuild(covariant _SearchBarDelegate oldDelegate) =>
@@ -977,9 +981,10 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final statusBarHeight = MediaQuery.of(context).padding.top;
     return Container(
       color: isDark ? AppColors.darkBackground : AppColors.background,
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      padding: EdgeInsets.fromLTRB(16, statusBarHeight + 8, 16, 8),
       child: Container(
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkCard : Colors.white,
