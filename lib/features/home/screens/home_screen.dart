@@ -172,122 +172,66 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        // Premium Header
+        // Fixed Header - scrolls with content, never collapses
         SliverToBoxAdapter(
           child: Container(
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkSurface : AppColors.primary,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: isDark
+                    ? [AppColors.darkSurface, const Color(0xFF1A2332)]
+                    : [const Color(0xFF006A4E), const Color(0xFF00897B), const Color(0xFF26A69A)],
+              ),
             ),
             child: SafeArea(
               bottom: false,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(20, 8, 16, 20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: isDark
-                        ? [AppColors.darkSurface, AppColors.darkBackground]
-                        : [const Color(0xFF006A4E), const Color(0xFF00795C)],
-                  ),
-                ),
-                child: Column(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 12, 16, 18),
+                child: Row(
                   children: [
-                    // Top row - actions
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // App name
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const Icon(Icons.grid_view_rounded, size: 18, color: Colors.white),
-                            ),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('জেলাশেবা', style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w800, letterSpacing: 0.5)),
-                                Text('সিরাজগঞ্জ', style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 11, fontWeight: FontWeight.w500)),
-                              ],
-                            ),
-                          ],
-                        ),
-                        // Actions
-                        Row(
-                          children: [
-                            _buildAppBarAction(
-                              icon: appProvider.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                              onTap: () => appProvider.toggleDarkMode(),
-                            ),
-                            const SizedBox(width: 6),
-                            _buildAppBarAction(
-                              icon: Icons.notifications_outlined,
-                              onTap: () => _showNotifications(),
-                              showBadge: appProvider.notifications.isNotEmpty,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    // Greeting card
+                    // Avatar
                     Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
+                      width: 46, height: 46,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+                        color: Colors.white.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1.5),
                       ),
-                      child: Row(
+                      child: Center(
+                        child: appProvider.isLoggedIn
+                            ? Text(appProvider.userName.isNotEmpty ? appProvider.userName[0].toUpperCase() : 'U', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800))
+                            : const Icon(Icons.person_rounded, color: Colors.white70, size: 24),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Greeting + Name
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Avatar
-                          Container(
-                            width: 50, height: 50,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Colors.white.withValues(alpha: 0.2), Colors.white.withValues(alpha: 0.08)],
-                              ),
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            child: Center(
-                              child: appProvider.isLoggedIn
-                                  ? Text(appProvider.userName.isNotEmpty ? appProvider.userName[0].toUpperCase() : 'U', style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800))
-                                  : const Icon(Icons.person_rounded, color: Colors.white, size: 26),
-                            ),
+                          Text(
+                            '${_getGreeting()} 👋',
+                            style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 13),
                           ),
-                          const SizedBox(width: 14),
-                          // Text
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(_getGreeting(), style: TextStyle(color: Colors.white.withValues(alpha: 0.65), fontSize: 12)),
-                                const SizedBox(height: 3),
-                                Text(
-                                  appProvider.isLoggedIn ? appProvider.userName : 'সিরাজগঞ্জবাসী',
-                                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Arrow
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.white60),
+                          const SizedBox(height: 2),
+                          Text(
+                            appProvider.isLoggedIn ? appProvider.userName : 'সিরাজগঞ্জবাসী',
+                            style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800),
                           ),
                         ],
                       ),
+                    ),
+                    // Action buttons
+                    _buildAppBarAction(
+                      icon: appProvider.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                      onTap: () => appProvider.toggleDarkMode(),
+                    ),
+                    const SizedBox(width: 6),
+                    _buildAppBarAction(
+                      icon: Icons.notifications_outlined,
+                      onTap: () => _showNotifications(),
+                      showBadge: appProvider.notifications.isNotEmpty,
                     ),
                   ],
                 ),
@@ -310,85 +254,46 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ),
 
-        // Quick Actions - 4 icons row (hidden during search)
+        // Auto-scroll Banner (hidden during search)
         if (_searchQuery.isEmpty)
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.darkCard : Colors.white,
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: isDark ? [] : [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 12, offset: const Offset(0, 3))],
-              ),
-              child: Row(
-                children: [
-                  _buildQuickIcon(Icons.emergency_rounded, '৯৯৯', const Color(0xFFEF4444), () => Helpers.makePhoneCall('999')),
-                  _buildQuickIcon(Icons.local_hospital_rounded, 'চিকিৎসা', const Color(0xFFE91E63), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HealthScreen()))),
-                  _buildQuickIcon(Icons.report_rounded, 'অভিযোগ', const Color(0xFFF59E0B), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const GrievanceScreen()))),
-                  _buildQuickIcon(Icons.track_changes_rounded, 'ট্র্যাকিং', const Color(0xFF3B82F6), () => Navigator.push(context, MaterialPageRoute(builder: (_) => const EServicesScreen()))),
-                ],
-              ),
-            ),
-          ),
-        ),
-
-        // Banner Slider (hidden during search)
-        if (_searchQuery.isEmpty)
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 6, 0, 4),
+            padding: const EdgeInsets.fromLTRB(0, 8, 0, 4),
             child: Column(
               children: [
                 SizedBox(
-                  height: 145,
+                  height: 130,
                   child: PageView.builder(
                     controller: _bannerController,
                     onPageChanged: (i) => setState(() => _currentBanner = i),
                     itemCount: _banners.length,
                     itemBuilder: (context, index) {
                       final banner = _banners[index];
-                      final colors = banner['gradient'] as List<Color>;
                       return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: colors),
-                          borderRadius: BorderRadius.circular(22),
-                          boxShadow: [BoxShadow(color: colors[0].withValues(alpha: 0.25), blurRadius: 16, offset: const Offset(0, 6))],
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft, end: Alignment.bottomRight,
+                            colors: banner['gradient'] as List<Color>,
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [BoxShadow(color: (banner['gradient'] as List<Color>)[0].withValues(alpha: 0.3), blurRadius: 16, offset: const Offset(0, 6))],
                         ),
                         child: Stack(
                           children: [
-                            // Background icon
-                            Positioned(right: -10, bottom: -10, child: Icon(banner['icon'] as IconData, size: 110, color: Colors.white.withValues(alpha: 0.06))),
-                            Positioned(top: -20, left: -20, child: Container(width: 70, height: 70, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.05)))),
-                            // Content
+                            Positioned(right: -20, bottom: -20, child: Icon(banner['icon'] as IconData, size: 120, color: Colors.white.withValues(alpha: 0.08))),
+                            Positioned(top: -15, left: -15, child: Container(width: 60, height: 60, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.06)))),
                             Padding(
-                              padding: const EdgeInsets.all(22),
-                              child: Row(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                                          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
-                                          child: Text('${index + 1}/${_banners.length}', style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 10, fontWeight: FontWeight.w600)),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(banner['title'] as String, style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800, height: 1.2)),
-                                        const SizedBox(height: 6),
-                                        Text(banner['subtitle'] as String, style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 12, height: 1.4), maxLines: 2, overflow: TextOverflow.ellipsis),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Container(
-                                    padding: const EdgeInsets.all(14),
-                                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.12), shape: BoxShape.circle),
-                                    child: Icon(banner['icon'] as IconData, size: 28, color: Colors.white),
+                                  Text(banner['title'] as String, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w800)),
+                                  const SizedBox(height: 6),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.6,
+                                    child: Text(banner['subtitle'] as String, style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 13, height: 1.4)),
                                   ),
                                 ],
                               ),
@@ -399,22 +304,69 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     },
                   ),
                 ),
-                const SizedBox(height: 8),
-                // Dot indicators
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(_banners.length, (i) => AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     margin: const EdgeInsets.symmetric(horizontal: 3),
-                    width: _currentBanner == i ? 22 : 7,
-                    height: 7,
+                    width: _currentBanner == i ? 20 : 6,
+                    height: 6,
                     decoration: BoxDecoration(
                       color: _currentBanner == i ? AppColors.primary : (isDark ? Colors.white24 : Colors.grey[300]),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(3),
                     ),
                   )),
                 ),
               ],
+            ),
+          ),
+        ),
+
+        // Quick Actions (hidden during search)
+        if (_searchQuery.isEmpty)
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
+            child: Row(
+              children: [
+                _buildQuickActionPremium('৯৯৯ কল', Icons.emergency_rounded, AppColors.error, 'জরুরি সেবা', () => Helpers.makePhoneCall('999')),
+                const SizedBox(width: 10),
+                _buildQuickActionPremium('অভিযোগ', Icons.report_rounded, const Color(0xFFF59E0B), 'দাখিল করুন', () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const GrievanceScreen()));
+                }),
+                const SizedBox(width: 10),
+                _buildQuickActionPremium('ট্র্যাকিং', Icons.track_changes_rounded, AppColors.info, 'সেবা ট্র্যাক', () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const EServicesScreen()));
+                }),
+              ],
+            ),
+          ),
+        ),
+
+        // Stats Row (hidden during search)
+        if (_searchQuery.isEmpty)
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkCard : Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: isDark ? [] : AppColors.softShadow,
+              ),
+              child: Row(
+                children: [
+                  _buildStatItem('১৫+', 'সেবা', const Color(0xFF3B82F6)),
+                  _buildStatDivider(isDark),
+                  _buildStatItem('৯', 'উপজেলা', const Color(0xFF10B981)),
+                  _buildStatDivider(isDark),
+                  _buildStatItem('৮৪', 'ইউনিয়ন', const Color(0xFF8B5CF6)),
+                  _buildStatDivider(isDark),
+                  _buildStatItem('২৪/৭', 'সেবা', const Color(0xFFF59E0B)),
+                ],
+              ),
             ),
           ),
         ),
@@ -651,6 +603,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildStatItem(String value, String label, Color color) {
+    return Expanded(
+      child: Column(
+        children: [
+          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: color)),
+          const SizedBox(height: 2),
+          Text(label, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatDivider(bool isDark) {
+    return Container(width: 1, height: 30, color: isDark ? Colors.white.withValues(alpha: 0.06) : const Color(0xFFE5E7EB));
+  }
 
   // Search keywords mapping for each service
   static const Map<String, List<String>> _searchKeywords = {
@@ -797,24 +764,40 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildQuickIcon(IconData icon, String label, Color color, VoidCallback onTap) {
+  Widget _buildQuickActionPremium(String title, IconData icon, Color color, String subtitle, VoidCallback onTap) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: isDark ? 0.15 : 0.08),
-                borderRadius: BorderRadius.circular(14),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft, end: Alignment.bottomRight,
+                colors: [color.withValues(alpha: isDark ? 0.2 : 0.12), color.withValues(alpha: isDark ? 0.08 : 0.03)],
               ),
-              child: Icon(icon, color: color, size: 24),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: color.withValues(alpha: 0.15)),
             ),
-            const SizedBox(height: 6),
-            Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: isDark ? Colors.white : AppColors.textPrimary)),
-          ],
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(icon, color: color, size: 20),
+                ),
+                const SizedBox(height: 8),
+                Text(title, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700)),
+                Text(subtitle, style: TextStyle(color: color.withValues(alpha: 0.6), fontSize: 9, fontWeight: FontWeight.w500)),
+              ],
+            ),
+          ),
         ),
       ),
     );
