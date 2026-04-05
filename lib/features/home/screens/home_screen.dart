@@ -172,113 +172,72 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        // Clean Modern Header
-        SliverAppBar(
-          expandedHeight: 155,
-          floating: false,
-          pinned: true,
-          stretch: true,
-          backgroundColor: isDark ? AppColors.darkSurface : AppColors.primary,
-          flexibleSpace: FlexibleSpaceBar(
-            titlePadding: EdgeInsets.zero,
-            title: const SizedBox.shrink(),
-            background: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: isDark
-                      ? [AppColors.darkSurface, const Color(0xFF1A2332)]
-                      : [const Color(0xFF006A4E), const Color(0xFF00897B), const Color(0xFF26A69A)],
-                ),
+        // Fixed Header - scrolls with content, never collapses
+        SliverToBoxAdapter(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: isDark
+                    ? [AppColors.darkSurface, const Color(0xFF1A2332)]
+                    : [const Color(0xFF006A4E), const Color(0xFF00897B), const Color(0xFF26A69A)],
               ),
-              child: Stack(
-                children: [
-                  // Subtle pattern
-                  Positioned(top: -50, right: -50, child: Container(width: 180, height: 180, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.04)))),
-                  Positioned(bottom: -30, left: -30, child: Container(width: 120, height: 120, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.03)))),
-                  // Content
-                  SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+            ),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 12, 16, 18),
+                child: Row(
+                  children: [
+                    // Avatar
+                    Container(
+                      width: 46, height: 46,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1.5),
+                      ),
+                      child: Center(
+                        child: appProvider.isLoggedIn
+                            ? Text(appProvider.userName.isNotEmpty ? appProvider.userName[0].toUpperCase() : 'U', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800))
+                            : const Icon(Icons.person_rounded, color: Colors.white70, size: 24),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // Greeting + Name
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 8),
-                          // User greeting
-                          Row(
-                            children: [
-                              // Avatar
-                              Container(
-                                width: 46, height: 46,
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.15),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(color: Colors.white.withValues(alpha: 0.25), width: 1.5),
-                                ),
-                                child: Center(
-                                  child: appProvider.isLoggedIn
-                                      ? Text(appProvider.userName.isNotEmpty ? appProvider.userName[0].toUpperCase() : 'U', style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800))
-                                      : const Icon(Icons.person_rounded, color: Colors.white70, size: 24),
-                                ),
-                              ),
-                              const SizedBox(width: 14),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${_getGreeting()} 👋',
-                                      style: TextStyle(color: Colors.white.withValues(alpha: 0.75), fontSize: 13, fontWeight: FontWeight.w400),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      appProvider.isLoggedIn ? appProvider.userName : 'সিরাজগঞ্জবাসী',
-                                      style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          Text(
+                            '${_getGreeting()} 👋',
+                            style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 13),
                           ),
-                          const SizedBox(height: 14),
-                          // Location badge
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.location_on_rounded, size: 14, color: Colors.white.withValues(alpha: 0.7)),
-                                const SizedBox(width: 4),
-                                Text('সিরাজগঞ্জ, রাজশাহী বিভাগ', style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w500)),
-                              ],
-                            ),
+                          const SizedBox(height: 2),
+                          Text(
+                            appProvider.isLoggedIn ? appProvider.userName : 'সিরাজগঞ্জবাসী',
+                            style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                    // Action buttons
+                    _buildAppBarAction(
+                      icon: appProvider.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                      onTap: () => appProvider.toggleDarkMode(),
+                    ),
+                    const SizedBox(width: 6),
+                    _buildAppBarAction(
+                      icon: Icons.notifications_outlined,
+                      onTap: () => _showNotifications(),
+                      showBadge: appProvider.notifications.isNotEmpty,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-          actions: [
-            _buildAppBarAction(
-              icon: appProvider.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-              onTap: () => appProvider.toggleDarkMode(),
-            ),
-            _buildAppBarAction(
-              icon: Icons.notifications_outlined,
-              onTap: () => _showNotifications(),
-              showBadge: appProvider.notifications.isNotEmpty,
-            ),
-            const SizedBox(width: 8),
-          ],
         ),
 
         // Sticky Search Bar - stays pinned on scroll
