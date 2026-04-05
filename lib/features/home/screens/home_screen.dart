@@ -807,25 +807,22 @@ class _SearchBarDelegate extends SliverPersistentHeaderDelegate {
   });
 
   @override
-  double get maxExtent => 60 + statusBarHeight;
+  double get maxExtent => 60;
 
   @override
-  double get minExtent => 60 + statusBarHeight;
+  double get minExtent => 60;
 
   @override
   bool shouldRebuild(covariant _SearchBarDelegate oldDelegate) => oldDelegate.isDark != isDark;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final topPad = MediaQuery.of(context).padding.top;
-    final isScrolled = shrinkOffset > 0;
-
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkBackground : AppColors.background,
-        boxShadow: isScrolled ? [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2))] : [],
+        boxShadow: shrinkOffset > 0 ? [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2))] : [],
       ),
-      padding: EdgeInsets.fromLTRB(16, topPad + 4, 16, 4),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
